@@ -325,13 +325,15 @@ function OpenBillHistory()
             -- Formatte le titre en fonction de si on est l'envoyeur ou le destinataire
             local title
             if isReceiver then
-                title = ('%s Facture de %s à vous'):format(
+                title = ('%s Facture de %s à %s'):format(
                     status_color[bill.status] or '⚪',
-                    bill.sender_name
+                    bill.sender_name,
+                    bill.receiver_name
                 )
             else
-                title = ('%s Facture de vous à %s'):format(
+                title = ('%s Facture de %s à %s'):format(
                     status_color[bill.status] or '⚪',
+                    bill.sender_name,
                     bill.receiver_name
                 )
             end
