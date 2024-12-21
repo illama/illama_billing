@@ -2,8 +2,8 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-author 'illama'
-description 'Système de facturation'
+author 'Illama'
+description 'Illama Billing est un script ESX de gestion des factures conçu pour une intégration facile et des interactions utilisateur optimisées.'
 version '1.0.0'
 
 dependencies {
