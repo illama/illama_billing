@@ -190,49 +190,85 @@ function CanCreateSocietyBills()
     return tonumber(playerJob.grade) >= tonumber(jobConfig.minGrade)
 end
 
--- Créer une facture société
 function CreateSocietyBill(target)
-    local playerJob = ESX.PlayerData.job
-    local jobConfig = Config.AllowedJobs[playerJob.name]
+    local PlayerData = GetPlayerData()
+    local jobConfig = Config.AllowedJobs[PlayerData.job.name]
     
     if not jobConfig then return end
-    local maxAmount = jobConfig.maxAmount or Config.MaxBillAmount
+
+    -- Créer les options pour le select
+    local options = {}
+    for i, template in ipairs(jobConfig.templates) do
+        table.insert(options, {
+            label = template.label,
+            value = i
+        })
+    end
 
     local input = lib.inputDialog('Nouvelle Facture Société', {
         {
-            type = 'number',
-            label = 'Montant',
-            description = 'Entrez le montant',
-            required = true,
-            min = 1,
-            max = maxAmount,
-            default = 1,
-        },
-        {
-            type = 'input',
-            label = 'Raison',
-            description = 'Entrez la raison',
+            type = 'select',
+            label = 'Type de facture',
+            description = 'Choisissez un modèle ou créez une facture personnalisée',
+            options = options,
             required = true
         }
     })
 
-    if input then
-        local amount = tonumber(input[1])
-        if not amount or amount <= 0 or amount > maxAmount then
-            lib.notify({
-                title = 'Erreur',
-                description = 'Montant invalide',
-                type = 'error'
-            })
-            return
-        end
+    if not input then return end
+    local selectedTemplate = jobConfig.templates[input[1]]
+    local maxAmount = jobConfig.maxAmount or Config.MaxBillAmount
 
-        TriggerServerEvent('illama_billing:createBill', {
-            target = target,
-            amount = amount,
-            reason = input[2],
-            type = 'society'
+    -- Si c'est le dernier template (personnalisé)
+    if selectedTemplate.amount == 0 then
+        local customInput = lib.inputDialog('Facture Personnalisée', {
+            {
+                type = 'number',
+                label = 'Montant',
+                description = 'Entrez le montant',
+                required = true,
+                min = 1,
+                max = maxAmount,
+                default = 0
+            },
+            {
+                type = 'input',
+                label = 'Raison',
+                description = 'Entrez la raison',
+                required = true
+            }
         })
+
+        if customInput then
+            TriggerServerEvent('illama_billing:createBill', {
+                target = target,
+                amount = customInput[1],
+                reason = customInput[2],
+                type = 'society'
+            })
+
+        end
+    else
+        -- Pour un template prédéfini
+        local confirm = lib.alertDialog({
+            header = selectedTemplate.label,
+            content = string.format('Montant: $%s\nRaison: %s\n\nConfirmer la facture?', 
+                ESX.Math.GroupDigits(selectedTemplate.amount), 
+                selectedTemplate.reason
+            ),
+            centered = true,
+            cancel = true
+        })
+
+        if confirm == 'confirm' then
+            TriggerServerEvent('illama_billing:createBill', {
+                target = target,
+                amount = selectedTemplate.amount,
+                reason = selectedTemplate.reason,
+                type = 'society'
+            })
+
+        end
     end
 end
 
@@ -420,13 +456,31 @@ function CreateConfirmBillMenu(data)
                     })
                 end
             }
-        }
+        },
+        -- Ajouter l'option pour fermer automatiquement si le menu est fermé manuellement
+        onClose = function()
+            TriggerServerEvent('illama_billing:refuseBill', data)
+        end
     })
     lib.showContext('confirm_bill_menu')
 end
 
+RegisterNetEvent('illama_billing:billExpired')
+AddEventHandler('illama_billing:billExpired', function()
+    -- Fermer tous les menus ox_lib ouverts
+    if lib.getOpenMenu() then
+        lib.hideContext()
+    end
+
+    -- Jouer un son de notification (optionnel)
+    PlaySoundFrontend(-1, "EXIT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
+end)
+
+
 -- Événement pour recevoir la demande de facture
 RegisterNetEvent('illama_billing:requestConfirmation')
-AddEventHandler('illama_billing:requestConfirmation', function(data)
-    CreateConfirmBillMenu(data)
+AddEventHandler('illama_billing:requestConfirmation', function(billData)
+    CreateConfirmBillMenu(billData)
+    -- Jouer un son de notification
+    PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
 end)
