@@ -4,6 +4,17 @@ local ESX = exports["es_extended"]:getSharedObject()
 
 -- Menu Principal
 function OpenBillingMenu()
+    local PlayerData = GetPlayerData()
+    if not PlayerData or not PlayerData.job then
+        lib.notify({
+            title = 'Erreur',
+            description = 'Impossible de charger vos données',
+            type = 'error'
+        })
+        return
+    end
+
+    --print('Ouverture menu avec job:', json.encode(PlayerData.job))
     local mainMenu = {
         id = 'billing_main_menu',
         title = 'Menu Facturation',
@@ -19,18 +30,10 @@ function OpenBillingMenu()
                 title = 'Factures Entreprise',
                 description = 'Gérer les factures d\'entreprise',
                 onSelect = function()
-                    -- Vérification de sécurité pour le job
-                    if not ESX.PlayerData or not ESX.PlayerData.job then
-                        lib.notify({
-                            title = 'Erreur',
-                            description = 'Impossible de récupérer votre emploi',
-                            type = 'error'
-                        })
-                        return
-                    end
-
-                    -- Vérification du grade
-                    if ESX.PlayerData.job.grade_name == 'boss' then
+                    local canCreate = CanCreateSocietyBills()
+                    --print('Permission de créer:', canCreate)
+                    
+                    if canCreate then
                         OpenSocietyBillingMenu()
                     else
                         lib.notify({
@@ -46,6 +49,13 @@ function OpenBillingMenu()
                 description = 'Voir les factures reçues',
                 onSelect = function()
                     OpenMyBillsMenu()
+                end
+            },
+            {
+                title = 'Historique des Transactions',
+                description = 'Voir l\'historique de toutes vos factures',
+                onSelect = function()
+                    OpenBillHistory()
                 end
             }
         }
@@ -160,9 +170,34 @@ function CreatePersonalBill(target)
         })
     end
 end
+function CanCreateSocietyBills()
+    local PlayerData = GetPlayerData()
+    if not PlayerData or not PlayerData.job then
+        --print('PlayerData ou job non trouvé')
+        return false
+    end
+
+    local playerJob = PlayerData.job
+    --print('Vérification job:', json.encode(playerJob))
+
+    local jobConfig = Config.AllowedJobs[playerJob.name]
+    if not jobConfig then 
+        --print('Job non configuré:', playerJob.name)
+        return false 
+    end
+
+    --print('Grade:', playerJob.grade, 'Grade minimum:', jobConfig.minGrade)
+    return tonumber(playerJob.grade) >= tonumber(jobConfig.minGrade)
+end
 
 -- Créer une facture société
 function CreateSocietyBill(target)
+    local playerJob = ESX.PlayerData.job
+    local jobConfig = Config.AllowedJobs[playerJob.name]
+    
+    if not jobConfig then return end
+    local maxAmount = jobConfig.maxAmount or Config.MaxBillAmount
+
     local input = lib.inputDialog('Nouvelle Facture Société', {
         {
             type = 'number',
@@ -170,7 +205,7 @@ function CreateSocietyBill(target)
             description = 'Entrez le montant',
             required = true,
             min = 1,
-            max = Config.MaxBillAmount,
+            max = maxAmount,
             default = 1,
         },
         {
@@ -183,10 +218,10 @@ function CreateSocietyBill(target)
 
     if input then
         local amount = tonumber(input[1])
-        if not amount or amount <= 0 then
+        if not amount or amount <= 0 or amount > maxAmount then
             lib.notify({
                 title = 'Erreur',
-                description = 'Le montant doit être supérieur à 0',
+                description = 'Montant invalide',
                 type = 'error'
             })
             return
@@ -211,8 +246,7 @@ function OpenMyBillsMenu()
                 title = ('Facture de %s'):format(bill.sender_name),
                 description = ('Montant: $%s - Raison: %s'):format(ESX.Math.GroupDigits(bill.amount), bill.reason),
                 metadata = {
-                    {label = 'Status', value = bill.status},
-                    {label = 'Date', value = bill.date and bill.date or 'Date inconnue'}
+                    {label = 'Status', value = bill.status}
                 },
                 onSelect = function()
                     OpenBillDetailsMenu(bill)
@@ -237,38 +271,111 @@ function OpenMyBillsMenu()
         lib.showContext('my_bills_menu')
     end)
 end
+function OpenBillHistory()
+    ESX.TriggerServerCallback('illama_billing:getBillHistory', function(bills)
+        local options = {}
+        
+        for i, bill in ipairs(bills) do
+            local status_color = {
+                pending = '🟡',
+                paid = '🟢',
+                deleted = '🔴'
+            }
 
+            -- Détermine si le joueur est l'envoyeur ou le destinataire
+            local playerIdentifier = ESX.PlayerData.identifier
+            local isReceiver = (bill.receiver == playerIdentifier)
+
+            -- Formatte le titre en fonction de si on est l'envoyeur ou le destinataire
+            local title
+            if isReceiver then
+                title = ('%s Facture de %s à vous'):format(
+                    status_color[bill.status] or '⚪',
+                    bill.sender_name
+                )
+            else
+                title = ('%s Facture de vous à %s'):format(
+                    status_color[bill.status] or '⚪',
+                    bill.receiver_name
+                )
+            end
+
+            table.insert(options, {
+                title = title,
+                description = ('Montant: $%s - Raison: %s'):format(ESX.Math.GroupDigits(bill.amount), bill.reason),
+                metadata = {
+                    {label = 'Status', value = bill.status},
+                    {label = 'Type', value = bill.type == 'society' and 'Société' or 'Personnel'},
+                    {label = 'De', value = bill.sender_name},
+                    {label = 'À', value = bill.receiver_name}
+                }
+            })
+        end
+        
+        if #options == 0 then
+            table.insert(options, {
+                title = 'Aucun historique',
+                description = 'Vous n\'avez aucune facture dans l\'historique'
+            })
+        end
+
+        lib.registerContext({
+            id = 'bills_history_menu',
+            title = 'Historique des Transactions',
+            menu = 'billing_main_menu',
+            options = options
+        })
+
+        lib.showContext('bills_history_menu')
+    end)
+end
 -- Menu Détails Facture
 function OpenBillDetailsMenu(bill)
-    if bill.status ~= 'pending' then
-        lib.notify({
-            title = 'Information',
-            description = 'Cette facture a déjà été traitée',
-            type = 'info'
+    local options = {}
+
+    if bill.status == 'pending' then
+        table.insert(options, {
+            title = 'Payer en espèces',
+            description = ('Payer $%s en espèces'):format(ESX.Math.GroupDigits(bill.amount)),
+            icon = 'money-bill',
+            onSelect = function()
+                TriggerServerEvent('illama_billing:payBill', bill.id, 'cash')
+            end
         })
-        return
+
+        table.insert(options, {
+            title = 'Payer par banque',
+            description = ('Payer $%s par banque'):format(ESX.Math.GroupDigits(bill.amount)),
+            icon = 'credit-card',
+            onSelect = function()
+                TriggerServerEvent('illama_billing:payBill', bill.id, 'bank')
+            end
+        })
     end
+
+    table.insert(options, {
+        title = 'Supprimer la facture',
+        description = 'Supprimer définitivement cette facture',
+        icon = 'trash',
+        onSelect = function()
+            local confirm = lib.alertDialog({
+                header = 'Confirmation',
+                content = 'Êtes-vous sûr de vouloir supprimer cette facture ?',
+                centered = true,
+                cancel = true
+            })
+            if confirm == 'confirm' then
+                TriggerServerEvent('illama_billing:deleteBill', bill.id)
+                lib.showContext('my_bills_menu') -- Retour au menu précédent
+            end
+        end
+    })
 
     lib.registerContext({
         id = 'bill_details_menu',
         title = ('Facture #%s'):format(bill.id),
         menu = 'my_bills_menu',
-        options = {
-            {
-                title = 'Payer en espèces',
-                description = ('Payer $%s en espèces'):format(ESX.Math.GroupDigits(bill.amount)),
-                onSelect = function()
-                    TriggerServerEvent('illama_billing:payBill', bill.id, 'cash')
-                end
-            },
-            {
-                title = 'Payer par banque',
-                description = ('Payer $%s par banque'):format(ESX.Math.GroupDigits(bill.amount)),
-                onSelect = function()
-                    TriggerServerEvent('illama_billing:payBill', bill.id, 'bank')
-                end
-            }
-        }
+        options = options
     })
 
     lib.showContext('bill_details_menu')
