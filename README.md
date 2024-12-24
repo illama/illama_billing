@@ -1,4 +1,4 @@
-------------------- FR -------------------
+-------------------------------------------------------------------- FR ------------------------------------------------------------------------------------
 Un script facile d'utilisation permettant de faire des facturations entre joueurs. Fonctionnant sous ESX 1.11.4 (minimum). 
 
 Prérequis
@@ -35,7 +35,7 @@ Utilisation
 Crédits
 - Développé par Illama.
 
-------------------- EN -------------------
+-------------------------------------------------------------------- EN ------------------------------------------------------------------------------------
 An easy-to-use script for invoicing between players. Running under ESX 1.11.4 (minimum). 
 
 Prerequisites
