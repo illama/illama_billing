@@ -1,5 +1,4 @@
 if not lib then return end
-
 ESX = exports["es_extended"]:getSharedObject()
 PlayerData = {}
 local isInitialized = false
@@ -8,7 +7,6 @@ local isInitialized = false
 local function RefreshPlayerData()
     PlayerData = ESX.GetPlayerData()
     isInitialized = true
-    --print('Données joueur rafraîchies:', json.encode(PlayerData.job))
 end
 
 -- Initialisation
@@ -24,40 +22,33 @@ RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
     PlayerData = xPlayer
     isInitialized = true
-    --print('Joueur chargé avec succès')
 end)
 
 -- Événement quand le job change
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
     PlayerData.job = job
-    --print('Job mis à jour:', json.encode(job))
     if lib.getOpenMenu() and lib.getOpenMenu():find('billing_') then
         OpenBillingMenu()
     end
 end)
 
 -- Commandes et touches
-RegisterKeyMapping('openbilling', 'Ouvrir le menu de facturation', 'keyboard', Config.OpenKey)
+RegisterKeyMapping('openbilling', _L('open_billing_menu'), 'keyboard', Config.OpenKey) -- Ajouter cette traduction dans les locales
 
 RegisterCommand('openbilling', function()
-    -- Rafraîchir les données avant d'ouvrir le menu
     RefreshPlayerData()
-    
+   
     if not PlayerData or not PlayerData.job then
-        --print('Erreur: Données job manquantes')
         lib.notify({
-            title = 'Erreur',
-            description = 'Impossible de charger vos données',
+            title = _L('error'),
+            description = _L('cannot_load_data'),
             type = 'error'
         })
         return
     end
-
-    --print('Ouverture menu - Job actuel:', json.encode(PlayerData.job))
     OpenBillingMenu()
 end)
-
 
 -- Fonction utilitaire pour obtenir les joueurs proches
 function GetNearbyPlayers()
@@ -71,7 +62,7 @@ function GetNearbyPlayers()
         if target ~= playerPed then
             local targetCoords = GetEntityCoords(target)
             local distance = #(coordinates - targetCoords)
-            
+           
             if distance <= 5.0 then
                 table.insert(nearbyPlayers, {
                     source = GetPlayerServerId(player),
@@ -85,10 +76,8 @@ function GetNearbyPlayers()
     table.sort(nearbyPlayers, function(a, b)
         return a.distance < b.distance
     end)
-
     return nearbyPlayers
 end
-
 
 -- Export les données pour menu.lua
 function GetPlayerData()
