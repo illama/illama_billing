@@ -1,13 +1,15 @@
 Config = {}
 Config.OpenKey = 'F2'
 Config.MaxBillAmount = 100000
+Config.Locale = 'fr'
 
--- Jobs autorisés à facturer et leurs grades minimum requis
 Config.AllowedJobs = {
     ['police'] = {
         minGrade = 0,
         label = 'LSPD',
         maxAmount = 100000,
+        allowRecurring = true,
+        recurringMaxAmount = 50000,
         templates = {
             {
                 label = "Excès de vitesse léger",
@@ -15,24 +17,29 @@ Config.AllowedJobs = {
                 amount = 750
             },
             {
-                label = "Excès de vitesse grave",
-                reason = "Excès de vitesse supérieur à 30km/h",
-                amount = 1500
-            },
-            {
-                label = "Stationnement gênant",
-                reason = "Véhicule mal stationné",
-                amount = 500
-            },
-            {
-                label = "Refus d'obtempérer",
-                reason = "Refus d'obtempérer à un contrôle de police",
-                amount = 2500
-            },
-            {
                 label = "Autre (personnalisé)",
                 reason = "",
                 amount = 0
+            }
+        },
+        recurringTemplates = { -- Modèles pour factures récurrentes
+            {
+                label = "Protection Mensuelle Standard",
+                reason = "Service de protection mensuel - Forfait standard",
+                amount = 5000,
+                interval = 30 -- Tous les 30 jours
+            },
+            {
+                label = "Protection Mensuelle Premium",
+                reason = "Service de protection mensuel - Forfait premium",
+                amount = 10000,
+                interval = 30
+            },
+            {
+                label = "Autre (personnalisé)", -- Toujours garder cette option
+                reason = "",
+                amount = 0,
+                interval = 0
             }
         }
     },
@@ -40,16 +47,44 @@ Config.AllowedJobs = {
         minGrade = 0,
         label = 'E.M.S',
         maxAmount = 100000,
+        allowRecurring = true,
+        recurringMaxAmount = 50000,
         templates = {
             {
-                label = "MEURT",
-                reason = "Refus d'obtsadsaempérer à un contrôle de police",
+                label = "Consultation médicale",
+                reason = "Consultation médicale standard",
                 amount = 2500
             },
             {
                 label = "Autre (personnalisé)",
                 reason = "",
                 amount = 0
+            }
+        },
+        recurringTemplates = {
+            {
+                label = "Assurance Santé Basic",
+                reason = "Couverture médicale mensuelle - Formule Basic",
+                amount = 3000,
+                interval = 30
+            },
+            {
+                label = "Assurance Santé Premium",
+                reason = "Couverture médicale mensuelle - Formule Premium",
+                amount = 6000,
+                interval = 30
+            },
+            {
+                label = "Surveillance Médicale Hebdomadaire",
+                reason = "Suivi médical hebdomadaire",
+                amount = 1500,
+                interval = 7
+            },
+            {
+                label = "Autre (personnalisé)",
+                reason = "",
+                amount = 0,
+                interval = 0
             }
         }
     }
