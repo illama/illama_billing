@@ -151,15 +151,16 @@ Both dependencies must be started **before** loading the Illama Billing script.
 
 ### 🛠️ **Installation Guide**
 
-1. Place the script in your `resources` folder.  
-2. Import the SQL file into your database (`Install/sql.sql`).  
-3. Add the following to your `server.cfg`:  
+1. **Download the script release** directly from the GitHub Releases page. **Do not use git clone**, as the script will not work properly without the release version.
+2. Place the script in your `resources` folder.  
+3. Import the SQL file into your database (`Install/sql.sql`).  
+4. Add the following to your `server.cfg`:  
    ```plaintext
    ensure ox_lib
    ensure es_extended
    ensure illama_billing
    ```
-4. Start your server and enjoy!  
+5. Start your server and enjoy!  
 
 ---
 
@@ -325,15 +326,16 @@ Ces dépendances doivent être démarrées **avant** de charger le script Illama
 
 ### 🛠️ **Guide d’installation**
 
-1. Placez le script dans votre dossier `resources`.  
-2. Importez le fichier SQL dans votre base de données (`Install/sql.sql`).  
-3. Ajoutez les lignes suivantes dans votre `server.cfg` :  
+1. **Téléchargez** directement la **release** du script depuis la page GitHub Releases. **Ne pas utiliser git clone**, car le script ne fonctionnera pas correctement sans la version de release.
+2. Placez le script dans votre dossier `resources`.  
+3. Importez le fichier SQL dans votre base de données (`Install/sql.sql`).  
+4. Ajoutez les lignes suivantes dans votre `server.cfg` :  
    ```plaintext
    ensure ox_lib
    ensure es_extended
    ensure illama_billing
    ```
-4. Lancez votre serveur et profitez-en !
+5. Lancez votre serveur et profitez-en !
 
 ---
 
