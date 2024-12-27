@@ -227,4 +227,27 @@ Locales['fr'] = {
     ['release_notes'] = '^3[illama_billing] Notes de mise à jour: ^7%s',
     ['changes_list'] = '^3[illama_billing] Changements: \n^7%s',
     ['script_up_to_date'] = '^2[illama_billing] Le script est à jour (v%s)^7',
+
+
+    -------------------
+    -- V.1.0.9
+    -------------------
+    ['bill_type'] = 'Type de facture',
+    ['standard_bill'] = 'Facture standard', 
+    ['recurring_bill'] = 'Facture récurrente',
+    ['bill_interval'] = 'Intervalle',
+    ['bills_status'] = 'État des factures',
+    ['check_bills'] = 'Vérifier les factures',
+    ['check_bills_desc'] = 'Vérifier les factures en cours',
+    ['select_player_check'] = 'Choisir un joueur à vérifier',
+    ['days'] = 'jours',
+    ['status_label'] = 'Statut',
+    ['type_label'] = 'Type',
+    ['from_label'] = 'De',
+    ['to_label'] = 'À',
+    ['society_bill'] = 'Société',
+    ['personal_bill'] = 'Personnel',
+    ['pending'] = 'En attente',
+    ['paid'] = 'Payée',
+    ['deleted'] = 'Supprimée',
 }
