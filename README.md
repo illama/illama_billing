@@ -1,165 +1,345 @@
-[ENGLISH]
+---
 
-📋 **Main Menu:**
-
-🎛️ **Billing Menu:** Access the main menu to manage all your bills (personal, society, history, etc.).  
-🧾 **Personal Bills:**  
-- **Description:** Manage your pending personal bills.  
-- **Actions:** Pay, delete, or view the details of received bills.  
-
-🏢 **Society Bills:**  
-- **Description:** Create or manage bills linked to your job.  
-- **Actions:** Create standard or recurring bills depending on your permissions.  
-
-📜 **Transaction History:** View all your past transactions for accurate tracking.  
-
-💡 **Bill Creation:**  
-✍️ **New Bill:**  
-- **Customization:** Specify the amount and reason. Ideal for one-time or customized bills.  
-🔁 **Recurring Bills:** Set up monthly or weekly subscriptions with customizable intervals.  
-🗂️ **Preconfigured Templates:** Choose from predefined templates based on your job (e.g., minor speeding infractions for police).  
-
-💸 **Payments and Actions:**  
-💵 **Cash Payment:** Instantly pay a bill with cash.  
-🏦 **Bank Payment:** Use your bank funds to settle your debts.  
-🗑️ **Delete Bills:** Remove pending bills if you have the required permissions.  
-🔄 **Recurring Payments:**  
-- **Options:** Cancel or configure advance payments.  
-- **History:** View detailed logs of each completed payment.  
-
-📊 **Bill Management:**  
-📑 **Bill Details:**  
-- **Amount:** Displays the total amount owed.  
-- **Next Due Date:** Shows the time remaining until the next payment.  
-- **Status:** Real-time updates (active/inactive).  
-
-🚀 **Notifications:** Receive alerts for:  
-- Accepted or declined bills.  
-- Successful payments or insufficient funds.  
-- Expired or deleted bills.  
-
-📂 **Complete History:** Search all your transactions, whether personal or job-related.  
-
-🛠️ **Technical Features:**  
-👥 **Player Selection:** Identify and select nearby players to issue bills.  
-⚙️ **Permission Checks:**  
-- Ensures only authorized jobs and grades can access specific features (e.g., only police can issue speeding fines).  
-🌐 **Multilingual:** Available in French and Spanish, with easy management through localization files.  
-🔔 **Notification System:** Uses clear and contextual alerts (success, errors, warnings).  
-⚡ **Performance:** Runs at 0.00ms for incredible efficiency and minimal impact on server performance.  
-
-🛡️ **Job Support:**  
-👮 **Police:**  
-- **Available Templates:**  
-  - Minor speeding infraction: $750.  
-  - Monthly protection subscriptions (Standard and Premium).  
-
-🚑 **Ambulance (EMS):**  
-- **Available Templates:**  
-  - Standard medical consultation: $2,500.  
-  - Health coverage subscriptions (Basic and Premium).  
-  - Weekly health monitoring.  
-
-🌟 **Additional Features:**  
-📆 **Date Management:**  
-- Accurate calculation of days remaining before a due date.  
-- Support for advance payments.  
-
-🔒 **Advanced Permissions:** Based on job and grade, ensuring secure access to features.  
-📤 **GitHub Notifications:** Notifies you when a new version of the script is available, with detailed release notes.  
-✨ **Easy Customization:** Add new jobs, templates, or messages to suit your needs.  
-
-🔗 **Compatibility & Dependencies:**  
-🛠️ **ESX Support:** Fully compatible with the latest version of ESX.  
-📦 **SQL Integration:** Comes with a pre-configured SQL file for seamless database integration.  
-📚 **OX Lib Dependency:** Utilizes the robust OX Lib for notifications and context menus.  
-
-🤝 **Support & Community:**  
-📧 **Need Help?** Contact me directly on Discord!  
-- **Username:** Illama  
-- **Available** to assist with any questions or issues you encounter.  
-💬 **Discord Integration:** Join the community for updates, help, and future features.  
+# Illama Billing - FiveM Script
 
 ---
 
-[FRANCAIS]
+## 🇬🇧 **English Version**
 
-📋 **Menu Principal :**
+### 📋 **Overview**
 
-🎛️ **Menu de Facturation :** Accédez au menu principal pour gérer toutes vos factures (personnelles, entreprises, historiques, etc.).  
-🧾 **Factures Personnelles :**  
-- **Description :** Gérez vos factures personnelles en attente.  
-- **Actions :** Payez, supprimez ou consultez les détails des factures reçues.  
+Illama Billing is a secure and efficient billing script for FiveM, designed to simplify the management of personal and job-related bills. It supports advanced features such as recurring payments, group billing, and real-time notifications, ensuring a seamless experience for players and server administrators.
 
-🏢 **Factures d'Entreprise :**  
-- **Description :** Créez ou gérez les factures liées à votre métier.  
-- **Actions :** Créez des factures standards ou récurrentes en fonction de vos permissions.  
+---
 
-📜 **Historique des Transactions :** Consultez toutes vos transactions passées pour un suivi précis.  
+### 🌟 **Features**
 
-💡 **Création de Factures :**  
-✍️ **Nouvelle Facture :**  
-- **Personnalisation :** Spécifiez le montant et la raison. Idéal pour des factures uniques ou personnalisées.  
-🔁 **Factures Récurrentes :** Configurez des abonnements mensuels ou hebdomadaires avec des intervalles personnalisés.  
-🗂️ **Modèles Préconfigurés :** Choisissez parmi des modèles prédéfinis selon votre métier (exemple : excès de vitesse léger pour la police).  
+#### 🎛️ **Bill Management**
+1. **Personal Bills**:  
+   - Manage pending personal bills.  
+   - Actions: Pay, delete, or view bill details.  
 
-💸 **Paiements et Actions :**  
-💵 **Paiement en Espèces :** Réglez immédiatement une facture en espèces.  
-🏦 **Paiement par Banque :** Utilisez vos fonds bancaires pour régler vos dettes.  
-🗑️ **Suppression des Factures :** Supprimez une facture en attente si vous en avez les droits.  
-🔄 **Paiements Récurrents :**  
-- **Options :** Annulez ou configurez des paiements anticipés.  
-- **Historique :** Consultez les détails de chaque paiement effectué.  
+2. **Job-Related Bills**:  
+   - Create or manage bills linked to your job.  
+   - Supports standard and recurring bills.  
+   - Allows **group billing** for configured jobs.  
 
-📊 **Gestion des Factures :**  
-📑 **Détails des Factures :**  
-- **Montant :** Indique le total en attente.  
-- **Prochaine Échéance :** Affiche le temps restant avant le prochain paiement.  
-- **Statut :** Mise à jour en temps réel (actif/inactif).  
+3. **Complete History**:  
+   - Search all your past transactions, whether personal or job-related.  
 
-🚀 **Notifications :** Recevez des alertes pour :  
-- Factures acceptées ou refusées.  
-- Paiements réussis ou fonds insuffisants.  
-- Expiration ou suppression de factures.  
+---
 
-📂 **Historique Complet :** Recherchez toutes vos transactions, qu'elles soient personnelles ou professionnelles.  
+#### 💡 **Bill Creation**
+1. **New Bills**:  
+   - Fully customizable (amount, reason).  
+   - Ideal for one-time or unique bills.  
 
-🛠️ **Caractéristiques Techniques :**  
-👥 **Sélection des Joueurs :** Identifiez et choisissez des joueurs proches pour émettre des factures.  
-⚙️ **Vérification des Permissions :**  
-- Assurez-vous que seuls les métiers et grades autorisés ont accès aux fonctionnalités spécifiques (par exemple, seuls les policiers peuvent facturer des infractions).  
-🌐 **Multilingue :** Disponible en français et espagnol, avec une gestion facile via des fichiers de localisation.  
-🔔 **Système de Notifications :** Utilise des alertes claires et contextuelles (succès, erreurs, avertissements).  
-⚡ **Performance :** Fonctionne à 0.00ms, garantissant une efficacité incroyable et un impact minimal sur les performances du serveur.  
+2. **Recurring Bills**:  
+   - Set up subscriptions (monthly, weekly) with customizable intervals.
 
-🛡️ **Support des Métiers :**  
-👮 **Police :**  
-- **Modèles Disponibles :**  
-  - Excès de vitesse léger : 750 $.  
-  - Abonnements de protection mensuelle (Standard et Premium).  
+3. **Group Billing**:  
+   - Available for **personal bills** and **configured jobs**.  
+   - Choose from three distribution methods:  
+     - **Equal distribution**: The total amount is evenly split among group members.  
+     - **Fixed amount per member**: Each group member is billed the same fixed amount.  
+     - **Percentage-based distribution**: The total amount is divided based on specified percentages.
 
-🚑 **Ambulance (EMS) :**  
-- **Modèles Disponibles :**  
-  - Consultation médicale standard : 2 500 $.  
-  - Couverture santé (Basic et Premium).  
-  - Suivi hebdomadaire.  
+4. **Preconfigured Templates**:  
+   - Example: Minor speeding violations ($750 for police).  
 
-🌟 **Fonctionnalités Supplémentaires :**  
-📆 **Gestion des Dates :**  
-- Calcul précis des jours restants avant une échéance.  
-- Support pour les paiements avancés.  
+---
 
-🔒 **Permissions Avancées :** Basées sur le métier et le grade, garantissant un accès sécurisé aux fonctionnalités.  
-📤 **Notifications GitHub :** Vous informe lorsqu'une nouvelle version du script est disponible, avec des notes de mise à jour détaillées.  
-✨ **Personnalisation Facile :** Ajoutez des métiers, des modèles ou des messages personnalisés selon vos besoins.  
+#### 💸 **Payments and Actions**
+1. **Payment Options**:  
+   - 💵 Pay in cash.  
+   - 🏦 Pay via bank transfer.  
 
-🔗 **Compatibilité & Dépendances :**  
-🛠️ **Support ESX :** Entièrement compatible avec la dernière version d'ESX.  
-📦 **Intégration SQL :** Fournit un fichier SQL pré-configuré pour une intégration facile à la base de données.  
-📚 **Dépendance OX Lib :** Utilise la bibliothèque robuste OX Lib pour les notifications et les menus contextuels.  
+2. **Recurring Payment Management**:  
+   - Cancel or configure advance payments.  
+   - View detailed payment history.  
 
-🤝 **Support & Communauté :**  
-📧 **Besoin d'aide ?** Contactez-moi directement sur Discord !  
-- **Pseudo :** Illama  
-- **Disponible** pour répondre à vos questions ou résoudre vos problèmes.  
-💬 **Intégration Discord :** Rejoignez la communauté pour des mises à jour, de l'aide et des fonctionnalités futures.  
+---
+
+### 🛠️ **Advanced Features**
+
+#### ⚙️ **Technical Details**
+- **Player Selection**:  
+  - Identify nearby players and issue bills to them.  
+- **Permission Verification**:  
+  - Limit access to features based on job and grade.
+
+#### 🌐 **Multi-Language Support**
+- Supports over **five languages**, configurable via localization files.
+
+#### 🔒 **Security**
+- Fully protected by the **FiveM Escrow System** to ensure integrity.  
+
+#### ⚡ **Performance**
+- Optimized to run at **0.00ms**, ensuring minimal impact on server performance.
+
+---
+
+### 🛡️ **Job Support**
+
+#### 👮 **Police**
+Example configuration:
+```lua
+['police'] = {
+    minGrade = 0,
+    label = 'LSPD',
+    maxAmount = 100000,
+    allowRecurring = true,
+    allowGroup = true, -- Enable group billing for this job
+    recurringMaxAmount = 50000,
+    templates = {
+        {
+            label = "Minor Speeding Violation",
+            reason = "Speeding less than 30km/h above the limit",
+            amount = 750
+        },
+        {
+            label = "Other (customized)",
+            reason = "",
+            amount = 0
+        }
+    },
+    recurringTemplates = {
+        {
+            label = "Standard Monthly Protection",
+            reason = "Monthly protection service - Standard package",
+            amount = 5000,
+            interval = 30 -- Every 30 days
+        },
+        {
+            label = "Premium Monthly Protection",
+            reason = "Monthly protection service - Premium package",
+            amount = 10000,
+            interval = 30
+        },
+        {
+            label = "Other (customized)", -- Always keep this option
+            reason = "",
+            amount = 0,
+            interval = 0
+        }
+    }
+}
+```
+
+---
+
+### 📂 **Data Management**
+
+1. **SQL Integration**:  
+   - **Required**: Import the SQL file located at `Install/sql.sql` into your database.  
+   - Includes all necessary tables for smooth script functionality.
+
+2. **Easy Configuration**:  
+   - Add new jobs, templates, or recurring options as per your server's needs.
+
+---
+
+### 🤝 **Dependencies**
+
+Before starting the script, ensure the following dependencies are installed and loaded:  
+1. **[OX Lib](https://github.com/overextended/ox_lib)**: For notifications and context menus.  
+2. **[ES Extended](https://github.com/esx-framework/es_extended)**: Base framework for ESX.  
+
+Both dependencies must be started **before** loading the Illama Billing script.
+
+---
+
+### 🛠️ **Installation Guide**
+
+1. Place the script in your `resources` folder.  
+2. Import the SQL file into your database (`Install/sql.sql`).  
+3. Add the following to your `server.cfg`:  
+   ```plaintext
+   ensure ox_lib
+   ensure es_extended
+   ensure illama_billing
+   ```
+4. Start your server and enjoy!  
+
+---
+
+### 🤝 **Support & Community**
+
+- **Contact**: Illama on Discord for any issues or questions.  
+- **Join the Community**: Get updates, support, and access to future features.  
+
+---
+
+Voici la version complète en français du README pour **Illama Billing - Script FiveM** :
+
+---
+
+# Illama Billing - Script FiveM
+
+---
+
+## 🇫🇷 **Version Française**
+
+### 📋 **Présentation**
+
+Illama Billing est un script de facturation sécurisé et performant pour FiveM, conçu pour simplifier la gestion des factures personnelles et professionnelles. Il prend en charge des fonctionnalités avancées telles que les paiements récurrents, les factures de groupe et les notifications en temps réel, offrant une expérience fluide pour les joueurs et les administrateurs de serveurs.
+
+---
+
+### 🌟 **Fonctionnalités**
+
+#### 🎛️ **Gestion des factures**
+1. **Factures personnelles** :  
+   - Gérez vos factures personnelles en attente.  
+   - Actions : payer, supprimer ou consulter les détails des factures.  
+
+2. **Factures d’entreprise** :  
+   - Créez ou gérez des factures liées à votre métier.  
+   - Prend en charge les factures standards et récurrentes.  
+   - Permet la **facturation de groupe** pour les métiers configurés.  
+
+3. **Historique complet** :  
+   - Recherchez toutes vos transactions passées, qu'elles soient personnelles ou professionnelles.  
+
+---
+
+#### 💡 **Création de factures**
+1. **Nouvelles factures** :  
+   - Entièrement personnalisable (montant, raison).  
+   - Idéal pour des factures uniques ou spécifiques.  
+
+2. **Factures récurrentes** :  
+   - Configurez des abonnements (mensuels, hebdomadaires) avec des intervalles personnalisés.
+
+3. **Factures de groupe** :  
+   - Disponible pour les **factures personnelles** et les **métiers configurés**.  
+   - Trois modes de répartition disponibles :  
+     - **Répartition égale** : Le montant total est divisé équitablement entre les membres du groupe.  
+     - **Montant fixe** : Chaque membre reçoit une facture du même montant.  
+     - **Répartition par pourcentage** : Le montant total est réparti selon des pourcentages définis.
+
+4. **Modèles prédéfinis** :  
+   - Exemple : Excès de vitesse léger (750 $ pour la police).  
+
+---
+
+#### 💸 **Paiements et actions**
+1. **Options de paiement** :  
+   - 💵 Payer en espèces.  
+   - 🏦 Payer via une banque.  
+
+2. **Gestion des paiements récurrents** :  
+   - Annulez ou configurez des paiements anticipés.  
+   - Consultez l’historique détaillé des paiements.  
+
+---
+
+### 🛠️ **Fonctionnalités avancées**
+
+#### ⚙️ **Détails techniques**
+- **Sélection des joueurs** :  
+  - Identifiez les joueurs proches et émettez des factures.  
+- **Vérification des permissions** :  
+  - Limitez l’accès aux fonctionnalités en fonction du métier et du grade.
+
+#### 🌐 **Support multilingue**
+- Supporte plus de **cinq langues**, configurable via des fichiers de localisation.
+
+#### 🔒 **Sécurité**
+- Totalement protégé par le **système Escrow de FiveM**, garantissant l'intégrité.  
+
+#### ⚡ **Performance**
+- Optimisé pour fonctionner à **0.00ms**, minimisant l’impact sur les performances du serveur.
+
+---
+
+### 🛡️ **Support métier**
+
+#### 👮 **Police**
+Exemple de configuration :
+```lua
+['police'] = {
+    minGrade = 0,
+    label = 'LSPD',
+    maxAmount = 100000,
+    allowRecurring = true,
+    allowGroup = true, -- Active la facturation de groupe pour ce métier
+    recurringMaxAmount = 50000,
+    templates = {
+        {
+            label = "Excès de vitesse léger",
+            reason = "Excès de vitesse inférieur à 30km/h",
+            amount = 750
+        },
+        {
+            label = "Autre (personnalisé)",
+            reason = "",
+            amount = 0
+        }
+    },
+    recurringTemplates = {
+        {
+            label = "Protection Mensuelle Standard",
+            reason = "Service de protection mensuel - Forfait standard",
+            amount = 5000,
+            interval = 30 -- Tous les 30 jours
+        },
+        {
+            label = "Protection Mensuelle Premium",
+            reason = "Service de protection mensuel - Forfait premium",
+            amount = 10000,
+            interval = 30
+        },
+        {
+            label = "Autre (personnalisé)", -- Toujours garder cette option
+            reason = "",
+            amount = 0,
+            interval = 0
+        }
+    }
+}
+```
+
+---
+
+### 📂 **Gestion des données**
+
+1. **Intégration SQL** :  
+   - **Obligatoire** : Importez le fichier SQL situé dans `Install/sql.sql` dans votre base de données.  
+   - Inclut toutes les tables nécessaires au bon fonctionnement du script.
+
+2. **Configuration simple** :  
+   - Ajoutez de nouveaux métiers, modèles ou options récurrentes en fonction des besoins de votre serveur.
+
+---
+
+### 🤝 **Dépendances**
+
+Avant de démarrer le script, assurez-vous que les dépendances suivantes sont installées et chargées :  
+1. **[OX Lib](https://github.com/overextended/ox_lib)** : Pour les notifications et les menus contextuels.  
+2. **[ES Extended](https://github.com/esx-framework/es_extended)** : Framework de base pour ESX.  
+
+Ces dépendances doivent être démarrées **avant** de charger le script Illama Billing.
+
+---
+
+### 🛠️ **Guide d’installation**
+
+1. Placez le script dans votre dossier `resources`.  
+2. Importez le fichier SQL dans votre base de données (`Install/sql.sql`).  
+3. Ajoutez les lignes suivantes dans votre `server.cfg` :  
+   ```plaintext
+   ensure ox_lib
+   ensure es_extended
+   ensure illama_billing
+   ```
+4. Lancez votre serveur et profitez-en !
+
+---
+
+### 🤝 **Support et communauté**
+
+- **Contact** : Illama sur Discord pour toute question ou problème.  
+- **Rejoignez la communauté** : Bénéficiez des mises à jour, du support et des fonctionnalités futures.  
+
+---
