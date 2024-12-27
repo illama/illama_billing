@@ -159,9 +159,24 @@ AddEventHandler('illama_billing:createRecurringBill', function(data)
     local xPlayer = ESX.GetPlayerFromId(source)
     local xTarget = ESX.GetPlayerFromId(data.target)
     
-    if not xPlayer or not xTarget then return end
+    print("^2[RECURRING BILL] Step 1: Starting^7")
+    print("^2[RECURRING BILL] Source^7:", source)
+    print("^2[RECURRING BILL] Target^7:", data.target)
+    print("^2[RECURRING BILL] Data^7:", json.encode(data))
+    
+    if not xPlayer or not xTarget then 
+        print("^1[ERROR] Player not found^7")
+        print("xPlayer:", xPlayer and "exists" or "nil")
+        print("xTarget:", xTarget and "exists" or "nil")
+        return 
+    end
+
+    print("^2[RECURRING BILL] Step 2: Players valid^7")
 
     if not canCreateSocietyBill(xPlayer) or not isJobAllowedForRecurring(xPlayer.job.name) then
+        print("^1[ERROR] Insufficient rights^7")
+        print("canCreateSocietyBill:", canCreateSocietyBill(xPlayer))
+        print("isJobAllowedForRecurring:", isJobAllowedForRecurring(xPlayer.job.name))
         TriggerClientEvent('ox_lib:notify', source, {
             type = 'error',
             description = _L('insufficient_rights')
@@ -169,51 +184,57 @@ AddEventHandler('illama_billing:createRecurringBill', function(data)
         return
     end
 
-    local jobConfig = Config.AllowedJobs[xPlayer.job.name]
-    local maxAmount = jobConfig and jobConfig.recurringMaxAmount or Config.MaxBillAmount
-    
-    if not data.amount or data.amount <= 0 or data.amount > maxAmount then
-        TriggerClientEvent('ox_lib:notify', source, {
-            type = 'error',
-            description = _L('invalid_amount')
-        })
-        return
-    end
+    print("^2[RECURRING BILL] Step 3: Rights validated^7")
 
-    if not data.interval_days or data.interval_days < 1 or data.interval_days > 365 then
-        TriggerClientEvent('ox_lib:notify', source, {
-            type = 'error',
-            description = _L('invalid_interval')
-        })
-        return
-    end
-
-    PendingBills[data.target] = {
+    local pendingBillData = {
         type = 'recurring',
         data = {
-            society = data.society,
-            society_label = data.society_label,
+            sender = xPlayer.identifier,
+            sender_name = xPlayer.getName(),
+            sender_source = source,
+            target = data.target,
             amount = data.amount,
             reason = data.reason,
             interval_days = data.interval_days,
-            sender_source = source
+            society = data.society,
+            society_label = data.society_label,
+            type = 'society',
+            bill_type = 'society'
         }
     }
 
-    TriggerClientEvent('illama_billing:requestRecurringConfirmation', data.target, PendingBills[data.target].data)
-    
+    print("^2[RECURRING BILL] Step 4: Data prepared^7")
+    print("^2[RECURRING BILL] PendingBillData^7:", json.encode(pendingBillData))
+
+    -- Stockage de la facture en attente
+    PendingBills[data.target] = pendingBillData
+
+    print("^2[RECURRING BILL] Step 5: Stored in PendingBills^7")
+    print("^2[RECURRING BILL] Triggering confirmation event for target^7:", data.target)
+
+    -- Envoi de l'événement
+    TriggerClientEvent('illama_billing:requestConfirmation', data.target, pendingBillData.data)
+
+    print("^2[RECURRING BILL] Step 6: Event triggered^7")
+
     TriggerClientEvent('ox_lib:notify', source, {
         type = 'info',
         description = _L('recurring_bill_request_sent')
     })
 end)
-
 RegisterNetEvent('illama_billing:acceptRecurringBill')
 AddEventHandler('illama_billing:acceptRecurringBill', function()
     local source = source
     local pendingBill = PendingBills[source]
     
-    if not pendingBill or pendingBill.type ~= 'recurring' then return end
+    print("^3[DEBUG] Accepting recurring bill^7")
+    print("^3PendingBill:^7", json.encode(pendingBill))
+
+    -- Changeons la vérification pour utiliser interval_days comme identifiant
+    if not pendingBill or not pendingBill.data.interval_days then 
+        print("^1[ERROR] No pending recurring bill found^7")
+        return 
+    end
 
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then return end

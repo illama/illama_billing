@@ -54,7 +54,33 @@ local function getDaysUntilNextPayment(nextBillingDate)
         return _L('days_remaining', daysRemaining)
     end
 end
+function OpenSocietyBillPlayerSelect(billType)
+    local players = GetNearbyPlayers()
+    
+    local options = {}
+    for _, player in ipairs(players) do
+        table.insert(options, {
+            title = player.name,
+            description = _L('distance', math.floor(player.distance)),
+            onSelect = function()
+                if billType == 'standard' then
+                    CreateSocietyBill(player.source)
+                elseif billType == 'recurring' then
+                    CreateRecurringBill(player.source)
+                end
+            end
+        })
+    end
 
+    lib.registerContext({
+        id = 'select_player_society_menu',
+        title = _L('select_player'),
+        menu = 'society_billing_type_menu',
+        options = options
+    })
+
+    lib.showContext('select_player_society_menu')
+end
 function OpenMyBillsMenu()
     ESX.TriggerServerCallback('illama_billing:getBills', function(bills)
         local options = {}
@@ -90,10 +116,26 @@ function OpenMyBillsMenu()
         lib.showContext('my_bills_menu')
     end)
 end
-
 RegisterNetEvent('illama_billing:requestConfirmation')
 AddEventHandler('illama_billing:requestConfirmation', function(billData)
+    print("^3[DEBUG] Received bill data:^7", json.encode(billData))
+
     if not billData then return end
+
+    -- Créons d'abord les métadonnées
+    local metadata = {
+        {label = _L('from'), value = billData.sender_name}
+    }
+
+    -- Ajoutons les informations spécifiques selon le type de facture
+    if billData.interval_days then
+        -- Pour les factures récurrentes
+        table.insert(metadata, {label = "Fréquence", value = billData.interval_days .. " jours"})
+        table.insert(metadata, {label = "Type", value = "Récurrent"})
+    else
+        -- Pour les factures standards
+        table.insert(metadata, {label = "Type", value = billData.type == 'society' and "Société" or "Personnel"})
+    end
 
     lib.registerContext({
         id = 'confirm_bill_menu',
@@ -101,18 +143,27 @@ AddEventHandler('illama_billing:requestConfirmation', function(billData)
         options = {
             {
                 title = _L('bill_details'),
-                description = _L('amount_reason', ESX.Math.GroupDigits(billData.amount), billData.reason),
-                metadata = {
-                    {label = _L('from'), value = billData.sender_name},
-                    {label = _L('type'), value = billData.type == 'society' and _L('society') or _L('personal')}
-                }
+                description = string.format("Montant: $%s - Raison: %s", 
+                    ESX.Math.GroupDigits(billData.amount), 
+                    billData.reason
+                ),
+                metadata = metadata
             },
             {
-                title = _L('accept'),
-                description = _L('accept_bill_desc'),
+                title = billData.interval_days and 'Accepter l\'abonnement' or 'Accepter la facture',
+                description = billData.interval_days and 
+                    string.format('Accepter le paiement récurrent de $%s tous les %d jours', 
+                        ESX.Math.GroupDigits(billData.amount), 
+                        billData.interval_days
+                    ) or 
+                    string.format('Payer $%s', ESX.Math.GroupDigits(billData.amount)),
                 icon = 'check',
                 onSelect = function()
-                    TriggerServerEvent('illama_billing:acceptBill', billData)
+                    if billData.interval_days then
+                        TriggerServerEvent('illama_billing:acceptRecurringBill')
+                    else
+                        TriggerServerEvent('illama_billing:acceptBill', billData)
+                    end
                     lib.notify({
                         title = _L('bill_accepted'),
                         description = _L('bill_accepted_desc'),
@@ -121,11 +172,15 @@ AddEventHandler('illama_billing:requestConfirmation', function(billData)
                 end
             },
             {
-                title = _L('refuse'),
-                description = _L('refuse_bill_desc'),
+                title = 'Refuser',
+                description = billData.interval_days and 'Refuser l\'abonnement' or 'Refuser la facture',
                 icon = 'xmark',
                 onSelect = function()
-                    TriggerServerEvent('illama_billing:refuseBill', billData)
+                    if billData.interval_days then
+                        TriggerServerEvent('illama_billing:refuseRecurringBill')
+                    else
+                        TriggerServerEvent('illama_billing:refuseBill', billData)
+                    end
                     lib.notify({
                         title = _L('bill_refused'),
                         description = _L('bill_refused_desc'),
@@ -135,9 +190,14 @@ AddEventHandler('illama_billing:requestConfirmation', function(billData)
             }
         },
         onClose = function()
-            TriggerServerEvent('illama_billing:refuseBill', billData)
+            if billData.interval_days then
+                TriggerServerEvent('illama_billing:refuseRecurringBill')
+            else
+                TriggerServerEvent('illama_billing:refuseBill', billData)
+            end
         end
     })
+
     lib.showContext('confirm_bill_menu')
     PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
 end)
@@ -234,6 +294,35 @@ function OpenPersonalBillingMenu()
         return
     end
 
+    local options = {
+        {
+            title = _L('individual_bill'),
+            description = _L('individual_bill_desc'),
+            onSelect = function()
+                OpenIndividualBillingMenu()
+            end
+        },
+        {
+            title = _L('group_bill'),
+            description = _L('group_bill_desc'),
+            onSelect = function()
+                OpenGroupBillingMenu('personal')
+            end
+        }
+    }
+
+    lib.registerContext({
+        id = 'billing_type_menu',
+        title = _L('select_billing_type'),
+        menu = 'billing_main_menu',
+        options = options
+    })
+
+    lib.showContext('billing_type_menu')
+end
+function OpenIndividualBillingMenu()
+    local players = GetNearbyPlayers()
+    
     local options = {}
     for _, player in ipairs(players) do
         table.insert(options, {
@@ -248,13 +337,179 @@ function OpenPersonalBillingMenu()
     lib.registerContext({
         id = 'select_player_menu',
         title = _L('select_player'),
-        menu = 'billing_main_menu',
+        menu = 'billing_type_menu',
         options = options
     })
 
     lib.showContext('select_player_menu')
 end
+function OpenGroupBillingMenu(billType)
+    local players = GetNearbyPlayers()
+    
+    if #players < 2 then
+        lib.notify({
+            title = _L('error'),
+            description = _L('need_multiple_players'),
+            type = 'error'
+        })
+        return
+    end
 
+    local playerOptions = {}
+    local playerNames = {}
+    for _, player in ipairs(players) do
+        table.insert(playerOptions, {
+            value = player.source,
+            label = player.name
+        })
+        playerNames[tostring(player.source)] = player.name
+    end
+
+    local input = lib.inputDialog(_L('group_billing'), {
+        {
+            type = 'multi-select',
+            name = 'players',
+            label = _L('select_players'),
+            options = playerOptions,
+            required = true
+        },
+        {
+            type = 'select',
+            name = 'split_type',
+            label = _L('split_type'),
+            options = {
+                { value = 'equal', label = _L('split_equal') },
+                { value = 'percentage', label = _L('split_percentage') },
+                { value = 'amount', label = _L('split_amount') }
+            },
+            required = true,
+            default = 'equal'
+        },
+        {
+            type = 'number',
+            name = 'total_amount',
+            label = _L('total_amount'),
+            required = true,
+            min = 1,
+            max = Config.MaxBillAmount
+        },
+        {
+            type = 'input',
+            name = 'reason',
+            label = _L('reason_label'),
+            required = true
+        }
+    })
+
+    if not input then return end
+    
+    local selectedPlayers = input[1]
+    local splitType = input[2]
+    local totalAmount = input[3]
+    local reason = input[4]
+
+    if not selectedPlayers or #selectedPlayers < 2 then
+        lib.notify({
+            title = _L('error'),
+            description = _L('select_min_players'),
+            type = 'error'
+        })
+        return
+    end
+
+    if splitType == 'percentage' or splitType == 'amount' then
+        local splitOptions = {}
+        local remainingPercentage = 100
+        local remainingAmount = totalAmount
+        local lastIndex = #selectedPlayers
+
+        for i, source in ipairs(selectedPlayers) do
+            local isLast = (i == lastIndex)
+            local max = splitType == 'percentage' and remainingPercentage or remainingAmount
+            local playerName = playerNames[tostring(source)] or 'Unknown'
+            local labelText = playerName
+
+            if splitType == 'percentage' then
+                labelText = string.format('%s - %d%% restant', playerName, remainingPercentage)
+            else
+                labelText = string.format('%s - $%s restant', playerName, ESX.Math.GroupDigits(remainingAmount))
+            end
+
+            table.insert(splitOptions, {
+                type = 'number',
+                name = tostring(source),
+                label = labelText,
+                required = true,
+                min = 1,
+                max = max,
+                step = splitType == 'percentage' and 1 or 100
+            })
+        end
+
+        local dialogTitle = splitType == 'percentage' 
+            and "Entrez le pourcentage pour chaque joueur"
+            or "Entrez le montant pour chaque joueur"
+
+        local splitInput = lib.inputDialog(dialogTitle, splitOptions)
+        
+        if not splitInput then return end
+
+        local sum = 0
+        for _, value in pairs(splitInput) do
+            sum = sum + value
+            if splitType == 'percentage' then
+                remainingPercentage = remainingPercentage - value
+            else
+                remainingAmount = remainingAmount - value
+            end
+        end
+
+        if (splitType == 'percentage' and sum ~= 100) or 
+           (splitType == 'amount' and sum ~= totalAmount) then
+            lib.notify({
+                title = _L('error'),
+                description = splitType == 'percentage' and _L('percentage_not_100') or _L('amounts_not_total'),
+                type = 'error'
+            })
+            return
+        end
+
+        for i, source in ipairs(selectedPlayers) do
+            local amount = splitType == 'percentage' 
+                and math.floor(totalAmount * splitInput[i] / 100)
+                or splitInput[i]
+
+            if amount > 0 then
+                TriggerServerEvent('illama_billing:createBill', {
+                    target = tonumber(source),
+                    amount = amount,
+                    reason = reason .. ' (' .. (splitType == 'percentage' and 'Répartition en %' or 'Répartition personnalisée') .. ')',
+                    type = billType  -- Utilise le type passé en paramètre
+                })
+            end
+        end
+    else
+        -- Répartition égale
+        local amountPerPerson = math.floor(totalAmount / #selectedPlayers)
+        
+        if amountPerPerson > 0 then
+            for _, source in ipairs(selectedPlayers) do
+                TriggerServerEvent('illama_billing:createBill', {
+                    target = source,
+                    amount = amountPerPerson,
+                    reason = reason .. ' (Répartition égale)',
+                    type = billType  -- Utilise le type passé en paramètre
+                })
+            end
+        end
+    end
+
+    lib.notify({
+        title = _L('success'),
+        description = _L('bills_created'),
+        type = 'success'
+    })
+end
 function OpenSocietyBillingMenu()
     local players = GetNearbyPlayers()
     
@@ -267,6 +522,9 @@ function OpenSocietyBillingMenu()
         return
     end
 
+    local PlayerData = GetPlayerData()
+    local jobConfig = Config.AllowedJobs[PlayerData.job.name]
+
     local options = {
         {
             title = _L('standard_bill'),
@@ -277,8 +535,17 @@ function OpenSocietyBillingMenu()
         }
     }
 
-    local PlayerData = GetPlayerData()
-    local jobConfig = Config.AllowedJobs[PlayerData.job.name]
+    -- Vérifie si l'entreprise est autorisée à créer des factures de groupe
+    if jobConfig and jobConfig.allowGroup then
+        table.insert(options, {
+            title = _L('group_bill'),
+            description = _L('group_bill_desc'),
+            onSelect = function()
+                OpenGroupBillingMenu('society')
+            end
+        })
+    end
+
     if jobConfig and jobConfig.allowRecurring then
         table.insert(options, {
             title = _L('recurring_bill'),
@@ -414,10 +681,15 @@ function CreateSocietyBill(target)
 end
 
 function CreateRecurringBill(target)
+    print("^3[DEBUG] Starting CreateRecurringBill^7") -- Debug log
+    print("^3Target ID:^7", target) -- Debug log
     local PlayerData = GetPlayerData()
     local jobConfig = Config.AllowedJobs[PlayerData.job.name]
     
-    if not jobConfig or not jobConfig.allowRecurring then return end
+    if not jobConfig or not jobConfig.allowRecurring then 
+        print("^1[ERROR] Job not configured for recurring bills^7")
+        return 
+    end
 
     local options = {}
     for i, template in ipairs(jobConfig.recurringTemplates or {}) do
@@ -469,14 +741,21 @@ function CreateRecurringBill(target)
         })
 
         if customInput then
-            TriggerServerEvent('illama_billing:createRecurringBill', {
+            local billData = {
                 target = target,
                 amount = customInput[1],
                 interval_days = customInput[2],
                 reason = customInput[3],
                 society = PlayerData.job.name,
                 society_label = jobConfig.label
-            })
+            }
+            
+            print("^3[DEBUG] Sending billData to server:^7")
+            print(json.encode(billData))
+                
+            -- Envoi d'un événement au serveur pour qu'il transmette au client cible
+            TriggerServerEvent('illama_billing:createRecurringBill', billData)
+            print("^3[DEBUG] Event triggered^7")
         end
     else
         local confirm = lib.alertDialog({
@@ -491,14 +770,17 @@ function CreateRecurringBill(target)
         })
 
         if confirm == 'confirm' then
-            TriggerServerEvent('illama_billing:createRecurringBill', {
+            local billData = {
                 target = target,
                 amount = selectedTemplate.amount,
                 interval_days = selectedTemplate.interval,
                 reason = selectedTemplate.reason,
                 society = PlayerData.job.name,
                 society_label = jobConfig.label
-            })
+            }
+            
+            -- Envoi d'un événement au serveur pour qu'il transmette au client cible
+            TriggerServerEvent('illama_billing:createRecurringBill', billData)
         end
     end
 end
@@ -508,27 +790,29 @@ function OpenRecurringBillsMenu()
         local options = {}
         
         for _, bill in ipairs(bills) do
-            local nextPaymentText = _L('undefined')
+            -- Gestion du texte de prochaine paiement sans _L
+            local nextPaymentText = "Non défini"
             if bill.days_remaining then
-                if tonumber(bill.days_remaining) <= 0 then
-                    nextPaymentText = _L('today')
-                elseif tonumber(bill.days_remaining) == 1 then
-                    nextPaymentText = _L('tomorrow')
+                local days = tonumber(bill.days_remaining)
+                if days <= 0 then
+                    nextPaymentText = "Aujourd'hui"
+                elseif days == 1 then
+                    nextPaymentText = "Demain"
                 else
-                    nextPaymentText = _L('in_days', tonumber(bill.days_remaining))
+                    nextPaymentText = string.format("Dans %d jours", days)
                 end
             end
 
             table.insert(options, {
                 title = bill.society_label,
-                description = _L('amount_reason',
+                description = string.format("Montant: $%s - %s", 
                     ESX.Math.GroupDigits(bill.amount),
                     bill.reason
                 ),
                 metadata = {
-                    {label = _L('next_payment'), value = nextPaymentText},
-                    {label = _L('interval'), value = _L('days_count', bill.interval_days)},
-                    {label = _L('status'), value = bill.status == 'active' and _L('active') or _L('inactive')}
+                    {label = "Prochain paiement", value = nextPaymentText},
+                    {label = "Intervalle", value = string.format("%d jours", bill.interval_days)},
+                    {label = "Statut", value = bill.status == 'active' and "Actif" or "Inactif"}
                 },
                 onSelect = function()
                     OpenRecurringBillActions(bill)
@@ -538,14 +822,14 @@ function OpenRecurringBillsMenu()
         
         if #options == 0 then
             table.insert(options, {
-                title = _L('no_recurring_bills'),
-                description = _L('no_recurring_bills_desc')
+                title = "Aucune facture récurrente",
+                description = "Vous n'avez aucune facture récurrente"
             })
         end
 
         lib.registerContext({
             id = 'recurring_bills_menu',
-            title = _L('my_recurring_bills'),
+            title = "Mes factures récurrentes",
             menu = 'billing_main_menu',
             options = options
         })
@@ -558,8 +842,8 @@ function OpenRecurringBillActions(bill)
 
     if bill.status == 'active' then
         table.insert(options, {
-            title = _L('pay_advance'),
-            description = _L('pay_advance_desc'),
+            title = "Payer en avance",
+            description = "Effectuer des paiements à l'avance",
             icon = 'money-bill',
             onSelect = function()
                 OpenAdvancePaymentMenu(bill)
@@ -567,13 +851,13 @@ function OpenRecurringBillActions(bill)
         })
 
         table.insert(options, {
-            title = _L('cancel_subscription'),
-            description = _L('cancel_subscription_desc'),
+            title = "Annuler l'abonnement",
+            description = "Annuler cet abonnement",
             icon = 'ban',
             onSelect = function()
                 local confirm = lib.alertDialog({
-                    header = _L('confirmation'),
-                    content = _L('confirm_cancel_subscription'),
+                    header = "Confirmation",
+                    content = "Êtes-vous sûr de vouloir annuler cet abonnement ?",
                     centered = true,
                     cancel = true
                 })
@@ -586,8 +870,8 @@ function OpenRecurringBillActions(bill)
     end
 
     table.insert(options, {
-        title = _L('payment_history'),
-        description = _L('payment_history_desc'),
+        title = "Historique des paiements",
+        description = "Voir l'historique des paiements pour cette facture",
         icon = 'history',
         onSelect = function()
             OpenRecurringPaymentHistory(bill.id)
@@ -596,7 +880,7 @@ function OpenRecurringBillActions(bill)
 
     lib.registerContext({
         id = 'recurring_bill_actions',
-        title = _L('recurring_bill_number', bill.id),
+        title = string.format("Facture récurrente #%d", bill.id),
         menu = 'recurring_bills_menu',
         options = options
     })
@@ -605,20 +889,20 @@ function OpenRecurringBillActions(bill)
 end
 
 function OpenAdvancePaymentMenu(bill)
-    local input = lib.inputDialog(_L('advance_payment'), {
+    local input = lib.inputDialog("Paiement en avance", {
         {
             type = 'select',
-            label = _L('payment_method'),
+            label = "Méthode de paiement",
             options = {
-                { value = 'cash', label = _L('cash') },
-                { value = 'bank', label = _L('bank') }
+                { value = 'cash', label = "Espèces" },
+                { value = 'bank', label = "Banque" }
             },
             default = 'bank'
         },
         {
             type = 'number',
-            label = _L('payment_count'),
-            description = _L('payment_count_desc'),
+            label = "Nombre de paiements",
+            description = "Combien de paiements souhaitez-vous effectuer en avance ?",
             required = true,
             min = 1,
             max = 12,
@@ -629,11 +913,11 @@ function OpenAdvancePaymentMenu(bill)
     if input then
         local total = bill.amount * input[2]
         local confirm = lib.alertDialog({
-            header = _L('confirm_payment'),
-            content = _L('confirm_advance_payment',
-                ESX.Math.GroupDigits(total),
-                input[2],
-                input[1] == 'cash' and _L('cash') or _L('bank')
+            header = "Confirmation du paiement",
+            content = string.format("Voulez-vous payer $%s pour %d paiement(s) en %s ?", 
+                ESX.Math.GroupDigits(total), 
+                input[2], 
+                input[1] == 'cash' and "espèces" or "banque"
             ),
             centered = true,
             cancel = true
@@ -652,30 +936,32 @@ function OpenRecurringPaymentHistory(billId)
         local options = {}
         
         for _, payment in ipairs(payments) do
+            -- Construction des métadonnées
+            local paymentMetadata = {
+                {label = "Montant", value = string.format("$%s", ESX.Math.GroupDigits(payment.amount))},
+                {label = "Nombre de paiements", value = payment.payments_count}
+            }
+
+            -- Construction du titre et de la description
+            local pluriel = payment.payments_count > 1 and "s" or ""
             table.insert(options, {
-                title = _L('payment_amount', ESX.Math.GroupDigits(payment.amount)),
-                description = _L('payments_count_desc', 
-                    payment.payments_count,
-                    payment.payments_count > 1 and _L('plural_s') or ''
-                ),
-                metadata = {
-                    {label = _L('amount'), value = '$' .. ESX.Math.GroupDigits(payment.amount)},
-                    {label = _L('payments_count'), value = payment.payments_count}
-                }
+                title = string.format("Paiement de $%s", ESX.Math.GroupDigits(payment.amount)),
+                description = string.format("%d paiement%s", payment.payments_count, pluriel),
+                metadata = paymentMetadata
             })
         end
         
         if #options == 0 then
             table.insert(options, {
-                title = _L('no_payments'),
-                description = _L('no_payments_desc'),
+                title = "Aucun paiement",
+                description = "Aucun paiement n'a été effectué",
                 disabled = true
             })
         end
 
         lib.registerContext({
             id = 'recurring_payment_history',
-            title = _L('payment_history'),
+            title = "Historique des paiements",
             menu = 'recurring_bill_actions',
             options = options
         })
@@ -787,62 +1073,20 @@ function OpenBillDetailsMenu(bill)
 
     lib.showContext('bill_details_menu')
 end
-
-RegisterNetEvent('illama_billing:requestRecurringConfirmation')
-AddEventHandler('illama_billing:requestRecurringConfirmation', function(billData)
-    lib.registerContext({
-        id = 'confirm_recurring_bill',
-        title = _L('new_recurring_bill'),
-        options = {
-            {
-                title = _L('bill_details'),
-                description = _L('amount_reason',
-                    ESX.Math.GroupDigits(billData.amount),
-                    billData.reason
-                ),
-                metadata = {
-                    {label = _L('society'), value = billData.society_label},
-                    {label = _L('interval'), value = _L('days_count', billData.interval_days)},
-                    {label = _L('amount_per_payment'), value = '$'..ESX.Math.GroupDigits(billData.amount)},
-                    {label = _L('type'), value = _L('recurring_payment')}
-                }
-            },
-            {
-                title = _L('accept'),
-                description = _L('accept_recurring_desc'),
-                icon = 'check',
-                onSelect = function()
-                    TriggerServerEvent('illama_billing:acceptRecurringBill')
-                    lib.notify({
-                        title = _L('bill_accepted'),
-                        description = _L('recurring_setup_success'),
-                        type = 'success'
-                    })
-                end
-            },
-            {
-                title = _L('refuse'),
-                description = _L('refuse_recurring_desc'),
-                icon = 'xmark',
-                onSelect = function()
-                    TriggerServerEvent('illama_billing:refuseRecurringBill')
-                    lib.notify({
-                        title = _L('bill_refused'),
-                        description = _L('recurring_refused_desc'),
-                        type = 'error'
-                    })
-                end
-            }
-        },
-        onClose = function()
-            TriggerServerEvent('illama_billing:refuseRecurringBill')
-        end
-    })
+RegisterNetEvent('illama_billing:refuseRecurringBill')
+AddEventHandler('illama_billing:refuseRecurringBill', function()
+    local source = source
+    local pendingBill = PendingBills[source]
     
-    lib.showContext('confirm_recurring_bill')
-    PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
-end)
+    if not pendingBill then return end
 
+    TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
+        type = 'error',
+        description = _L('bill_refused_by_receiver')
+    })
+
+    PendingBills[source] = nil
+end)
 RegisterNetEvent('illama_billing:billExpired')
 AddEventHandler('illama_billing:billExpired', function(billId, billType)
     if lib.getOpenMenu() then

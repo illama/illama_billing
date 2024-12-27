@@ -9,6 +9,7 @@ Config.AllowedJobs = {
         label = 'LSPD',
         maxAmount = 100000,
         allowRecurring = true,
+        allowGroup = false,
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -48,6 +49,7 @@ Config.AllowedJobs = {
         label = 'E.M.S',
         maxAmount = 100000,
         allowRecurring = true,
+        allowGroup = true,
         recurringMaxAmount = 50000,
         templates = {
             {
