@@ -89,7 +89,8 @@ Example configuration:
     label = 'LSPD',
     maxAmount = 100000,
     allowRecurring = true,
-    allowGroup = true, -- Enable group billing for this job
+    allowGroup = true,
+    allowCheck = true,
     recurringMaxAmount = 50000,
     templates = {
         {
@@ -264,7 +265,8 @@ Exemple de configuration :
     label = 'LSPD',
     maxAmount = 100000,
     allowRecurring = true,
-    allowGroup = true, -- Active la facturation de groupe pour ce métier
+    allowGroup = true,
+    allowCheck = true,
     recurringMaxAmount = 50000,
     templates = {
         {
