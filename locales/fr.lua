@@ -16,6 +16,7 @@ Locales['fr'] = {
     ['recurring_bills_desc'] = 'Gérer vos abonnements et paiements récurrents',
     ['transaction_history'] = 'Historique des Transactions',
     ['transaction_history_desc'] = 'Voir l\'historique de toutes vos factures',
+    ['my_recurring_bills'] = 'Mes factures récurrentes',
 
     -------------------
     -- FACTURES INDIVIDUELLES
@@ -30,8 +31,14 @@ Locales['fr'] = {
     ['reason_desc'] = 'Entrez la raison',
     ['amount'] = 'Montant: $%s',
     ['amount_reason'] = 'Montant: $%s - %s',
+    ['amount_and_reason'] = 'Montant: $%s - %s',
     ['reason'] = 'Raison: %s',
     ['bill_from'] = 'Facture de %s',
+    ['standard_bill'] = 'Facture standard',
+    ['check_bills'] = 'Vérifier les factures',
+    ['check_bills_desc'] = 'Vérifier les factures en cours',
+    ['select_player_check'] = 'Choisir un joueur à vérifier',
+    ['bills_status'] = 'État des factures',
 
     -------------------
     -- FACTURES DE GROUPE
@@ -54,6 +61,13 @@ Locales['fr'] = {
     ['enter_amounts'] = 'Entrez les montants',
     ['percentage_not_100'] = 'La somme des pourcentages doit être égale à 100%',
     ['amounts_not_total'] = 'La somme des montants doit être égale au montant total',
+    ['percentage_split'] = 'Répartition en %',
+    ['custom_split'] = 'Répartition personnalisée',
+    ['equal_split'] = 'Répartition égale',
+    ['remaining_percentage'] = '%s - %d%% restant',
+    ['remaining_amount'] = '%s - $%s restant',
+    ['enter_percentage_per_player'] = 'Entrez le pourcentage pour chaque joueur',
+    ['enter_amount_per_player'] = 'Entrez le montant pour chaque joueur',
 
     -------------------
     -- FACTURES SOCIÉTÉ
@@ -66,6 +80,7 @@ Locales['fr'] = {
     ['custom_bill'] = 'Facture Personnalisée',
     ['society_payment'] = 'Paiement Société',
     ['confirm_society_bill'] = 'Montant: $%s\nRaison: %s',
+    ['society_bill'] = 'Société',
 
     -------------------
     -- FACTURES RÉCURRENTES
@@ -76,6 +91,9 @@ Locales['fr'] = {
     ['new_recurring_bill'] = 'Nouvelle Facture Récurrente',
     ['recurring_payment'] = 'Paiement récurrent',
     ['recurring_payment_suffix'] = '(Paiement récurrent)',
+    ['no_recurring_bills'] = 'Aucune facture récurrente',
+    ['no_recurring_bills_desc'] = 'Vous n\'avez aucune facture récurrente',
+    ['bill_interval'] = 'Intervalle',
     
     -- Paramètres récurrents
     ['subscription_type'] = 'Type d\'abonnement',
@@ -83,8 +101,10 @@ Locales['fr'] = {
     ['select_subscription_template'] = 'Choisissez un modèle ou créez un abonnement personnalisé',
     ['interval_days'] = 'Intervalle (jours)',
     ['interval_days_desc'] = 'Nombre de jours entre chaque paiement',
+    ['interval_days_format'] = '%d jours',
     ['recurring_reason_desc'] = 'Entrez la raison de la facturation récurrente',
     ['confirm_recurring_bill'] = 'Facture récurrente de $%s tous les %d jours pour: %s',
+    ['accept_recurring_payment'] = 'Accepter le paiement récurrent de $%s tous les %d jours',
 
     -------------------
     -- PAIEMENTS
@@ -97,6 +117,7 @@ Locales['fr'] = {
     ['pay_bank'] = 'Payer par banque',
     ['pay_amount_cash'] = 'Payer $%s en espèces',
     ['pay_amount_bank'] = 'Payer $%s par banque',
+    ['pay_amount'] = 'Payer $%s',
     
     -- Paiements anticipés
     ['advance_payment'] = 'Paiement anticipé',
@@ -106,39 +127,50 @@ Locales['fr'] = {
     ['payment_amount_desc'] = 'Entrez le montant de chaque paiement',
     ['amount_per_payment'] = 'Montant par paiement',
     ['confirm_advance_payment'] = 'Total à payer: $%s pour %d paiements par %s',
+    ['payment_confirmation'] = 'Confirmation du paiement',
 
     -- Compteurs et montants
     ['payment_count'] = 'Nombre de paiements: %d',
     ['payments_count'] = 'Nombre de paiements',
     ['payments_count_desc'] = '%d paiement%s',
     ['payment_count_desc'] = 'Choisissez le nombre de paiements à effectuer en avance',
+    ['payments_count_label'] = 'Nombre de paiements',
     ['total_to_pay'] = 'Total à payer: $%s',
     
     -- Historique et confirmations
     ['payment_history'] = 'Historique des paiements',
     ['payment_history_desc'] = 'Voir l\'historique des paiements',
+    ['payment_history_title'] = 'Historique des paiements',
     ['confirm_payment'] = 'Confirmer le paiement',
     ['payment_received'] = 'Vous avez reçu $%s de %s',
     ['payment_made'] = 'Vous avez payé $%s à %s',
     ['payment_made_society'] = 'Vous avez payé $%s à %s',
     ['payment_made_player'] = 'Vous avez payé $%s à %s',
     ['bill_paid_amount'] = 'Facture de $%s payée',
+    ['payment_amount'] = 'Paiement de $%s',
 
     -------------------
     -- STATUTS ET TEMPS
     -------------------
     ['status'] = 'Statut',
+    ['status_label'] = 'Statut',
     ['active'] = 'Actif',
     ['inactive'] = 'Inactif',
+    ['pending'] = 'En attente',
+    ['paid'] = 'Payée',
+    ['deleted'] = 'Supprimée',
     ['next_payment'] = 'Prochain paiement',
+    ['next_payment_label'] = 'Prochain paiement',
     ['today'] = 'Aujourd\'hui',
     ['tomorrow'] = 'Demain',
     ['days_remaining'] = 'Dans %d jours',
     ['days_count'] = '%d jours',
     ['interval'] = '%d jours',
+    ['interval_label'] = 'Intervalle',
     ['in_days'] = 'Dans %d jours',
     ['undefined'] = 'Non défini',
     ['plural_s'] = 's',
+    ['days'] = 'jours',
 
     -------------------
     -- HISTORIQUE
@@ -146,7 +178,11 @@ Locales['fr'] = {
     ['from'] = 'de',
     ['to'] = 'à',
     ['type'] = 'Type',
+    ['type_label'] = 'Type',
+    ['from_label'] = 'De',
+    ['to_label'] = 'À',
     ['personal'] = 'Personnel',
+    ['personal_bill'] = 'Personnel',
     ['bill_history_title'] = '%s Facture %s %s',
     ['no_history'] = 'Aucun historique',
     ['no_history_desc'] = 'Vous n\'avez aucune facture dans l\'historique',
@@ -160,8 +196,12 @@ Locales['fr'] = {
     -------------------
     ['accept'] = 'Accepter',
     ['refuse'] = 'Refuser',
+    ['accept_bill'] = 'Accepter la facture',
     ['accept_bill_desc'] = 'Accepter cette facture',
+    ['accept_subscription'] = 'Accepter l\'abonnement',
+    ['refuse_bill'] = 'Refuser la facture',
     ['refuse_bill_desc'] = 'Refuser cette facture',
+    ['refuse_subscription'] = 'Refuser l\'abonnement',
     ['accept_recurring_desc'] = 'Accepter cette facture récurrente',
     ['refuse_recurring_desc'] = 'Refuser cette facture récurrente',
     ['select_player'] = 'Sélectionner un joueur',
@@ -174,6 +214,7 @@ Locales['fr'] = {
     ['cancel_subscription_desc'] = 'Annuler cet abonnement',
     ['confirm_delete_bill'] = 'Êtes-vous sûr de vouloir supprimer cette facture ?',
     ['confirm_cancel_subscription'] = 'Êtes-vous sûr de vouloir annuler cet abonnement ?',
+    ['unknown_player'] = 'Inconnu',
 
     -------------------
     -- NOTIFICATIONS ET ERREURS
@@ -226,28 +267,5 @@ Locales['fr'] = {
     ['latest_version'] = '^3[illama_billing] Dernière version: ^7%s',
     ['release_notes'] = '^3[illama_billing] Notes de mise à jour: ^7%s',
     ['changes_list'] = '^3[illama_billing] Changements: \n^7%s',
-    ['script_up_to_date'] = '^2[illama_billing] Le script est à jour (v%s)^7',
-
-
-    -------------------
-    -- V.1.0.9
-    -------------------
-    ['bill_type'] = 'Type de facture',
-    ['standard_bill'] = 'Facture standard', 
-    ['recurring_bill'] = 'Facture récurrente',
-    ['bill_interval'] = 'Intervalle',
-    ['bills_status'] = 'État des factures',
-    ['check_bills'] = 'Vérifier les factures',
-    ['check_bills_desc'] = 'Vérifier les factures en cours',
-    ['select_player_check'] = 'Choisir un joueur à vérifier',
-    ['days'] = 'jours',
-    ['status_label'] = 'Statut',
-    ['type_label'] = 'Type',
-    ['from_label'] = 'De',
-    ['to_label'] = 'À',
-    ['society_bill'] = 'Société',
-    ['personal_bill'] = 'Personnel',
-    ['pending'] = 'En attente',
-    ['paid'] = 'Payée',
-    ['deleted'] = 'Supprimée',
+    ['script_up_to_date'] = '^2[illama_billing] Le script est à jour (v%s)^7'
 }
