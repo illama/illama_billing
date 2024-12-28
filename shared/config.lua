@@ -10,6 +10,7 @@ Config.AllowedJobs = {
         maxAmount = 100000,
         allowRecurring = true,
         allowGroup = false,
+        allowCheck = true,
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -23,12 +24,12 @@ Config.AllowedJobs = {
                 amount = 0
             }
         },
-        recurringTemplates = { -- Modèles pour factures récurrentes
+        recurringTemplates = {
             {
                 label = "Protection Mensuelle Standard",
                 reason = "Service de protection mensuel - Forfait standard",
                 amount = 5000,
-                interval = 30 -- Tous les 30 jours
+                interval = 30
             },
             {
                 label = "Protection Mensuelle Premium",
@@ -37,7 +38,7 @@ Config.AllowedJobs = {
                 interval = 30
             },
             {
-                label = "Autre (personnalisé)", -- Toujours garder cette option
+                label = "Autre (personnalisé)",
                 reason = "",
                 amount = 0,
                 interval = 0
@@ -50,6 +51,7 @@ Config.AllowedJobs = {
         maxAmount = 100000,
         allowRecurring = true,
         allowGroup = true,
+        allowCheck = true,
         recurringMaxAmount = 50000,
         templates = {
             {
