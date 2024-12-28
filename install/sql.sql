@@ -1,47 +1,60 @@
--- Table pour les factures standards
 CREATE TABLE `illama_bills` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `sender` VARCHAR(60),
-    `sender_name` VARCHAR(255),
-    `receiver` VARCHAR(60) NOT NULL,
-    `receiver_name` VARCHAR(255),
-    `amount` INT NOT NULL,
-    `reason` VARCHAR(255),
-    `type` ENUM('personal', 'society') NOT NULL,
-    `society` VARCHAR(60),
-    `status` ENUM('pending', 'paid') NOT NULL DEFAULT 'pending',
-    `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+  `id` int(11) NOT NULL,
+  `sender` varchar(60) DEFAULT NULL,
+  `sender_name` varchar(255) DEFAULT NULL,
+  `receiver` varchar(60) DEFAULT NULL,
+  `receiver_name` varchar(255) DEFAULT NULL,
+  `amount` int(11) DEFAULT NULL,
+  `reason` text DEFAULT NULL,
+  `type` enum('society','personal') DEFAULT NULL,
+  `society` varchar(60) DEFAULT NULL,
+  `status` enum('pending','paid','deleted') DEFAULT 'pending',
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Table pour les factures récurrentes
-CREATE TABLE `illama_recurring_bills` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `society` VARCHAR(60) NOT NULL,
-    `society_label` VARCHAR(255) NOT NULL,
-    `receiver` VARCHAR(60) NOT NULL,
-    `receiver_name` VARCHAR(255) NOT NULL,
-    `amount` INT NOT NULL,
-    `reason` VARCHAR(255),
-    `interval_days` INT NOT NULL,
-    `next_billing_date` TIMESTAMP NOT NULL,
-    `status` ENUM('active', 'cancelled') NOT NULL DEFAULT 'active',
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+ALTER TABLE `illama_bills`
+  ADD PRIMARY KEY (`id`);
 
--- Table pour l'historique des paiements récurrents
+
+ALTER TABLE `illama_bills`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+COMMIT;
+
 CREATE TABLE `illama_recurring_payments` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `recurring_bill_id` INT NOT NULL,
-    `amount` INT NOT NULL,
-    `payments_count` INT NOT NULL,
-    `payment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (recurring_bill_id) REFERENCES illama_recurring_bills(id) ON DELETE CASCADE
-);
+  `id` int(11) NOT NULL,
+  `recurring_bill_id` int(11) DEFAULT NULL,
+  `amount` int(11) DEFAULT NULL,
+  `payments_count` int(11) DEFAULT NULL,
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Index recommandés pour optimiser les performances
-CREATE INDEX idx_bills_receiver ON illama_bills(receiver);
-CREATE INDEX idx_bills_sender ON illama_bills(sender);
-CREATE INDEX idx_bills_status ON illama_bills(status);
-CREATE INDEX idx_recurring_bills_receiver ON illama_recurring_bills(receiver);
-CREATE INDEX idx_recurring_bills_next_date ON illama_recurring_bills(next_billing_date);
-CREATE INDEX idx_recurring_payments_bill_id ON illama_recurring_payments(recurring_bill_id);
+ALTER TABLE `illama_recurring_payments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `recurring_bill_id` (`recurring_bill_id`);
+
+ALTER TABLE `illama_recurring_payments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+ALTER TABLE `illama_recurring_payments`
+  ADD CONSTRAINT `illama_recurring_payments_ibfk_1` FOREIGN KEY (`recurring_bill_id`) REFERENCES `illama_recurring_bills` (`id`);
+COMMIT;
+
+CREATE TABLE `illama_recurring_bills` (
+  `id` int(11) NOT NULL,
+  `society` varchar(60) DEFAULT NULL,
+  `society_label` varchar(255) DEFAULT NULL,
+  `receiver` varchar(60) DEFAULT NULL,
+  `receiver_name` varchar(255) DEFAULT NULL,
+  `amount` int(11) DEFAULT NULL,
+  `reason` text DEFAULT NULL,
+  `interval_days` int(11) DEFAULT NULL,
+  `next_billing_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `status` enum('active','inactive') DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE `illama_recurring_bills`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `illama_recurring_bills`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+COMMIT;
