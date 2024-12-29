@@ -71,9 +71,6 @@ Illama Billing is a secure and efficient billing script for FiveM, designed to s
 #### 🌐 **Multi-Language Support**
 - Supports over **five languages**, configurable via localization files.
 
-#### 🔒 **Security**
-- Fully protected by the **FiveM Escrow System** to ensure integrity.  
-
 #### ⚡ **Performance**
 - Optimized to run at **0.00ms**, ensuring minimal impact on server performance.
 
@@ -89,7 +86,8 @@ Example configuration:
     label = 'LSPD',
     maxAmount = 100000,
     allowRecurring = true,
-    allowGroup = true, -- Enable group billing for this job
+    allowGroup = true,
+    allowCheck = true,
     recurringMaxAmount = 50000,
     templates = {
         {
@@ -244,10 +242,7 @@ Illama Billing est un script de facturation sécurisé et performant pour FiveM,
   - Limitez l’accès aux fonctionnalités en fonction du métier et du grade.
 
 #### 🌐 **Support multilingue**
-- Supporte plus de **cinq langues**, configurable via des fichiers de localisation.
-
-#### 🔒 **Sécurité**
-- Totalement protégé par le **système Escrow de FiveM**, garantissant l'intégrité.  
+- Supporte plus de **cinq langues**, configurable via des fichiers de localisation. 
 
 #### ⚡ **Performance**
 - Optimisé pour fonctionner à **0.00ms**, minimisant l’impact sur les performances du serveur.
@@ -264,7 +259,8 @@ Exemple de configuration :
     label = 'LSPD',
     maxAmount = 100000,
     allowRecurring = true,
-    allowGroup = true, -- Active la facturation de groupe pour ce métier
+    allowGroup = true,
+    allowCheck = true,
     recurringMaxAmount = 50000,
     templates = {
         {

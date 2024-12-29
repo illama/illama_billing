@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 author 'Illama'
-version '1.1.2'
+version '1.1.1'
 
 dependencies {
     'es_extended',
@@ -37,4 +37,5 @@ ui_page 'html/bill_display.html'
 
 files {
     'html/bill_display.html'
+
 }
