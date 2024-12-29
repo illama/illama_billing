@@ -68,6 +68,33 @@ Locales['ar'] = {
     ['remaining_amount'] = '%s - $%s متبقية',
     ['enter_percentage_per_player'] = 'أدخل النسبة لكل لاعب',
     ['enter_amount_per_player'] = 'أدخل المبلغ لكل لاعب',
+    -- القائمة والإشعارات - الدفع بالتقسيط
+    ['pay_installments'] = 'الدفع بالتقسيط',
+    ['pay_installments_desc'] = 'تقسيط الدفع على عدة أسابيع',
+    ['installment_setup'] = 'إعداد الدفع بالتقسيط',
+    ['number_of_payments'] = 'عدد الأقساط',
+    ['max_5_payments'] = 'الحد الأقصى 5 أقساط (قسط واحد أسبوعياً)',
+    ['confirm_installment_plan'] = 'تأكيد خطة الدفع',
+    ['payment_plan'] = 'خطة الدفع: %s',  -- 1 argument
+    ['installment_status'] = 'متبقي %d قسط من %d\nقيمة القسط: $%s', -- 3 arguments
+    ['installment_details'] = 'خطة دفع على %d قسط\nقيمة القسط: $%s\nالمبلغ الإجمالي: $%s', -- 3 arguments
+    ['payment_plan_created'] = 'تم إنشاء خطة الدفع بالتقسيط بنجاح',
+    ['bill_accepted_with_installments'] = 'تم قبول الفاتورة مع الدفع بالتقسيط',
+
+    -- قائمة المدفوعات بالتقسيط
+    ['installment_payments'] = 'المدفوعات بالتقسيط',
+    ['view_payment_plans'] = 'عرض خطط الدفع النشطة',
+    ['my_payment_plans'] = 'خطط الدفع الخاصة بي',
+    ['payment_plan'] = 'خطة الدفع: %s',
+    ['no_installment_payments'] = 'لا توجد مدفوعات بالتقسيط',
+    ['no_active_payment_plans'] = 'ليس لديك خطط دفع نشطة',
+    ['total_remaining'] = 'المبلغ المتبقي للدفع',
+
+    -- إشعارات الدفع التلقائي
+    ['installment_payment'] = 'دفع القسط',
+    ['payment_processed'] = 'تم خصم $%s تلقائياً',
+    ['payment_failed'] = 'فشل الدفع',
+    ['insufficient_funds_installment'] = 'رصيد غير كافٍ لدفع القسط',
 
     -------------------
     -- فواتير الشركات

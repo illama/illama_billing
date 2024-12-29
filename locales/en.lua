@@ -68,6 +68,33 @@ Locales['en'] = {
     ['remaining_amount'] = '%s - $%s remaining',
     ['enter_percentage_per_player'] = 'Enter the percentage for each player',
     ['enter_amount_per_player'] = 'Enter the amount for each player',
+    -- Installment Payment - Menus and notifications
+    ['pay_installments'] = 'Pay in installments',
+    ['pay_installments_desc'] = 'Split payment over several weeks',
+    ['installment_setup'] = 'Installment Payment Setup',
+    ['number_of_payments'] = 'Number of payments',
+    ['max_5_payments'] = 'Maximum 5 payments (1 per week)',
+    ['confirm_installment_plan'] = 'Confirm Payment Plan',
+    ['payment_plan'] = 'Payment Plan: %s',  -- 1 argument
+    ['installment_status'] = '%d payments remaining out of %d\nAmount per payment: $%s', -- 3 arguments
+    ['installment_details'] = 'Payment plan in %d installments\nAmount per payment: $%s\nTotal amount: $%s', -- 3 arguments
+    ['payment_plan_created'] = 'Installment payment plan created successfully',
+    ['bill_accepted_with_installments'] = 'Bill accepted with installment payment',
+
+    -- Installment Payments Menu
+    ['installment_payments'] = 'Installment Payments',
+    ['view_payment_plans'] = 'View my active payment plans',
+    ['my_payment_plans'] = 'My Installment Payments',
+    ['payment_plan'] = 'Payment Plan: %s',
+    ['no_installment_payments'] = 'No Installment Payments',
+    ['no_active_payment_plans'] = 'You have no active payment plans',
+    ['total_remaining'] = 'Total amount remaining',
+
+    -- Automatic Payment Notifications
+    ['installment_payment'] = 'Installment Payment',
+    ['payment_processed'] = 'Payment of $%s automatically processed',
+    ['payment_failed'] = 'Payment Failed',
+    ['insufficient_funds_installment'] = 'Insufficient funds for installment payment',
 
     -------------------
     -- COMPANY BILLS

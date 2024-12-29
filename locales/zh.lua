@@ -68,7 +68,34 @@ Locales['zh'] = {
     ['remaining_amount'] = '%s - $%s 剩余',
     ['enter_percentage_per_player'] = '输入每个玩家的百分比',
     ['enter_amount_per_player'] = '输入每个玩家的金额',
+    -- 分期付款 - 菜单和通知
+    ['pay_installments'] = '分期付款',
+    ['pay_installments_desc'] = '将付款分散在几周内支付',
+    ['installment_setup'] = '设置分期付款',
+    ['number_of_payments'] = '付款期数',
+    ['max_5_payments'] = '最多5期（每周1期）',
+    ['confirm_installment_plan'] = '确认分期计划',
+    ['payment_plan'] = '付款计划: %s',  -- 1 argument
+    ['installment_status'] = '剩余%d期，共%d期\n每期金额: $%s', -- 3 arguments
+    ['installment_details'] = '%d期分期付款计划\n每期金额: $%s\n总金额: $%s', -- 3 arguments
+    ['payment_plan_created'] = '分期付款计划创建成功',
+    ['bill_accepted_with_installments'] = '账单已接受，将以分期方式支付',
 
+    -- 分期付款菜单
+    ['installment_payments'] = '分期付款',
+    ['view_payment_plans'] = '查看我的活动付款计划',
+    ['my_payment_plans'] = '我的分期付款',
+    ['payment_plan'] = '付款计划: %s',
+    ['no_installment_payments'] = '没有分期付款',
+    ['no_active_payment_plans'] = '您没有活动的付款计划',
+    ['total_remaining'] = '剩余应付总额',
+
+    -- 自动付款通知
+    ['installment_payment'] = '分期付款',
+    ['payment_processed'] = '已自动扣款 $%s',
+    ['payment_failed'] = '付款失败',
+    ['insufficient_funds_installment'] = '余额不足，无法完成分期付款',
+    
     -------------------
     -- 公司账单
     -------------------

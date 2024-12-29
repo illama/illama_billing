@@ -69,6 +69,34 @@ Locales['fr'] = {
     ['enter_percentage_per_player'] = 'Entrez le pourcentage pour chaque joueur',
     ['enter_amount_per_player'] = 'Entrez le montant pour chaque joueur',
 
+    -- Paiement échelonné - Menus et notifications
+    ['pay_installments'] = 'Payer en plusieurs fois',
+    ['pay_installments_desc'] = 'Échelonner le paiement sur plusieurs semaines',
+    ['installment_setup'] = 'Configuration du paiement échelonné',
+    ['number_of_payments'] = 'Nombre de paiements',
+    ['max_5_payments'] = 'Maximum 5 paiements (1 par semaine)',
+    ['confirm_installment_plan'] = 'Confirmer le plan de paiement',
+    ['payment_plan'] = 'Plan de paiement: %s',  -- 1 argument
+    ['installment_status'] = 'Reste %d paiements sur %d\nMontant par paiement: $%s', -- 3 arguments
+    ['installment_details'] = 'Plan de paiement en %d fois\nMontant par paiement: $%s\nMontant total: $%s', -- 3 arguments
+    ['payment_plan_created'] = 'Plan de paiement échelonné créé avec succès',
+    ['bill_accepted_with_installments'] = 'La facture a été acceptée avec un paiement échelonné',
+
+    -- Menu des paiements échelonnés
+    ['installment_payments'] = 'Paiements échelonnés',
+    ['view_payment_plans'] = 'Voir mes plans de paiement en cours',
+    ['my_payment_plans'] = 'Mes paiements échelonnés',
+    ['payment_plan'] = 'Plan de paiement: %s',
+    ['no_installment_payments'] = 'Aucun paiement échelonné',
+    ['no_active_payment_plans'] = 'Vous n\'avez aucun plan de paiement actif',
+    ['total_remaining'] = 'Montant restant à payer',
+
+    -- Notifications de paiement automatique
+    ['installment_payment'] = 'Paiement échelonné',
+    ['payment_processed'] = 'Paiement de $%s prélevé automatiquement',
+    ['payment_failed'] = 'Échec du paiement',
+    ['insufficient_funds_installment'] = 'Fonds insuffisants pour le paiement échelonné',
+
     -------------------
     -- FACTURES SOCIÉTÉ
     -------------------

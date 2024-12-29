@@ -270,6 +270,132 @@ AddEventHandler('illama_billing:createRecurringBill', function(data)
         description = _L('recurring_bill_request_sent')
     })
 end)
+ESX.RegisterServerCallback('illama_billing:getInstallmentPayments', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    
+    if not xPlayer then 
+        cb({})
+        return
+    end
+
+    MySQL.query([[
+        SELECT 
+            ip.*,
+            b.reason as bill_reason
+        FROM illama_installment_payments ip
+        JOIN illama_bills b ON b.id = ip.bill_id
+        WHERE ip.player_identifier = ?
+        AND ip.remaining_payments > 0
+    ]], {xPlayer.identifier}, function(results)
+        cb(results or {})
+    end)
+end)
+
+-- Événement pour configurer un plan de paiement
+RegisterNetEvent('illama_billing:setupInstallmentPlan')
+AddEventHandler('illama_billing:setupInstallmentPlan', function(billData, numberOfPayments)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local pendingBill = PendingBills[source]
+    
+    if not xPlayer or not pendingBill then return end
+
+    -- D'abord, créer la facture
+    MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        {
+            pendingBill.data.sender,
+            pendingBill.data.sender_name,
+            xPlayer.identifier,
+            xPlayer.getName(),
+            pendingBill.data.amount,
+            pendingBill.data.reason,
+            pendingBill.data.bill_type,
+            pendingBill.data.society,
+            'pending'
+        },
+        function(billId)
+            if billId then
+                -- Ensuite, créer le plan de paiement
+                local amountPerPayment = math.ceil(pendingBill.data.amount / numberOfPayments)
+                local nextPaymentDate = os.time() + (7 * 86400) -- 7 jours
+
+                MySQL.insert('INSERT INTO illama_installment_payments (bill_id, player_identifier, amount_per_payment, remaining_payments, next_payment_date, total_payments) VALUES (?, ?, ?, ?, FROM_UNIXTIME(?), ?)',
+                    {
+                        billId,
+                        xPlayer.identifier,
+                        amountPerPayment,
+                        numberOfPayments,
+                        nextPaymentDate,
+                        numberOfPayments
+                    },
+                    function(id)
+                        if id then
+                            TriggerClientEvent('ox_lib:notify', source, {
+                                type = 'success',
+                                description = _L('payment_plan_created')
+                            })
+
+                            -- Notifier l'émetteur de la facture
+                            TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
+                                type = 'success',
+                                description = _L('bill_accepted_with_installments')
+                            })
+                        end
+                    end
+                )
+            end
+        end
+    )
+
+    -- Supprimer la facture en attente
+    PendingBills[source] = nil
+end)
+
+-- Thread pour gérer les paiements automatiques
+CreateThread(function()
+    while true do
+        MySQL.query([[
+            SELECT * FROM illama_installment_payments 
+            WHERE remaining_payments > 0 
+            AND next_payment_date <= NOW()
+        ]], {}, function(payments)
+            for _, payment in ipairs(payments) do
+                local xPlayer = ESX.GetPlayerFromIdentifier(payment.player_identifier)
+                
+                if xPlayer then
+                    local bankMoney = xPlayer.getAccount('bank').money
+                    
+                    if bankMoney >= payment.amount_per_payment then
+                        xPlayer.removeAccountMoney('bank', payment.amount_per_payment)
+                        
+                        -- Mettre à jour le paiement
+                        MySQL.query([[
+                            UPDATE illama_installment_payments 
+                            SET remaining_payments = remaining_payments - 1,
+                                next_payment_date = DATE_ADD(next_payment_date, INTERVAL 7 DAY)
+                            WHERE id = ?
+                        ]], {payment.id})
+                        
+                        -- Notifier le joueur
+                        TriggerClientEvent('ox_lib:notify', xPlayer.source, {
+                            title = _L('installment_payment'),
+                            description = _L('payment_processed', ESX.Math.GroupDigits(payment.amount_per_payment)),
+                            type = 'success'
+                        })
+                    else
+                        TriggerClientEvent('ox_lib:notify', xPlayer.source, {
+                            title = _L('payment_failed'),
+                            description = _L('insufficient_funds_installment'),
+                            type = 'error'
+                        })
+                    end
+                end
+            end
+        end)
+        
+        Wait(60000) -- Vérifier toutes les minutes
+    end
+end)
 RegisterNetEvent('illama_billing:acceptRecurringBill')
 AddEventHandler('illama_billing:acceptRecurringBill', function()
     local source = source

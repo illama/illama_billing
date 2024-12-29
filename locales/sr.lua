@@ -68,7 +68,34 @@ Locales['sr'] = {
     ['remaining_amount'] = '%s - $%s preostalo',
     ['enter_percentage_per_player'] = 'Unesite procenat za svakog igrača',
     ['enter_amount_per_player'] = 'Unesite iznos za svakog igrača',
+    -- Плаћање на рате - Менији и обавештења
+    ['pay_installments'] = 'Плати на рате',
+    ['pay_installments_desc'] = 'Подели плаћање на више недеља',
+    ['installment_setup'] = 'Подешавање плаћања на рате',
+    ['number_of_payments'] = 'Број рата',
+    ['max_5_payments'] = 'Максимално 5 рата (1 недељно)',
+    ['confirm_installment_plan'] = 'Потврди план отплате',
+    ['payment_plan'] = 'План отплате: %s',  -- 1 argument
+    ['installment_status'] = 'Преостало %d рата од %d\nИзнос рате: $%s', -- 3 arguments
+    ['installment_details'] = 'План отплате на %d рата\nИзнос рате: $%s\nУкупан износ: $%s', -- 3 arguments
+    ['payment_plan_created'] = 'План отплате на рате успешно креиран',
+    ['bill_accepted_with_installments'] = 'Рачун прихваћен са плаћањем на рате',
 
+    -- Мени рата
+    ['installment_payments'] = 'Плаћање на рате',
+    ['view_payment_plans'] = 'Прегледај активне планове отплате',
+    ['my_payment_plans'] = 'Моји планови отплате',
+    ['payment_plan'] = 'План отплате: %s',
+    ['no_installment_payments'] = 'Нема плаћања на рате',
+    ['no_active_payment_plans'] = 'Немате активних планова отплате',
+    ['total_remaining'] = 'Преостали износ за плаћање',
+
+    -- Обавештења о аутоматском плаћању
+    ['installment_payment'] = 'Плаћање рате',
+    ['payment_processed'] = 'Аутоматски је наплаћено $%s',
+    ['payment_failed'] = 'Неуспешно плаћање',
+    ['insufficient_funds_installment'] = 'Недовољно средстава за плаћање рате',
+    
     -------------------
     -- FAKTURE PREDUZEĆA
     -------------------

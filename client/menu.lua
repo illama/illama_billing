@@ -141,6 +141,14 @@ AddEventHandler('illama_billing:requestConfirmation', function(billData)
                 metadata = metadata
             },
             {
+                title = _L('pay_installments'),
+                description = _L('pay_installments_desc'),
+                icon = 'calendar',
+                onSelect = function()
+                    OpenInstallmentMenu(billData)
+                end
+            },
+            {
                 title = billData.interval_days and _L('accept_subscription') or _L('accept_bill'),
                 description = billData.interval_days and
                     _L('accept_recurring_payment',
@@ -192,6 +200,80 @@ AddEventHandler('illama_billing:requestConfirmation', function(billData)
     lib.showContext('confirm_bill_menu')
     PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
 end)
+function OpenInstallmentMenu(billData)
+    local input = lib.inputDialog(_L('installment_setup'), {
+        {
+            type = 'number',
+            label = _L('number_of_payments'),
+            description = _L('max_5_payments'),
+            required = true,
+            min = 2,
+            max = 5,
+            default = 2
+        }
+    })
+
+    if input then
+        local numberOfPayments = input[1]
+        local amountPerPayment = math.ceil(billData.amount / numberOfPayments)
+        
+        local confirm = lib.alertDialog({
+            header = _L('confirm_installment_plan'),
+            content = _L('installment_details', 
+                numberOfPayments,
+                ESX.Math.GroupDigits(amountPerPayment),
+                ESX.Math.GroupDigits(amountPerPayment * numberOfPayments)
+            ),
+            centered = true,
+            cancel = true
+        })
+
+        if confirm == 'confirm' then
+            TriggerServerEvent('illama_billing:setupInstallmentPlan', billData, numberOfPayments)
+            lib.hideContext()
+        end
+    end
+end
+
+function OpenInstallmentPaymentsMenu()
+    ESX.TriggerServerCallback('illama_billing:getInstallmentPayments', function(payments)
+        local options = {}
+        
+        for _, payment in ipairs(payments) do
+            table.insert(options, {
+                title = _L('payment_plan', payment.bill_reason or ''),
+                description = _L('installment_status',
+                    payment.remaining_payments,
+                    payment.total_payments,
+                    ESX.Math.GroupDigits(payment.amount_per_payment)
+                ),
+                metadata = {
+                    {
+                        label = _L('total_remaining'), 
+                        value = ESX.Math.GroupDigits(payment.amount_per_payment * payment.remaining_payments)
+                    }
+                }
+            })
+        end
+        
+        if #options == 0 then
+            table.insert(options, {
+                title = _L('no_installment_payments'),
+                description = _L('no_active_payment_plans'),
+                disabled = true
+            })
+        end
+
+        lib.registerContext({
+            id = 'installment_payments_menu',
+            title = _L('my_payment_plans'),
+            menu = 'billing_main_menu',
+            options = options
+        })
+
+        lib.showContext('installment_payments_menu')
+    end)
+end
 function CanCreateSocietyBills()
     local PlayerData = GetPlayerData()
     if not PlayerData or not PlayerData.job then
@@ -265,6 +347,13 @@ function OpenBillingMenu()
                 description = _L('transaction_history_desc'),
                 onSelect = function()
                     OpenBillHistory()
+                end
+            },
+            {
+                title = _L('installment_payments'),
+                description = _L('view_payment_plans'),
+                onSelect = function()
+                    OpenInstallmentPaymentsMenu()
                 end
             }
         }

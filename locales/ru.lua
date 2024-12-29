@@ -68,7 +68,34 @@ Locales['ru'] = {
     ['remaining_amount'] = '%s - $%s осталось',
     ['enter_percentage_per_player'] = 'Введите процент для каждого игрока',
     ['enter_amount_per_player'] = 'Введите сумму для каждого игрока',
+    -- Рассрочка платежа - Меню и уведомления
+    ['pay_installments'] = 'Оплатить в рассрочку',
+    ['pay_installments_desc'] = 'Разделить платёж на несколько недель',
+    ['installment_setup'] = 'Настройка рассрочки',
+    ['number_of_payments'] = 'Количество платежей',
+    ['max_5_payments'] = 'Максимум 5 платежей (1 раз в неделю)',
+    ['confirm_installment_plan'] = 'Подтвердить план рассрочки',
+    ['payment_plan'] = 'План платежей: %s',  -- 1 argument
+    ['installment_status'] = 'Осталось %d платежей из %d\nСумма платежа: $%s', -- 3 arguments
+    ['installment_details'] = 'План рассрочки на %d платежей\nСумма платежа: $%s\nОбщая сумма: $%s', -- 3 arguments
+    ['payment_plan_created'] = 'План рассрочки успешно создан',
+    ['bill_accepted_with_installments'] = 'Счёт принят с оплатой в рассрочку',
 
+    -- Меню рассрочки
+    ['installment_payments'] = 'Платежи в рассрочку',
+    ['view_payment_plans'] = 'Просмотр активных планов рассрочки',
+    ['my_payment_plans'] = 'Мои планы рассрочки',
+    ['payment_plan'] = 'План рассрочки: %s',
+    ['no_installment_payments'] = 'Нет платежей в рассрочку',
+    ['no_active_payment_plans'] = 'У вас нет активных планов рассрочки',
+    ['total_remaining'] = 'Осталось к оплате',
+
+    -- Уведомления об автоматических платежах
+    ['installment_payment'] = 'Платёж по рассрочке',
+    ['payment_processed'] = 'Автоматически списано $%s',
+    ['payment_failed'] = 'Ошибка платежа',
+    ['insufficient_funds_installment'] = 'Недостаточно средств для платежа по рассрочке',
+    
     -------------------
     -- СЧЕТА КОМПАНИИ
     -------------------

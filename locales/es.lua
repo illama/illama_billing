@@ -68,6 +68,33 @@ Locales['es'] = {
     ['remaining_amount'] = '%s - $%s restantes',
     ['enter_percentage_per_player'] = 'Ingresa el porcentaje para cada jugador',
     ['enter_amount_per_player'] = 'Ingresa la cantidad para cada jugador',
+    -- Pago a plazos - Menús y notificaciones
+    ['pay_installments'] = 'Pagar a plazos',
+    ['pay_installments_desc'] = 'Dividir el pago en varias semanas',
+    ['installment_setup'] = 'Configuración de pago a plazos',
+    ['number_of_payments'] = 'Número de pagos',
+    ['max_5_payments'] = 'Máximo 5 pagos (1 por semana)',
+    ['confirm_installment_plan'] = 'Confirmar plan de pago',
+    ['payment_plan'] = 'Plan de pago: %s',  -- 1 argument
+    ['installment_status'] = 'Quedan %d pagos de %d\nCantidad por pago: $%s', -- 3 arguments
+    ['installment_details'] = 'Plan de pago en %d plazos\nCantidad por pago: $%s\nCantidad total: $%s', -- 3 arguments
+    ['payment_plan_created'] = 'Plan de pago a plazos creado con éxito',
+    ['bill_accepted_with_installments'] = 'Factura aceptada con pago a plazos',
+
+    -- Menú de pagos a plazos
+    ['installment_payments'] = 'Pagos a plazos',
+    ['view_payment_plans'] = 'Ver mis planes de pago activos',
+    ['my_payment_plans'] = 'Mis pagos a plazos',
+    ['payment_plan'] = 'Plan de pago: %s',
+    ['no_installment_payments'] = 'Sin pagos a plazos',
+    ['no_active_payment_plans'] = 'No tienes planes de pago activos',
+    ['total_remaining'] = 'Cantidad total pendiente',
+
+    -- Notificaciones de pago automático
+    ['installment_payment'] = 'Pago a plazos',
+    ['payment_processed'] = 'Pago de $%s procesado automáticamente',
+    ['payment_failed'] = 'Pago fallido',
+    ['insufficient_funds_installment'] = 'Fondos insuficientes para el pago a plazos',
 
     -------------------
     -- FACTURAS DE LA EMPRESA

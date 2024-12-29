@@ -68,7 +68,34 @@ Locales['it'] = {
     ['remaining_amount'] = '%s - €%s rimanenti',
     ['enter_percentage_per_player'] = 'Inserisci la percentuale per ogni giocatore',
     ['enter_amount_per_player'] = 'Inserisci l\'importo per ogni giocatore',
+    -- Pagamento rateale - Menu e notifiche
+    ['pay_installments'] = 'Paga a rate',
+    ['pay_installments_desc'] = 'Dividi il pagamento in più settimane',
+    ['installment_setup'] = 'Configurazione pagamento rateale',
+    ['number_of_payments'] = 'Numero di rate',
+    ['max_5_payments'] = 'Massimo 5 rate (1 a settimana)',
+    ['confirm_installment_plan'] = 'Conferma piano di pagamento',
+    ['payment_plan'] = 'Piano di pagamento: %s',  -- 1 argument
+    ['installment_status'] = 'Restano %d rate su %d\nImporto per rata: $%s', -- 3 arguments
+    ['installment_details'] = 'Piano di pagamento in %d rate\nImporto per rata: $%s\nImporto totale: $%s', -- 3 arguments
+    ['payment_plan_created'] = 'Piano di pagamento rateale creato con successo',
+    ['bill_accepted_with_installments'] = 'Fattura accettata con pagamento rateale',
 
+    -- Menu dei pagamenti rateali
+    ['installment_payments'] = 'Pagamenti rateali',
+    ['view_payment_plans'] = 'Visualizza i miei piani di pagamento attivi',
+    ['my_payment_plans'] = 'I miei pagamenti rateali',
+    ['payment_plan'] = 'Piano di pagamento: %s',
+    ['no_installment_payments'] = 'Nessun pagamento rateale',
+    ['no_active_payment_plans'] = 'Non hai piani di pagamento attivi',
+    ['total_remaining'] = 'Importo totale rimanente',
+
+    -- Notifiche di pagamento automatico
+    ['installment_payment'] = 'Pagamento rateale',
+    ['payment_processed'] = 'Pagamento di $%s elaborato automaticamente',
+    ['payment_failed'] = 'Pagamento fallito',
+    ['insufficient_funds_installment'] = 'Fondi insufficienti per il pagamento rateale',
+    
     -------------------
     -- FATTURE AZIENDALI
     -------------------
