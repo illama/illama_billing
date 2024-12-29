@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="bill_receipt">Facture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        #bill-container {
+            background-color: white;
+            width: 800px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            opacity: 0.03;
+            pointer-events: none;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .bill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .logo-container {
+            width: 180px;
+            height: 60px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .bill-info {
+            text-align: right;
+        }
+
+        .bill-number {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .parties {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .party-info {
+            flex: 1;
+            max-width: 45%;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .party-info h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .party-info p {
+            color: #444;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .bill-details {
+            margin-bottom: 40px;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .details-table th {
+            background-color: #2c3e50;
+            color: white;
+            text-align: left;
+            padding: 12px;
+            font-weight: 500;
+        }
+
+        .details-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #444;
+        }
+
+        .amount-row {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .status-banner {
+            position: absolute;
+            top: 20px;
+            right: -10px;
+            padding: 8px 30px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            transform: rotate(45deg);
+        }
+
+        .status-pending {
+            background-color: #f1c40f;
+        }
+
+        .status-paid {
+            background-color: #27ae60;
+        }
+
+        .status-deleted {
+            background-color: #e74c3c;
+        }
+
+        .bill-buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: #2c3e50;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #34495e;
+        }
+
+        @media print {
+            body {
+                background: none;
+                display: block;
+            }
+            #bill-container {
+                width: 100%;
+                box-shadow: none;
+            }
+            .bill-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="bill-container"></div>
+    <script>
+        function getStatusClass(status) {
+            switch(status) {
+                case 'pending': return 'status-pending';
+                case 'paid': return 'status-paid';
+                case 'deleted': return 'status-deleted';
+                default: return '';
+            }
+        }
+
+        function createBillHTML(data, translations) {
+            return `
+                <div class="watermark">${translations[data.status] || data.status}</div>
+                
+                <div class="status-banner ${getStatusClass(data.status)}">
+                    ${translations[data.status] || data.status}
+                </div>
+
+                <div class="bill-header">
+                    <div class="company-info">
+                        <div class="logo-container">AVENTURE</div>
+                    </div>
+                    <div class="bill-info">
+                        <div class="bill-number">#${data.id || Math.floor(Math.random() * 10000)}</div>
+                    </div>
+                </div>
+
+                <div class="parties">
+                    <div class="party-info">
+                        <h3>${translations.from}</h3>
+                        <p><strong>${data.sender}</strong></p>
+                        <p>${translations[data.type] || data.type}</p>
+                    </div>
+                    <div class="party-info">
+                        <h3>${translations.to}</h3>
+                        <p><strong>${data.receiver}</strong></p>
+                    </div>
+                </div>
+
+                <div class="bill-details">
+                    <table class="details-table">
+                        <thead>
+                            <tr>
+                                <th>${translations.reason}</th>
+                                <th>${translations.amount}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${data.reason}</td>
+                                <td>$${data.amount}</td>
+                            </tr>
+                            <tr class="amount-row">
+                                <td><strong>${translations.amount}</strong></td>
+                                <td><strong>$${data.amount}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bill-buttons">
+                    <button>${translations.close}</button>
+                </div>
+            `;
+        }
+
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'showBillHTML') {
+                document.body.style.display = 'flex';
+                const container = document.getElementById('bill-container');
+                
+                const billHTML = createBillHTML(event.data.billData, event.data.translations);
+                container.innerHTML = billHTML;
+
+                const closeButton = container.querySelector('button');
+                closeButton.onclick = () => {
+                    document.body.style.display = 'none';
+                    container.innerHTML = '';
+                    fetch(`https://${GetParentResourceName()}/closeBill`, {
+                        method: 'POST'
+                    });
+                };
+            }
+        });
+    </script>
+</body>
+</html>

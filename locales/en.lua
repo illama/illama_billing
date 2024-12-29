@@ -215,6 +215,9 @@ Locales['en'] = {
     ['confirm_delete_bill'] = 'Are you sure you want to delete this bill?',
     ['confirm_cancel_subscription'] = 'Are you sure you want to cancel this subscription?',
     ['unknown_player'] = 'Unknown',
+    ['close'] = 'Close',
+    ['info'] = 'Information',
+    ['click_to_export'] = 'Click on an invoice to view it',
 
     -------------------
     -- NOTIFICATIONS AND ERRORS

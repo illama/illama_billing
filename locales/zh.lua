@@ -215,6 +215,9 @@ Locales['zh'] = {
     ['confirm_delete_bill'] = '您确定要删除此账单吗？',
     ['confirm_cancel_subscription'] = '您确定要取消此订阅吗？',
     ['unknown_player'] = '未知',
+    ['close'] = '关闭',
+    ['info'] = '信息',
+    ['click_to_export'] = '点击发票以查看',
 
     -------------------
     -- 通知和错误

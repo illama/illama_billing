@@ -608,6 +608,34 @@ AddEventHandler('illama_billing:payBill', function(billId, paymentType)
         end
     )
 end)
+ESX.RegisterServerCallback('illama_billing:generateBillImage', function(source, cb, content)
+    local html = [[
+        <div style="width: 400px; height: 500px; background-color: white; border: 2px solid black; padding: 20px; font-family: Arial, sans-serif;">
+            <h2 style="text-align: center; color: #333;">%s</h2>
+            <table style="width: 100%%;">
+                <tr><td><strong>De:</strong></td><td>%s</td></tr>
+                <tr><td><strong>À:</strong></td><td>%s</td></tr>
+                <tr><td><strong>Montant:</strong></td><td>%s</td></tr>
+                <tr><td><strong>Raison:</strong></td><td>%s</td></tr>
+                <tr><td><strong>Statut:</strong></td><td>%s</td></tr>
+                <tr><td><strong>Type:</strong></td><td>%s</td></tr>
+            </table>
+        </div>
+    ]]
+
+    local formattedHtml = string.format(html,
+        content.title,
+        content.sender,
+        content.receiver,
+        content.amount,
+        content.reason,
+        content.status,
+        content.type
+    )
+
+    cb(formattedHtml)
+end)
+
 
 CreateThread(function()
     Wait(5000)

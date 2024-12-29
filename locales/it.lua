@@ -212,6 +212,9 @@ Locales['it'] = {
     ['confirm_delete_bill'] = 'Sei sicuro di voler eliminare questa fattura?',
     ['confirm_cancel_subscription'] = 'Sei sicuro di voler annullare questo abbonamento?',
     ['unknown_player'] = 'Sconosciuto',
+    ['close'] = 'Chiudi',
+    ['info'] = 'Informazioni',
+    ['click_to_export'] = 'Clicca su una fattura per visualizzarla',
 
     -------------------
     -- NOTIFICHE ED ERRORI
