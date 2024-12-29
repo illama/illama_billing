@@ -58,3 +58,21 @@ ALTER TABLE `illama_recurring_payments`
 ALTER TABLE `illama_recurring_payments`
   ADD CONSTRAINT `illama_recurring_payments_ibfk_1` FOREIGN KEY (`recurring_bill_id`) REFERENCES `illama_recurring_bills` (`id`);
 COMMIT;
+
+CREATE TABLE `illama_installment_payments` (
+  `id` int(11) NOT NULL,
+  `bill_id` int(11) NOT NULL,
+  `player_identifier` varchar(60) NOT NULL,
+  `amount_per_payment` int(11) NOT NULL,
+  `remaining_payments` int(11) NOT NULL,
+  `next_payment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `total_payments` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE `illama_installment_payments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bill_id` (`bill_id`);
+
+ALTER TABLE `illama_installment_payments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+COMMIT;
