@@ -270,5 +270,37 @@ Locales['zh'] = {
     ['latest_version'] = '^3[illama_billing] 最新版本: ^7%s',
     ['release_notes'] = '^3[illama_billing] 发行说明: ^7%s',
     ['changes_list'] = '^3[illama_billing] 修改内容: \n^7%s',
-    ['script_up_to_date'] = '^2[illama_billing] 脚本是最新的（v%s）^7'
+    ['script_up_to_date'] = '^2[illama_billing] 脚本是最新的（v%s）^7',
+
+    -------------------
+    -- 标签系统
+    -------------------
+    ['filter_by_tags'] = '按标签筛选',
+    ['filter_tags_desc'] = '按标签筛选账单',
+    ['manage_tags'] = '管理标签',
+    ['manage_tags_desc'] = '为此账单添加或删除标签',
+    ['add_tag'] = '添加标签',
+    ['add_tag_desc'] = '为此账单添加新标签',
+    ['tag_placeholder'] = '例如：重要、个人、工作',
+    ['tag_added'] = '标签添加成功',
+    ['show_all'] = '显示所有账单',
+    ['show_all_desc'] = '移除标签筛选',
+    ['filter_by_tag_desc'] = '显示带有此标签的账单',
+    ['current_filter'] = '当前筛选',
+    ['filtered_by_tag'] = '显示带有标签的账单：%s',
+    ['change_filter'] = '更改筛选',
+    ['change_filter_desc'] = '选择其他标签进行筛选',
+    ['filtered_transaction_history'] = '已筛选的交易记录',
+    ['no_bills_found'] = '未找到账单',
+    ['no_bills_with_tag'] = '未找到带有标签的账单：%s',
+    ['bill_actions'] = '账单操作',
+    ['no_tags'] = '无标签',
+    ['no_tags_desc'] = '此账单尚未添加任何标签',
+    ['add_new_tag'] = '添加新标签',
+    ['remove_tag_desc'] = '点击删除此标签',
+    ['tag_removed'] = '标签删除成功',
+    ['tag_name'] = '标签名称',
+    ['tag_name_desc'] = '输入新标签名称',
+    ['export_bill'] = '导出账单',
+    ['export_bill_desc'] = '将账单导出为图片'
 }
