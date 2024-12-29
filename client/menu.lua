@@ -891,7 +891,8 @@ function OpenRecurringBillsMenu()
         if #options == 0 then
             table.insert(options, {
                 title = _L('no_recurring_bills'),
-                description = _L('no_recurring_bills_desc')
+                description = _L('no_recurring_bills_desc'),
+                disabled = true
             })
         end
 
@@ -1038,7 +1039,13 @@ end
 
 function OpenBillHistory()
     ESX.TriggerServerCallback('illama_billing:getBillHistory', function(bills)
-        local options = {}
+        local options = {
+            {
+                title = _L('info'),
+                description = _L('click_to_export'),
+                disabled = true
+            }
+        }
         
         for _, bill in ipairs(bills) do
             local status_color = {
@@ -1067,16 +1074,19 @@ function OpenBillHistory()
                     {label = _L('type'), value = bill.type == 'society' and _L('society') or _L('personal')},
                     {label = _L('from'), value = bill.sender_name},
                     {label = _L('to'), value = bill.receiver_name}
-                }
+                },
+                onSelect = function()
+                    ExportBillAsImage(bill)
+                end
             })
         end
         
-        if #options == 0 then
-            table.insert(options, {
+        if #bills == 0 then
+            options = {
                 title = _L('no_history'),
                 description = _L('no_history_desc'),
                 disabled = true
-            })
+            }
         end
 
         lib.registerContext({
@@ -1089,6 +1099,42 @@ function OpenBillHistory()
         lib.showContext('bills_history_menu')
     end)
 end
+
+function ExportBillAsImage(bill)
+    local translations = {
+        bill_receipt = _L('bill_receipt'),
+        from = _L('from'),
+        to = _L('to'),
+        amount = _L('amount_label'),
+        reason = _L('reason_label'),
+        status = _L('status'),
+        type = _L('type'),
+        close = _L('close'),
+        pending = _L('pending'),
+        paid = _L('paid'),
+        deleted = _L('deleted'),
+        society = _L('society'),
+        personal = _L('personal')
+    }
+
+    local billData = {
+        id = bill.id,
+        sender = bill.sender_name,
+        receiver = bill.receiver_name,
+        amount = ESX.Math.GroupDigits(bill.amount),
+        reason = bill.reason,
+        status = bill.status,
+        type = bill.type
+    }
+
+    SendNUIMessage({
+        type = 'showBillHTML',
+        billData = billData,
+        translations = translations
+    })
+    SetNuiFocus(true, true)
+end
+
 function OpenBillDetailsMenu(bill)
     local options = {}
 

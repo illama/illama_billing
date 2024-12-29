@@ -141,3 +141,8 @@ function GetPlayerData()
     end
     return PlayerData
 end
+
+RegisterNUICallback('closeBill', function(data, cb)
+    SetNuiFocus(false, false)
+    cb({})
+end)
