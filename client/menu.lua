@@ -128,66 +128,72 @@ AddEventHandler('illama_billing:requestConfirmation', function(billData)
         table.insert(metadata, {label = _L('type'), value = billData.type == 'society' and _L('society') or _L('personal')})
     end
 
+    local options = {
+        {
+            title = _L('bill_details'),
+            description = _L('amount_reason',
+                ESX.Math.GroupDigits(billData.amount),
+                billData.reason
+            ),
+            metadata = metadata
+        }
+    }
+    if not billData.interval_days then
+        table.insert(options, {
+            title = _L('pay_installments'),
+            description = _L('pay_installments_desc'),
+            icon = 'calendar',
+            onSelect = function()
+                OpenInstallmentMenu(billData)
+            end
+        })
+    end
+
+    table.insert(options, {
+        title = billData.interval_days and _L('accept_subscription') or _L('accept_bill'),
+        description = billData.interval_days and
+            _L('accept_recurring_payment',
+                ESX.Math.GroupDigits(billData.amount),
+                billData.interval_days
+            ) or
+            _L('pay_amount', ESX.Math.GroupDigits(billData.amount)),
+        icon = 'check',
+        onSelect = function()
+            if billData.interval_days then
+                TriggerServerEvent('illama_billing:acceptRecurringBill')
+            else
+                TriggerServerEvent('illama_billing:acceptBill', billData)
+            end
+            lib.notify({
+                title = _L('bill_accepted'),
+                description = _L('bill_accepted_desc'),
+                type = 'success'
+            })
+        end
+    })
+
+    table.insert(options, {
+        title = _L('refuse'),
+        description = billData.interval_days and _L('refuse_subscription') or _L('refuse_bill'),
+        icon = 'xmark',
+        onSelect = function()
+            if billData.interval_days then
+                TriggerServerEvent('illama_billing:refuseRecurringBill')
+            else
+                TriggerServerEvent('illama_billing:refuseBill', billData)
+            end
+            lib.notify({
+                title = _L('bill_refused'),
+                description = _L('bill_refused_desc'),
+                type = 'error'
+            })
+        end
+    })
+
     lib.registerContext({
         id = 'confirm_bill_menu',
         title = _L('new_bill'),
-        options = {
-            {
-                title = _L('bill_details'),
-                description = _L('amount_reason',
-                    ESX.Math.GroupDigits(billData.amount),
-                    billData.reason
-                ),
-                metadata = metadata
-            },
-            {
-                title = _L('pay_installments'),
-                description = _L('pay_installments_desc'),
-                icon = 'calendar',
-                onSelect = function()
-                    OpenInstallmentMenu(billData)
-                end
-            },
-            {
-                title = billData.interval_days and _L('accept_subscription') or _L('accept_bill'),
-                description = billData.interval_days and
-                    _L('accept_recurring_payment',
-                        ESX.Math.GroupDigits(billData.amount),
-                        billData.interval_days
-                    ) or
-                    _L('pay_amount', ESX.Math.GroupDigits(billData.amount)),
-                icon = 'check',
-                onSelect = function()
-                    if billData.interval_days then
-                        TriggerServerEvent('illama_billing:acceptRecurringBill')
-                    else
-                        TriggerServerEvent('illama_billing:acceptBill', billData)
-                    end
-                    lib.notify({
-                        title = _L('bill_accepted'),
-                        description = _L('bill_accepted_desc'),
-                        type = 'success'
-                    })
-                end
-            },
-            {
-                title = _L('refuse'),
-                description = billData.interval_days and _L('refuse_subscription') or _L('refuse_bill'),
-                icon = 'xmark',
-                onSelect = function()
-                    if billData.interval_days then
-                        TriggerServerEvent('illama_billing:refuseRecurringBill')
-                    else
-                        TriggerServerEvent('illama_billing:refuseBill', billData)
-                    end
-                    lib.notify({
-                        title = _L('bill_refused'),
-                        description = _L('bill_refused_desc'),
-                        type = 'error'
-                    })
-                end
-            }
-        },
+        options = options,
         onClose = function()
             if billData.interval_days then
                 TriggerServerEvent('illama_billing:refuseRecurringBill')
@@ -1154,8 +1160,6 @@ function OpenBillHistory()
             local playerIdentifier = ESX.PlayerData.identifier
             local isReceiver = (bill.receiver == playerIdentifier)
             local tagIcons = ''
-            
-            -- Display tags if they exist
             if bill.tags and #bill.tags > 0 then
                 for _, tag in ipairs(bill.tags) do
                     tagIcons = tagIcons .. '🏷️ ' .. tag .. ' '
@@ -1245,8 +1249,6 @@ function OpenTagsManagementMenu(bill)
             end
         }
     }
-
-    -- Afficher les tags existants avec option de suppression
     if bill.tags and #bill.tags > 0 then
         for _, tag in ipairs(bill.tags) do
             table.insert(options, {
@@ -1260,7 +1262,7 @@ function OpenTagsManagementMenu(bill)
                         type = 'success'
                     })
                     Wait(100)
-                    OpenBillHistory() -- Rafraîchir le menu
+                    OpenBillHistory()
                 end
             })
         end
@@ -1299,7 +1301,7 @@ function OpenAddTagMenu(bill)
             type = 'success'
         })
         Wait(100)
-        OpenBillHistory() -- Rafraîchir le menu
+        OpenBillHistory()
     end
 end
 function OpenManageTagsMenu(bill)
@@ -1319,12 +1321,11 @@ function OpenManageTagsMenu(bill)
             type = 'success'
         })
         Wait(100)
-        OpenBillHistory() -- Refresh the menu
+        OpenBillHistory()
     end
 end
 
 function OpenTagFilterMenu(bills)
-    -- Collect all unique tags
     local uniqueTags = {}
     for _, bill in ipairs(bills) do
         if bill.tags then
@@ -1392,8 +1393,6 @@ function OpenFilteredBillHistory(bills, filterTag)
             end
         }
     }
-
-    -- Add filtered bills to options
     for _, bill in ipairs(filteredBills) do
         local status_color = {
             pending = '🟡',
@@ -1404,8 +1403,6 @@ function OpenFilteredBillHistory(bills, filterTag)
         local playerIdentifier = ESX.PlayerData.identifier
         local isReceiver = (bill.receiver == playerIdentifier)
         local tagIcons = ''
-        
-        -- Display tags if they exist
         if bill.tags and #bill.tags > 0 then
             for _, tag in ipairs(bill.tags) do
                 tagIcons = tagIcons .. '🏷️ ' .. tag .. ' '
