@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 author 'Illama'
-version '1.1.0'
+version '1.1.1'
 
 dependencies {
     'es_extended',
@@ -31,4 +31,10 @@ client_scripts {
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/main.lua'
+}
+
+ui_page 'html/bill_display.html'
+
+files {
+    'html/bill_display.html'
 }
