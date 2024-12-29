@@ -270,5 +270,37 @@ Locales['ar'] = {
     ['latest_version'] = '^3[illama_billing] أحدث إصدار: ^7%s',
     ['release_notes'] = '^3[illama_billing] ملاحظات الإصدار: ^7%s',
     ['changes_list'] = '^3[illama_billing] التغييرات: \n^7%s',
-    ['script_up_to_date'] = '^2[illama_billing] السكربت محدث (v%s)^7'
+    ['script_up_to_date'] = '^2[illama_billing] السكربت محدث (v%s)^7',
+
+    -------------------
+    -- نظام العلامات
+    -------------------
+    ['filter_by_tags'] = 'تصفية حسب العلامات',
+    ['filter_tags_desc'] = 'تصفية الفواتير حسب العلامات',
+    ['manage_tags'] = 'إدارة العلامات',
+    ['manage_tags_desc'] = 'إضافة أو إزالة العلامات لهذه الفاتورة',
+    ['add_tag'] = 'إضافة علامة',
+    ['add_tag_desc'] = 'أدخل علامة جديدة لهذه الفاتورة',
+    ['tag_placeholder'] = 'مثال: مهم، شخصي، عمل',
+    ['tag_added'] = 'تمت إضافة العلامة بنجاح',
+    ['show_all'] = 'عرض جميع الفواتير',
+    ['show_all_desc'] = 'إزالة تصفية العلامات',
+    ['filter_by_tag_desc'] = 'عرض الفواتير بهذه العلامة',
+    ['current_filter'] = 'التصفية الحالية',
+    ['filtered_by_tag'] = 'عرض الفواتير المعلمة بـ: %s',
+    ['change_filter'] = 'تغيير التصفية',
+    ['change_filter_desc'] = 'اختر علامة أخرى للتصفية',
+    ['filtered_transaction_history'] = 'سجل المعاملات المصفى',
+    ['no_bills_found'] = 'لم يتم العثور على فواتير',
+    ['no_bills_with_tag'] = 'لم يتم العثور على فواتير بالعلامة: %s',
+    ['bill_actions'] = 'إجراءات الفاتورة',
+    ['no_tags'] = 'لا توجد علامات',
+    ['no_tags_desc'] = 'لم يتم إضافة أي علامات لهذه الفاتورة',
+    ['add_new_tag'] = 'إضافة علامة جديدة',
+    ['remove_tag_desc'] = 'انقر لإزالة هذه العلامة',
+    ['tag_removed'] = 'تمت إزالة العلامة بنجاح',
+    ['tag_name'] = 'اسم العلامة',
+    ['tag_name_desc'] = 'أدخل اسم العلامة الجديدة',
+    ['export_bill'] = 'تصدير الفاتورة',
+    ['export_bill_desc'] = 'تصدير الفاتورة كصورة'
 }

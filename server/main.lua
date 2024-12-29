@@ -41,8 +41,10 @@ ESX.RegisterServerCallback('illama_billing:getBillHistory', function(source, cb)
     end
 
     MySQL.query([[
-        SELECT *
-        FROM illama_bills 
+        SELECT 
+            b.*,
+            COALESCE(b.tags, '[]') as tags
+        FROM illama_bills b
         WHERE receiver = ? OR sender = ?
         ORDER BY date DESC
         LIMIT 50
@@ -50,7 +52,44 @@ ESX.RegisterServerCallback('illama_billing:getBillHistory', function(source, cb)
         xPlayer.identifier,
         xPlayer.identifier
     }, function(bills)
+        if bills then
+            -- Parse JSON tags for each bill
+            for i, bill in ipairs(bills) do
+                local success, decodedTags = pcall(json.decode, bill.tags)
+                bills[i].tags = success and decodedTags or {}
+            end
+        end
         cb(bills or {})
+    end)
+end)
+
+-- Add the server event to handle adding tags
+RegisterNetEvent('illama_billing:addTagToBill')
+AddEventHandler('illama_billing:addTagToBill', function(billId, tag)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    
+    if not xPlayer then return end
+
+    MySQL.query('SELECT tags FROM illama_bills WHERE id = ?', {billId}, function(result)
+        if result and result[1] then
+            local success, currentTags = pcall(json.decode, result[1].tags or '[]')
+            if not success then currentTags = {} end
+
+            -- Check if tag already exists
+            for _, existingTag in ipairs(currentTags) do
+                if existingTag == tag then
+                    return
+                end
+            end
+            
+            table.insert(currentTags, tag)
+            
+            MySQL.update('UPDATE illama_bills SET tags = ? WHERE id = ?', {
+                json.encode(currentTags),
+                billId
+            })
+        end
     end)
 end)
 
@@ -111,7 +150,33 @@ ESX.RegisterServerCallback('illama_billing:getRecurringPaymentHistory', function
         end
     )
 end)
+RegisterNetEvent('illama_billing:removeTagFromBill')
+AddEventHandler('illama_billing:removeTagFromBill', function(billId, tagToRemove)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    
+    if not xPlayer then return end
 
+    MySQL.query('SELECT tags FROM illama_bills WHERE id = ?', {billId}, function(result)
+        if result and result[1] then
+            local success, currentTags = pcall(json.decode, result[1].tags or '[]')
+            if not success then currentTags = {} end
+
+            -- Créer un nouveau tableau sans le tag à supprimer
+            local newTags = {}
+            for _, tag in ipairs(currentTags) do
+                if tag ~= tagToRemove then
+                    table.insert(newTags, tag)
+                end
+            end
+            
+            MySQL.update('UPDATE illama_bills SET tags = ? WHERE id = ?', {
+                json.encode(newTags),
+                billId
+            })
+        end
+    end)
+end)
 RegisterNetEvent('illama_billing:createBill')
 AddEventHandler('illama_billing:createBill', function(data)
     local source = source

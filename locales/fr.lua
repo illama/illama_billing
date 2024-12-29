@@ -270,5 +270,38 @@ Locales['fr'] = {
     ['latest_version'] = '^3[illama_billing] Dernière version: ^7%s',
     ['release_notes'] = '^3[illama_billing] Notes de mise à jour: ^7%s',
     ['changes_list'] = '^3[illama_billing] Changements: \n^7%s',
-    ['script_up_to_date'] = '^2[illama_billing] Le script est à jour (v%s)^7'
+    ['script_up_to_date'] = '^2[illama_billing] Le script est à jour (v%s)^7',
+
+
+    -------------------
+    -- TAG SYSTEM
+    -------------------
+    ['filter_by_tags'] = 'Filtrer par étiquettes',
+    ['filter_tags_desc'] = 'Filtrer les factures par étiquettes',
+    ['manage_tags'] = 'Gérer les étiquettes',
+    ['manage_tags_desc'] = 'Ajouter ou supprimer des étiquettes pour cette facture',
+    ['add_tag'] = 'Ajouter une étiquette',
+    ['add_tag_desc'] = 'Entrez une nouvelle étiquette pour cette facture',
+    ['tag_placeholder'] = 'ex: Important, Personnel, Travail',
+    ['tag_added'] = 'Étiquette ajoutée avec succès',
+    ['show_all'] = 'Afficher toutes les factures',
+    ['show_all_desc'] = 'Supprimer les filtres d\'étiquettes',
+    ['filter_by_tag_desc'] = 'Afficher les factures avec cette étiquette',
+    ['current_filter'] = 'Filtre actuel',
+    ['filtered_by_tag'] = 'Affichage des factures étiquetées : %s',
+    ['change_filter'] = 'Changer de filtre',
+    ['change_filter_desc'] = 'Sélectionner une autre étiquette pour filtrer',
+    ['filtered_transaction_history'] = 'Historique des transactions filtré',
+    ['no_bills_found'] = 'Aucune facture trouvée',
+    ['no_bills_with_tag'] = 'Aucune facture trouvée avec l\'étiquette : %s',
+    ['bill_actions'] = 'Actions de la facture',
+    ['no_tags'] = 'Aucune étiquette',
+    ['no_tags_desc'] = 'Aucune étiquette n\'a été ajoutée à cette facture',
+    ['add_new_tag'] = 'Ajouter une nouvelle étiquette',
+    ['remove_tag_desc'] = 'Cliquez pour supprimer cette étiquette',
+    ['tag_removed'] = 'Étiquette supprimée avec succès',
+    ['tag_name'] = 'Nom de l\'étiquette',
+    ['tag_name_desc'] = 'Entrez le nom de la nouvelle étiquette',
+    ['export_bill'] = 'Exporter la facture',
+    ['export_bill_desc'] = 'Faire une exportation en image de la facture'
 }

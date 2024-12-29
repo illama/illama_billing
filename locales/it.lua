@@ -267,5 +267,37 @@ Locales['it'] = {
     ['latest_version'] = '^3[illama_billing] Ultima versione: ^7%s',
     ['release_notes'] = '^3[illama_billing] Note di rilascio: ^7%s',
     ['changes_list'] = '^3[illama_billing] Modifiche: \n^7%s',
-    ['script_up_to_date'] = '^2[illama_billing] Lo script è aggiornato (v%s)^7'
+    ['script_up_to_date'] = '^2[illama_billing] Lo script è aggiornato (v%s)^7',
+
+    -------------------
+    -- SISTEMA DI ETICHETTE
+    -------------------
+    ['filter_by_tags'] = 'Filtra per Etichette',
+    ['filter_tags_desc'] = 'Filtra le fatture per etichette',
+    ['manage_tags'] = 'Gestisci Etichette',
+    ['manage_tags_desc'] = 'Aggiungi o rimuovi etichette per questa fattura',
+    ['add_tag'] = 'Aggiungi Etichetta',
+    ['add_tag_desc'] = 'Inserisci una nuova etichetta per questa fattura',
+    ['tag_placeholder'] = 'es: Importante, Personale, Lavoro',
+    ['tag_added'] = 'Etichetta aggiunta con successo',
+    ['show_all'] = 'Mostra Tutte le Fatture',
+    ['show_all_desc'] = 'Rimuovi i filtri delle etichette',
+    ['filter_by_tag_desc'] = 'Mostra fatture con questa etichetta',
+    ['current_filter'] = 'Filtro Attuale',
+    ['filtered_by_tag'] = 'Visualizzazione fatture etichettate con: %s',
+    ['change_filter'] = 'Cambia Filtro',
+    ['change_filter_desc'] = 'Seleziona un\'altra etichetta per filtrare',
+    ['filtered_transaction_history'] = 'Cronologia Transazioni Filtrata',
+    ['no_bills_found'] = 'Nessuna Fattura Trovata',
+    ['no_bills_with_tag'] = 'Nessuna fattura trovata con l\'etichetta: %s',
+    ['bill_actions'] = 'Azioni Fattura',
+    ['no_tags'] = 'Nessuna Etichetta',
+    ['no_tags_desc'] = 'Nessuna etichetta è stata aggiunta a questa fattura',
+    ['add_new_tag'] = 'Aggiungi Nuova Etichetta',
+    ['remove_tag_desc'] = 'Clicca per rimuovere questa etichetta',
+    ['tag_removed'] = 'Etichetta rimossa con successo',
+    ['tag_name'] = 'Nome Etichetta',
+    ['tag_name_desc'] = 'Inserisci il nome della nuova etichetta',
+    ['export_bill'] = 'Esporta Fattura',
+    ['export_bill_desc'] = 'Esporta fattura come immagine'
 }

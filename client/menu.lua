@@ -1044,6 +1044,14 @@ function OpenBillHistory()
                 title = _L('info'),
                 description = _L('click_to_export'),
                 disabled = true
+            },
+            {
+                title = _L('filter_by_tags'),
+                description = _L('filter_tags_desc'),
+                icon = 'tags',
+                onSelect = function()
+                    OpenTagFilterMenu(bills)
+                end
             }
         }
         
@@ -1056,6 +1064,14 @@ function OpenBillHistory()
 
             local playerIdentifier = ESX.PlayerData.identifier
             local isReceiver = (bill.receiver == playerIdentifier)
+            local tagIcons = ''
+            
+            -- Display tags if they exist
+            if bill.tags and #bill.tags > 0 then
+                for _, tag in ipairs(bill.tags) do
+                    tagIcons = tagIcons .. '🏷️ ' .. tag .. ' '
+                end
+            end
 
             local title = _L('bill_history_title',
                 status_color[bill.status] or '⚪',
@@ -1068,7 +1084,7 @@ function OpenBillHistory()
                 description = _L('amount_reason',
                     ESX.Math.GroupDigits(bill.amount),
                     bill.reason
-                ),
+                ) .. (tagIcons ~= '' and '\n' .. tagIcons or ''),
                 metadata = {
                     {label = _L('status'), value = bill.status == 'pending' and _L('pending') or (bill.status == 'paid' and _L('paid') or _L('deleted'))},
                     {label = _L('type'), value = bill.type == 'society' and _L('society') or _L('personal')},
@@ -1076,17 +1092,9 @@ function OpenBillHistory()
                     {label = _L('to'), value = bill.receiver_name}
                 },
                 onSelect = function()
-                    ExportBillAsImage(bill)
+                    OpenBillActions(bill)
                 end
             })
-        end
-        
-        if #bills == 0 then
-            options = {
-                title = _L('no_history'),
-                description = _L('no_history_desc'),
-                disabled = true
-            }
         end
 
         lib.registerContext({
@@ -1099,7 +1107,263 @@ function OpenBillHistory()
         lib.showContext('bills_history_menu')
     end)
 end
+function OpenBillActions(bill)
+    local tagsList = ''
+    if bill.tags and #bill.tags > 0 then
+        for _, tag in ipairs(bill.tags) do
+            tagsList = tagsList .. '🏷️ ' .. tag .. ' '
+        end
+    else
+        tagsList = _L('no_tags')
+    end
 
+    local options = {
+        {
+            title = _L('export_bill'),
+            description = _L('export_bill_desc'),
+            icon = 'file-export',
+            onSelect = function()
+                ExportBillAsImage(bill)
+            end
+        },
+        {
+            title = _L('manage_tags'),
+            description = tagsList,
+            icon = 'tags',
+            onSelect = function()
+                OpenTagsManagementMenu(bill)
+            end
+        }
+    }
+
+    lib.registerContext({
+        id = 'bill_actions_menu',
+        title = _L('bill_actions'),
+        menu = 'bills_history_menu',
+        options = options
+    })
+
+    lib.showContext('bill_actions_menu')
+end
+function OpenTagsManagementMenu(bill)
+    local options = {
+        {
+            title = _L('add_new_tag'),
+            description = _L('add_tag_desc'),
+            icon = 'plus',
+            onSelect = function()
+                OpenAddTagMenu(bill)
+            end
+        }
+    }
+
+    -- Afficher les tags existants avec option de suppression
+    if bill.tags and #bill.tags > 0 then
+        for _, tag in ipairs(bill.tags) do
+            table.insert(options, {
+                title = tag,
+                description = _L('remove_tag_desc'),
+                icon = 'xmark',
+                onSelect = function()
+                    TriggerServerEvent('illama_billing:removeTagFromBill', bill.id, tag)
+                    lib.notify({
+                        description = _L('tag_removed'),
+                        type = 'success'
+                    })
+                    Wait(100)
+                    OpenBillHistory() -- Rafraîchir le menu
+                end
+            })
+        end
+    else
+        table.insert(options, {
+            title = _L('no_tags'),
+            description = _L('no_tags_desc'),
+            disabled = true
+        })
+    end
+
+    lib.registerContext({
+        id = 'tags_management_menu',
+        title = _L('manage_tags'),
+        menu = 'bill_actions_menu',
+        options = options
+    })
+
+    lib.showContext('tags_management_menu')
+end
+function OpenAddTagMenu(bill)
+    local input = lib.inputDialog(_L('add_tag'), {
+        {
+            type = 'input',
+            label = _L('tag_name'),
+            description = _L('tag_name_desc'),
+            placeholder = _L('tag_placeholder'),
+            required = true
+        }
+    })
+
+    if input and input[1] and input[1]:len() > 0 then
+        TriggerServerEvent('illama_billing:addTagToBill', bill.id, input[1])
+        lib.notify({
+            description = _L('tag_added'),
+            type = 'success'
+        })
+        Wait(100)
+        OpenBillHistory() -- Rafraîchir le menu
+    end
+end
+function OpenManageTagsMenu(bill)
+    local input = lib.inputDialog(_L('manage_tags'), {
+        {
+            type = 'input',
+            label = _L('add_tag'),
+            description = _L('add_tag_desc'),
+            placeholder = _L('tag_placeholder')
+        }
+    })
+
+    if input and input[1] and input[1]:len() > 0 then
+        TriggerServerEvent('illama_billing:addTagToBill', bill.id, input[1])
+        lib.notify({
+            description = _L('tag_added'),
+            type = 'success'
+        })
+        Wait(100)
+        OpenBillHistory() -- Refresh the menu
+    end
+end
+
+function OpenTagFilterMenu(bills)
+    -- Collect all unique tags
+    local uniqueTags = {}
+    for _, bill in ipairs(bills) do
+        if bill.tags then
+            for _, tag in ipairs(bill.tags) do
+                uniqueTags[tag] = true
+            end
+        end
+    end
+
+    local options = {
+        {
+            title = _L('show_all'),
+            description = _L('show_all_desc'),
+            onSelect = function()
+                OpenBillHistory()
+            end
+        }
+    }
+
+    for tag, _ in pairs(uniqueTags) do
+        table.insert(options, {
+            title = tag,
+            description = _L('filter_by_tag_desc'),
+            onSelect = function()
+                OpenFilteredBillHistory(bills, tag)
+            end
+        })
+    end
+
+    lib.registerContext({
+        id = 'tag_filter_menu',
+        title = _L('filter_by_tags'),
+        menu = 'bills_history_menu',
+        options = options
+    })
+
+    lib.showContext('tag_filter_menu')
+end
+
+function OpenFilteredBillHistory(bills, filterTag)
+    local filteredBills = {}
+    for _, bill in ipairs(bills) do
+        if bill.tags then
+            for _, tag in ipairs(bill.tags) do
+                if tag == filterTag then
+                    table.insert(filteredBills, bill)
+                    break
+                end
+            end
+        end
+    end
+
+    local options = {
+        {
+            title = _L('current_filter'),
+            description = _L('filtered_by_tag', filterTag),
+            disabled = true
+        },
+        {
+            title = _L('change_filter'),
+            description = _L('change_filter_desc'),
+            icon = 'filter',
+            onSelect = function()
+                OpenTagFilterMenu(bills)
+            end
+        }
+    }
+
+    -- Add filtered bills to options
+    for _, bill in ipairs(filteredBills) do
+        local status_color = {
+            pending = '🟡',
+            paid = '🟢',
+            deleted = '🔴'
+        }
+
+        local playerIdentifier = ESX.PlayerData.identifier
+        local isReceiver = (bill.receiver == playerIdentifier)
+        local tagIcons = ''
+        
+        -- Display tags if they exist
+        if bill.tags and #bill.tags > 0 then
+            for _, tag in ipairs(bill.tags) do
+                tagIcons = tagIcons .. '🏷️ ' .. tag .. ' '
+            end
+        end
+
+        local title = _L('bill_history_title',
+            status_color[bill.status] or '⚪',
+            isReceiver and _L('from') or _L('to'),
+            isReceiver and bill.sender_name or bill.receiver_name
+        )
+
+        table.insert(options, {
+            title = title,
+            description = _L('amount_reason',
+                ESX.Math.GroupDigits(bill.amount),
+                bill.reason
+            ) .. (tagIcons ~= '' and '\n' .. tagIcons or ''),
+            metadata = {
+                {label = _L('status'), value = bill.status == 'pending' and _L('pending') or (bill.status == 'paid' and _L('paid') or _L('deleted'))},
+                {label = _L('type'), value = bill.type == 'society' and _L('society') or _L('personal')},
+                {label = _L('from'), value = bill.sender_name},
+                {label = _L('to'), value = bill.receiver_name}
+            },
+            onSelect = function()
+                OpenBillActions(bill)
+            end
+        })
+    end
+
+    if #filteredBills == 0 then
+        table.insert(options, {
+            title = _L('no_bills_found'),
+            description = _L('no_bills_with_tag', filterTag),
+            disabled = true
+        })
+    end
+
+    lib.registerContext({
+        id = 'filtered_bills_history_menu',
+        title = _L('filtered_transaction_history'),
+        menu = 'bills_history_menu',
+        options = options
+    })
+
+    lib.showContext('filtered_bills_history_menu')
+end
 function ExportBillAsImage(bill)
     local translations = {
         bill_receipt = _L('bill_receipt'),
@@ -1212,7 +1476,6 @@ AddEventHandler('illama_billing:billExpired', function(billId, billType)
     })
     PlaySoundFrontend(-1, "EXIT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
 end)
-
 RegisterKeyMapping('openbilling', _L('open_billing_menu'), 'keyboard', Config.OpenKey)
 RegisterCommand('openbilling', function()
     RefreshPlayerData()

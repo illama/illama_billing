@@ -270,5 +270,37 @@ Locales['en'] = {
     ['latest_version'] = '^3[illama_billing] Latest version: ^7%s',
     ['release_notes'] = '^3[illama_billing] Release notes: ^7%s',
     ['changes_list'] = '^3[illama_billing] Changes: \n^7%s',
-    ['script_up_to_date'] = '^2[illama_billing] The script is up to date (v%s)^7'
+    ['script_up_to_date'] = '^2[illama_billing] The script is up to date (v%s)^7',
+
+    -------------------
+    -- TAG SYSTEM
+    -------------------
+    ['filter_by_tags'] = 'Filter by Tags',
+    ['filter_tags_desc'] = 'Filter bills by their tags',
+    ['manage_tags'] = 'Manage Tags',
+    ['manage_tags_desc'] = 'Add or remove tags for this bill',
+    ['add_tag'] = 'Add Tag',
+    ['add_tag_desc'] = 'Enter a new tag for this bill',
+    ['tag_placeholder'] = 'e.g., Important, Personal, Work',
+    ['tag_added'] = 'Tag added successfully',
+    ['show_all'] = 'Show All Bills',
+    ['show_all_desc'] = 'Remove tag filters',
+    ['filter_by_tag_desc'] = 'Show bills with this tag',
+    ['current_filter'] = 'Current Filter',
+    ['filtered_by_tag'] = 'Showing bills tagged with: %s',
+    ['change_filter'] = 'Change Filter',
+    ['change_filter_desc'] = 'Select a different tag to filter by',
+    ['filtered_transaction_history'] = 'Filtered Transaction History',
+    ['no_bills_found'] = 'No Bills Found',
+    ['no_bills_with_tag'] = 'No bills found with tag: %s',
+    ['bill_actions'] = 'Bill Actions',
+    ['no_tags'] = 'No Tags',
+    ['no_tags_desc'] = 'No tags have been added to this bill',
+    ['add_new_tag'] = 'Add New Tag',
+    ['remove_tag_desc'] = 'Click to remove this tag',
+    ['tag_removed'] = 'Tag removed successfully',
+    ['tag_name'] = 'Tag Name',
+    ['tag_name_desc'] = 'Enter the name of the new tag',
+    ['export_bill'] = 'Export Bill',
+    ['export_bill_desc'] = 'Export bill as an image'
 }
