@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 author 'Illama'
-version '1.1.2'
+version '1.1.3'
 
 dependencies {
     'es_extended',
@@ -20,7 +20,8 @@ shared_scripts {
     'locales/es.lua',
     'locales/en.lua',
     'locales/fr.lua',
-    'locales/it.lua'
+    'locales/it.lua',
+    'locales/sr.lua'
 }
 
 client_scripts {
@@ -37,5 +38,4 @@ ui_page 'html/bill_display.html'
 
 files {
     'html/bill_display.html'
-
 }
