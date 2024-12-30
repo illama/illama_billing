@@ -10,7 +10,9 @@ CREATE TABLE `illama_bills` (
   `society` varchar(60) DEFAULT NULL,
   `status` enum('pending','paid','deleted') DEFAULT 'pending',
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `tags` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '[]' CHECK (json_valid(`tags`))
+  `tags` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '[]' CHECK (json_valid(`tags`)),
+  `allow_installments` tinyint(1) NOT NULL DEFAULT 0,
+  `signature` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 ALTER TABLE `illama_bills`
