@@ -332,5 +332,19 @@ Locales['en'] = {
     ['tag_name'] = 'Tag Name',
     ['tag_name_desc'] = 'Enter the name of the new tag',
     ['export_bill'] = 'Export Bill',
-    ['export_bill_desc'] = 'Export bill as an image'
+    ['export_bill_desc'] = 'Export bill as an image',
+
+    -------------------
+    -- SECURITY
+    -------------------
+    ['billing_system_error'] = 'ERROR - BILLING SYSTEM',
+    ['error'] = 'ERROR',
+    ['script_disabled_wrong_name'] = 'Script is disabled because the resource name is incorrect!',
+    ['expected_name'] = 'Expected name: ^3%s^7',
+    ['current_name'] = 'Current name: ^3%s^7',
+    ['rename_folder_instruction'] = 'Please rename the folder to reactivate the script.',
+    ['contact_support'] = 'Contact support if you need help.',
+    ['invalid_resource_name'] = 'Invalid resource name!',
+    ['manifest_version'] = 'Manifest version: %s',
+    ['script_disabled_security'] = 'Script is disabled for security reasons.',
 }
