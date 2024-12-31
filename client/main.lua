@@ -1,50 +1,25 @@
+-------------------------------
+--          INIT
+-------------------------------
 if not lib then return end
 ESX = exports["es_extended"]:getSharedObject()
 PlayerData = {}
 local isInitialized = false
 
+-------------------------------
+--       CORE FUNCTIONS
+-------------------------------
 local function RefreshPlayerData()
     PlayerData = ESX.GetPlayerData()
     isInitialized = true
 end
 
-CreateThread(function()
-    while not ESX.IsPlayerLoaded() do
-        Wait(100)
+function GetPlayerData()
+    if not isInitialized then
+        RefreshPlayerData()
     end
-    RefreshPlayerData()
-end)
-
-
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-    PlayerData = xPlayer
-    isInitialized = true
-end)
-
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-    PlayerData.job = job
-    if lib.getOpenMenu() and lib.getOpenMenu():find('billing_') then
-        OpenBillingMenu()
-    end
-end)
-
-RegisterKeyMapping('openbilling', _L('open_billing_menu'), 'keyboard', Config.OpenKey)
-
-RegisterCommand('openbilling', function()
-    RefreshPlayerData()
-   
-    if not PlayerData or not PlayerData.job then
-        lib.notify({
-            title = _L('error'),
-            description = _L('cannot_load_data'),
-            type = 'error'
-        })
-        return
-    end
-    OpenBillingMenu()
-end)
+    return PlayerData
+end
 
 function GetNearbyPlayers()
     local playerPed = PlayerPedId()
@@ -74,11 +49,36 @@ function GetNearbyPlayers()
     return nearbyPlayers
 end
 
+-------------------------------
+--       ESX EVENTS
+-------------------------------
+CreateThread(function()
+    while not ESX.IsPlayerLoaded() do
+        Wait(100)
+    end
+    RefreshPlayerData()
+end)
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+    PlayerData = xPlayer
+    isInitialized = true
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+    PlayerData.job = job
+    if lib.getOpenMenu() and lib.getOpenMenu():find('billing_') then
+        OpenBillingMenu()
+    end
+end)
+
+-------------------------------
+--       BILLING EVENTS
+-------------------------------
 RegisterNetEvent('illama_billing:requestRecurringConfirmation')
 AddEventHandler('illama_billing:requestRecurringConfirmation', function(billData)
-    if not billData then 
-        return 
-    end
+    if not billData then return end
 
     if lib.getOpenMenu() then lib.hideContext() end
 
@@ -135,14 +135,117 @@ AddEventHandler('illama_billing:requestRecurringConfirmation', function(billData
     PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
 end)
 
-function GetPlayerData()
-    if not isInitialized then
-        RefreshPlayerData()
-    end
-    return PlayerData
-end
-
+-------------------------------
+--       NUI CALLBACKS
+-------------------------------
 RegisterNUICallback('closeBill', function(data, cb)
     SetNuiFocus(false, false)
     cb({})
 end)
+
+-------------------------------
+--       COMMANDS
+-------------------------------
+RegisterKeyMapping('openbilling', _L('open_billing_menu'), 'keyboard', Config.OpenKey)
+
+RegisterCommand('openbilling', function()
+    RefreshPlayerData()
+   
+    if not PlayerData or not PlayerData.job then
+        lib.notify({
+            title = _L('error'),
+            description = _L('cannot_load_data'),
+            type = 'error'
+        })
+        return
+    end
+    OpenBillingMenu()
+end)
+
+-------------------------------
+--     SECURITY CHECK
+-------------------------------
+local scriptEnabled = false
+
+local function GetManifestVersion()
+    local manifest = LoadResourceFile(GetCurrentResourceName(), 'fxmanifest.lua')
+    if not manifest then return nil end
+    
+    for line in manifest:gmatch("[^\r\n]+") do
+        local version = line:match("^version%s+['\"](.+)['\"]")
+        if version then
+            return version:gsub("%s+", "")
+        end
+    end
+    return nil
+end
+
+local function StartPeriodicNotification(expectedName, currentName)
+    CreateThread(function()
+        while true do
+            lib.notify({
+                title = 'Système de Facturation Désactivé',
+                description = 'Le système est désactivé en raison d\'une erreur de configuration.',
+                type = 'error',
+                duration = 10000
+            })
+            Wait(10000)
+        end
+    end)
+end
+
+local function DisableScript()
+    AddEventHandler = function() return end
+    RegisterNetEvent = function() return end
+    TriggerEvent = function() return end
+end
+
+RegisterNetEvent('illama_billing:scriptDisabled')
+AddEventHandler('illama_billing:scriptDisabled', function(expectedName, currentName)
+    DisableScript()
+    StartPeriodicNotification(expectedName, currentName)
+    lib.notify({
+        title = 'Erreur Système',
+        description = 'Le système de facturation est désactivé.\nContactez un administrateur.',
+        type = 'error',
+        duration = 10000
+    })
+end)
+
+local function ValidateResourceName()
+    local resourceName = GetCurrentResourceName()
+    local manifestVersion = GetManifestVersion()
+    local expectedName = 'illama_billing_v.' .. manifestVersion
+    
+    if resourceName ~= expectedName then
+        DisableScript()
+        StartPeriodicNotification(expectedName, resourceName)
+        return false
+    end
+    
+    scriptEnabled = true
+    return true
+end
+
+-------------------------------
+--          INIT
+-------------------------------
+if not ValidateResourceName() then 
+    return
+end
+
+local ESX = exports["es_extended"]:getSharedObject()
+
+local function CheckScriptEnabled(fn)
+    return function(...)
+        if not scriptEnabled then
+            lib.notify({
+                title = 'Erreur',
+                description = 'Cette fonctionnalité est désactivée.',
+                type = 'error'
+            })
+            return
+        end
+        return fn(...)
+    end
+end
