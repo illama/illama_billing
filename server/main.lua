@@ -940,12 +940,12 @@ end
 local function StartPeriodicWarning(expectedName, currentName)
     CreateThread(function()
         while true do
-            print('^1[ERREUR - SYSTÈME DE FACTURATION] ^7')
-            print('^1[ERREUR] ^7Le script est désactivé car le nom de la ressource est incorrect!')
-            print('^1[ERREUR] ^7Nom attendu: ^3' .. expectedName .. '^7')
-            print('^1[ERREUR] ^7Nom actuel: ^3' .. currentName .. '^7')
-            print('^1[ERREUR] ^7Veuillez renommer le dossier pour réactiver le script.')
-            print('^1[ERREUR] ^7Contactez le support si vous avez besoin d\'aide.')
+            print('^1[' .. _L('billing_system_error') .. '] ^7')
+            print('^1[' .. _L('error') .. '] ^7' .. _L('script_disabled_wrong_name'))
+            print('^1[' .. _L('error') .. '] ^7' .. _L('expected_name', expectedName))
+            print('^1[' .. _L('error') .. '] ^7' .. _L('current_name', currentName))
+            print('^1[' .. _L('error') .. '] ^7' .. _L('rename_folder_instruction'))
+            print('^1[' .. _L('error') .. '] ^7' .. _L('contact_support'))
             Wait(10000)
         end
     end)
@@ -966,11 +966,11 @@ local function ValidateResourceName()
     local expectedName = 'illama_billing_v.' .. manifestVersion
     
     if resourceName ~= expectedName then
-        print('^1[ERREUR] ^7Nom de ressource invalide!')
-        print('^1[ERREUR] ^7Nom attendu: ' .. expectedName)
-        print('^1[ERREUR] ^7Nom actuel: ' .. resourceName)
-        print('^1[ERREUR] ^7Version du manifest: ' .. manifestVersion)
-        print('^1[ERREUR] ^7Le script est désactivé pour des raisons de sécurité.')
+        print('^1[' .. _L('error') .. '] ^7' .. _L('invalid_resource_name'))
+        print('^1[' .. _L('error') .. '] ^7' .. _L('expected_name', expectedName))
+        print('^1[' .. _L('error') .. '] ^7' .. _L('current_name', resourceName))
+        print('^1[' .. _L('error') .. '] ^7' .. _L('manifest_version', manifestVersion))
+        print('^1[' .. _L('error') .. '] ^7' .. _L('script_disabled_security'))
         
         DisableScript(expectedName, resourceName)
         return false
