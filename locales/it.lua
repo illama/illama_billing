@@ -331,5 +331,19 @@ Locales['it'] = {
     ['tag_name'] = 'Nome Etichetta',
     ['tag_name_desc'] = 'Inserisci il nome della nuova etichetta',
     ['export_bill'] = 'Esporta Fattura',
-    ['export_bill_desc'] = 'Esporta fattura come immagine'
+    ['export_bill_desc'] = 'Esporta fattura come immagine',
+
+    -------------------
+    -- SICUREZZA
+    -------------------
+    ['billing_system_error'] = 'ERRORE - SISTEMA DI FATTURAZIONE',
+    ['error'] = 'ERRORE',
+    ['script_disabled_wrong_name'] = 'Lo script è disabilitato perché il nome della risorsa non è corretto!',
+    ['expected_name'] = 'Nome previsto: ^3%s^7',
+    ['current_name'] = 'Nome attuale: ^3%s^7',
+    ['rename_folder_instruction'] = 'Rinominare la cartella per riattivare lo script.',
+    ['contact_support'] = 'Contatta il supporto se hai bisogno di aiuto.',
+    ['invalid_resource_name'] = 'Nome risorsa non valido!',
+    ['manifest_version'] = 'Versione manifest: %s',
+    ['script_disabled_security'] = 'Script disabilitato per motivi di sicurezza.',
 }
