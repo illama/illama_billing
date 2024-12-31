@@ -346,4 +346,18 @@ Locales['fr'] = {
     ['tag_name_desc'] = 'Entrez le nom de la nouvelle étiquette',
     ['export_bill'] = 'Exporter la facture',
     ['export_bill_desc'] = 'Faire une exportation en image de la facture',
+
+    -------------------
+    -- SÉCURITÉ
+    -------------------
+    ['billing_system_error'] = 'ERREUR - SYSTÈME DE FACTURATION',
+    ['error'] = 'ERREUR',
+    ['script_disabled_wrong_name'] = 'Le script est désactivé car le nom de la ressource est incorrect!',
+    ['expected_name'] = 'Nom attendu: ^3%s^7',
+    ['current_name'] = 'Nom actuel: ^3%s^7',
+    ['rename_folder_instruction'] = 'Veuillez renommer le dossier pour réactiver le script.',
+    ['contact_support'] = 'Contactez le support si vous avez besoin d\'aide.',
+    ['invalid_resource_name'] = 'Nom de ressource invalide!',
+    ['manifest_version'] = 'Version du manifest: %s',
+    ['script_disabled_security'] = 'Le script est désactivé pour des raisons de sécurité.',
 }
