@@ -312,8 +312,11 @@ Locales['fr'] = {
     ['latest_version'] = '^3[illama_billing] Dernière version: ^7%s',
     ['release_notes'] = '^3[illama_billing] Notes de mise à jour: ^7%s',
     ['changes_list'] = '^3[illama_billing] Changements: \n^7%s',
-    ['script_up_to_date'] = '^2[illama_billing] Le script est à jour (v%s)^7',
-
+    ['script_up_to_date'] = '^2[illama_billing] Le script est à jour (v%s)^7',['system_disabled_title'] = 'Système de Facturation Désactivé',
+    ['system_disabled_desc'] = 'Le système est désactivé en raison d\'une erreur de configuration',
+    ['system_error'] = 'Erreur Système',
+    ['system_disabled_contact_admin'] = 'Le système de facturation est désactivé.\nContactez un administrateur',
+    ['feature_disabled'] = 'Cette fonctionnalité est désactivée',
 
     -------------------
     -- TAG SYSTEM

@@ -303,6 +303,11 @@ Locales['ru'] = {
     ['release_notes'] = '^3[illama_billing] Примечания к версии: ^7%s',
     ['changes_list'] = '^3[illama_billing] Изменения: \n^7%s',
     ['script_up_to_date'] = '^2[illama_billing] Скрипт обновлен (v%s)^7',
+    ['system_disabled_title'] = 'Система Выставления Счетов Отключена',
+    ['system_disabled_desc'] = 'Система отключена из-за ошибки конфигурации',
+    ['system_error'] = 'Системная Ошибка',
+    ['system_disabled_contact_admin'] = 'Система выставления счетов отключена.\nПожалуйста, обратитесь к администратору',
+    ['feature_disabled'] = 'Эта функция отключена',
 
     -------------------
     -- СИСТЕМА ТЕГОВ

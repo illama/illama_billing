@@ -301,7 +301,11 @@ Locales['sr'] = {
     ['release_notes'] = '^3[illama_billing] Napomene o izdanju: ^7%s',
     ['changes_list'] = '^3[illama_billing] Promene: \n^7%s',
     ['script_up_to_date'] = '^2[illama_billing] Skripta je ažurna (v%s)^7',
-
+    ['system_disabled_title'] = 'Sistem Fakturisanja Onemogućen',
+    ['system_disabled_desc'] = 'Sistem je onemogućen zbog greške u konfiguraciji',
+    ['system_error'] = 'Sistemska Greška',
+    ['system_disabled_contact_admin'] = 'Sistem fakturisanja je onemogućen.\nMolimo kontaktirajte administratora',
+    ['feature_disabled'] = 'Ova funkcija je onemogućena',
 
     -------------------
     -- SISTEM OZNAKA

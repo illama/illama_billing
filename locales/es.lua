@@ -303,6 +303,11 @@ Locales['es'] = {
     ['release_notes'] = '^3[illama_billing] Notas de la versión: ^7%s',
     ['changes_list'] = '^3[illama_billing] Cambios: \n^7%s',
     ['script_up_to_date'] = '^2[illama_billing] El script está actualizado (v%s)^7',
+    ['system_disabled_title'] = 'Sistema de Facturación Desactivado',
+    ['system_disabled_desc'] = 'El sistema está desactivado debido a un error de configuración',
+    ['system_error'] = 'Error del Sistema',
+    ['system_disabled_contact_admin'] = 'El sistema de facturación está desactivado.\nPor favor, contacte con un administrador',
+    ['feature_disabled'] = 'Esta función está desactivada',
 
     -------------------
     -- SISTEMA DE ETIQUETAS

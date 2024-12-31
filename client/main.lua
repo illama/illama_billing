@@ -184,8 +184,8 @@ local function StartPeriodicNotification(expectedName, currentName)
     CreateThread(function()
         while true do
             lib.notify({
-                title = 'Système de Facturation Désactivé',
-                description = 'Le système est désactivé en raison d\'une erreur de configuration.',
+                title = _L('system_disabled_title'),
+                description = _L('system_disabled_desc'),
                 type = 'error',
                 duration = 10000
             })
@@ -205,8 +205,8 @@ AddEventHandler('illama_billing:scriptDisabled', function(expectedName, currentN
     DisableScript()
     StartPeriodicNotification(expectedName, currentName)
     lib.notify({
-        title = 'Erreur Système',
-        description = 'Le système de facturation est désactivé.\nContactez un administrateur.',
+        title = _L('system_error'),
+        description = _L('system_disabled_contact_admin'),
         type = 'error',
         duration = 10000
     })
@@ -240,8 +240,8 @@ local function CheckScriptEnabled(fn)
     return function(...)
         if not scriptEnabled then
             lib.notify({
-                title = 'Erreur',
-                description = 'Cette fonctionnalité est désactivée.',
+                title = _L('error'),
+                description = _L('feature_disabled'),
                 type = 'error'
             })
             return

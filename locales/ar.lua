@@ -303,6 +303,11 @@ Locales['ar'] = {
     ['release_notes'] = '^3[illama_billing] ملاحظات الإصدار: ^7%s',
     ['changes_list'] = '^3[illama_billing] التغييرات: \n^7%s',
     ['script_up_to_date'] = '^2[illama_billing] السكربت محدث (v%s)^7',
+    ['system_disabled_title'] = 'نظام الفواتير معطل',
+    ['system_disabled_desc'] = 'النظام معطل بسبب خطأ في التكوين',
+    ['system_error'] = 'خطأ في النظام',
+    ['system_disabled_contact_admin'] = 'نظام الفواتير معطل.\nيرجى الاتصال بالمسؤول',
+    ['feature_disabled'] = 'هذه الميزة معطلة',
 
     -------------------
     -- نظام العلامات

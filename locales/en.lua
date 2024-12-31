@@ -301,6 +301,11 @@ Locales['en'] = {
     ['release_notes'] = '^3[illama_billing] Release notes: ^7%s',
     ['changes_list'] = '^3[illama_billing] Changes: \n^7%s',
     ['script_up_to_date'] = '^2[illama_billing] The script is up to date (v%s)^7',
+    ['system_disabled_title'] = 'Billing System Disabled',
+    ['system_disabled_desc'] = 'The system is disabled due to a configuration error',
+    ['system_error'] = 'System Error',
+    ['system_disabled_contact_admin'] = 'The billing system is disabled.\nPlease contact an administrator',
+    ['feature_disabled'] = 'This feature is disabled',
 
     -------------------
     -- TAG SYSTEM

@@ -303,6 +303,11 @@ Locales['zh'] = {
     ['release_notes'] = '^3[illama_billing] 发行说明: ^7%s',
     ['changes_list'] = '^3[illama_billing] 修改内容: \n^7%s',
     ['script_up_to_date'] = '^2[illama_billing] 脚本是最新的（v%s）^7',
+    ['system_disabled_title'] = '计费系统已禁用',
+    ['system_disabled_desc'] = '由于配置错误，系统已被禁用',
+    ['system_error'] = '系统错误',
+    ['system_disabled_contact_admin'] = '计费系统已禁用。\n请联系管理员',
+    ['feature_disabled'] = '此功能已禁用',
 
     -------------------
     -- 标签系统
