@@ -1,7 +1,13 @@
+-------------------------------
+--          INIT
+-------------------------------
 local ESX = exports["es_extended"]:getSharedObject()
 local PendingBills = {}
 local RecurringBillsThread = false
 
+-------------------------------
+--     UTILITY FUNCTIONS
+-------------------------------
 local function canCreateSocietyBill(xPlayer)
     local jobConfig = Config.AllowedJobs[xPlayer.job.name]
     if not jobConfig then return false end
@@ -13,6 +19,9 @@ local function isJobAllowedForRecurring(jobName)
     return jobConfig and jobConfig.allowRecurring or false
 end
 
+-------------------------------
+--     SERVER CALLBACKS
+-------------------------------
 ESX.RegisterServerCallback('illama_billing:getBills', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
     
@@ -21,15 +30,20 @@ ESX.RegisterServerCallback('illama_billing:getBills', function(source, cb)
         return
     end
 
-    MySQL.query('SELECT * FROM illama_bills WHERE receiver = ? AND status = ? ORDER BY date DESC', 
-        {
-            xPlayer.identifier,
-            'pending'
-        }, 
-        function(bills)
-            cb(bills or {})
-        end
-    )
+    MySQL.query([[
+        SELECT b.*, b.signature 
+        FROM illama_bills b
+        WHERE b.receiver = ? 
+        AND b.status = 'pending'
+        AND NOT EXISTS (
+            SELECT 1 
+            FROM illama_installment_payments ip 
+            WHERE ip.bill_id = b.id
+        )
+        ORDER BY b.date DESC
+    ]], {xPlayer.identifier}, function(bills)
+        cb(bills or {})
+    end)
 end)
 
 ESX.RegisterServerCallback('illama_billing:getBillHistory', function(source, cb)
@@ -53,43 +67,12 @@ ESX.RegisterServerCallback('illama_billing:getBillHistory', function(source, cb)
         xPlayer.identifier
     }, function(bills)
         if bills then
-            -- Parse JSON tags for each bill
             for i, bill in ipairs(bills) do
                 local success, decodedTags = pcall(json.decode, bill.tags)
                 bills[i].tags = success and decodedTags or {}
             end
         end
         cb(bills or {})
-    end)
-end)
-
--- Add the server event to handle adding tags
-RegisterNetEvent('illama_billing:addTagToBill')
-AddEventHandler('illama_billing:addTagToBill', function(billId, tag)
-    local source = source
-    local xPlayer = ESX.GetPlayerFromId(source)
-    
-    if not xPlayer then return end
-
-    MySQL.query('SELECT tags FROM illama_bills WHERE id = ?', {billId}, function(result)
-        if result and result[1] then
-            local success, currentTags = pcall(json.decode, result[1].tags or '[]')
-            if not success then currentTags = {} end
-
-            -- Check if tag already exists
-            for _, existingTag in ipairs(currentTags) do
-                if existingTag == tag then
-                    return
-                end
-            end
-            
-            table.insert(currentTags, tag)
-            
-            MySQL.update('UPDATE illama_bills SET tags = ? WHERE id = ?', {
-                json.encode(currentTags),
-                billId
-            })
-        end
     end)
 end)
 
@@ -115,6 +98,7 @@ ESX.RegisterServerCallback('illama_billing:getRecurringBills', function(source, 
         cb(bills or {})
     end)
 end)
+
 ESX.RegisterServerCallback('illama_billing:getAllPlayerBills', function(source, cb, target)
     local xPlayer = ESX.GetPlayerFromId(source)
     local xTarget = ESX.GetPlayerFromId(target)
@@ -142,6 +126,7 @@ ESX.RegisterServerCallback('illama_billing:getAllPlayerBills', function(source, 
         end
     )
 end)
+
 ESX.RegisterServerCallback('illama_billing:getRecurringPaymentHistory', function(source, cb, billId)
     MySQL.query('SELECT * FROM illama_recurring_payments WHERE recurring_bill_id = ? ORDER BY payment_date DESC', 
         {billId},
@@ -150,33 +135,59 @@ ESX.RegisterServerCallback('illama_billing:getRecurringPaymentHistory', function
         end
     )
 end)
-RegisterNetEvent('illama_billing:removeTagFromBill')
-AddEventHandler('illama_billing:removeTagFromBill', function(billId, tagToRemove)
-    local source = source
+
+ESX.RegisterServerCallback('illama_billing:getInstallmentPayments', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
     
-    if not xPlayer then return end
+    if not xPlayer then 
+        cb({})
+        return
+    end
 
-    MySQL.query('SELECT tags FROM illama_bills WHERE id = ?', {billId}, function(result)
-        if result and result[1] then
-            local success, currentTags = pcall(json.decode, result[1].tags or '[]')
-            if not success then currentTags = {} end
-
-            -- Créer un nouveau tableau sans le tag à supprimer
-            local newTags = {}
-            for _, tag in ipairs(currentTags) do
-                if tag ~= tagToRemove then
-                    table.insert(newTags, tag)
-                end
-            end
-            
-            MySQL.update('UPDATE illama_bills SET tags = ? WHERE id = ?', {
-                json.encode(newTags),
-                billId
-            })
-        end
+    MySQL.query([[
+        SELECT 
+            ip.*,
+            b.reason as bill_reason
+        FROM illama_installment_payments ip
+        JOIN illama_bills b ON b.id = ip.bill_id
+        WHERE ip.player_identifier = ?
+        AND ip.remaining_payments > 0
+    ]], {xPlayer.identifier}, function(results)
+        cb(results or {})
     end)
 end)
+
+ESX.RegisterServerCallback('illama_billing:generateBillImage', function(source, cb, content)
+    local html = [[
+        <div style="width: 400px; height: 500px; background-color: white; border: 2px solid black; padding: 20px; font-family: Arial, sans-serif;">
+            <h2 style="text-align: center; color: #333;">%s</h2>
+            <table style="width: 100%%;">
+                <tr><td><strong>De:</strong></td><td>%s</td></tr>
+                <tr><td><strong>À:</strong></td><td>%s</td></tr>
+                <tr><td><strong>Montant:</strong></td><td>%s</td></tr>
+                <tr><td><strong>Raison:</strong></td><td>%s</td></tr>
+                <tr><td><strong>Statut:</strong></td><td>%s</td></tr>
+                <tr><td><strong>Type:</strong></td><td>%s</td></tr>
+            </table>
+        </div>
+    ]]
+
+    local formattedHtml = string.format(html,
+        content.title,
+        content.sender,
+        content.receiver,
+        content.amount,
+        content.reason,
+        content.status,
+        content.type
+    )
+
+    cb(formattedHtml)
+end)
+
+-------------------------------
+--     BILL MANAGEMENT
+-------------------------------
 RegisterNetEvent('illama_billing:createBill')
 AddEventHandler('illama_billing:createBill', function(data)
     local source = source
@@ -217,7 +228,9 @@ AddEventHandler('illama_billing:createBill', function(data)
             reason = data.reason,
             bill_type = data.type,
             society = data.type == 'society' and xPlayer.job.name or nil,
-            job_label = data.type == 'society' and xPlayer.job.label or nil
+            job_label = data.type == 'society' and xPlayer.job.label or nil,
+            allow_installments = data.allow_installments,
+            requireSignature = data.requireSignature
         }
     }
 
@@ -230,6 +243,228 @@ AddEventHandler('illama_billing:createBill', function(data)
         description = _L('bill_request_sent')
     })
 end)
+
+RegisterNetEvent('illama_billing:payBill')
+AddEventHandler('illama_billing:payBill', function(billId, paymentType)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    
+    if not xPlayer then return end
+
+    MySQL.single('SELECT * FROM illama_bills WHERE id = ? AND status = ?', 
+        {billId, 'pending'},
+        function(bill)
+            if not bill then
+                TriggerClientEvent('ox_lib:notify', source, {
+                    type = 'error',
+                    description = _L('bill_already_paid')
+                })
+                return
+            end
+
+            local money = paymentType == 'bank' and xPlayer.getAccount('bank').money or xPlayer.getMoney()
+
+            if money < bill.amount then
+                TriggerClientEvent('ox_lib:notify', source, {
+                    type = 'error',
+                    description = _L('insufficient_funds', ESX.Math.GroupDigits(bill.amount - money))
+                })
+                return
+            end
+
+            if paymentType == 'bank' then
+                xPlayer.removeAccountMoney('bank', bill.amount)
+            else
+                xPlayer.removeMoney(bill.amount)
+            end
+
+            MySQL.update('UPDATE illama_bills SET status = ? WHERE id = ?', 
+                {'paid', billId},
+                function(affectedRows)
+                    if affectedRows > 0 then
+                        if bill.type == 'society' then
+                            TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. bill.society, function(account)
+                                if account then
+                                    account.addMoney(bill.amount)
+                                    
+                                    TriggerClientEvent('ox_lib:notify', source, {
+                                        type = 'success',
+                                        description = _L('payment_made_society', ESX.Math.GroupDigits(bill.amount), bill.society)
+                                    })
+
+                                    local xPlayers = ESX.GetPlayers()
+                                    for _, playerId in ipairs(xPlayers) do
+                                        local xTarget = ESX.GetPlayerFromId(playerId)
+                                        if xTarget and xTarget.job.name == bill.society and xTarget.job.grade_name == 'boss' then
+                                            TriggerClientEvent('ox_lib:notify', xTarget.source, {
+                                                title = _L('society_payment'),
+                                                description = _L('bill_paid_amount', ESX.Math.GroupDigits(bill.amount)),
+                                                type = 'success'
+                                            })
+                                        end
+                                    end
+                                end
+                            end)
+                        else
+                            local xTarget = ESX.GetPlayerFromIdentifier(bill.sender)
+                            if xTarget then
+                                if paymentType == 'bank' then
+                                    xTarget.addAccountMoney('bank', bill.amount)
+                                else
+                                    xTarget.addMoney(bill.amount)
+                                end
+
+                                TriggerClientEvent('ox_lib:notify', xTarget.source, {
+                                    type = 'success',
+                                    description = _L('payment_received', ESX.Math.GroupDigits(bill.amount), xPlayer.getName())
+                                })
+                            else
+                                MySQL.query('UPDATE users SET accounts = JSON_SET(accounts, "$.bank", CAST(JSON_EXTRACT(accounts, "$.bank") AS UNSIGNED) + ?) WHERE identifier = ?',
+                                    {bill.amount, bill.sender}
+                                )
+                            end
+
+                            TriggerClientEvent('ox_lib:notify', source, {
+                                type = 'success',
+                                description = _L('payment_made_player', ESX.Math.GroupDigits(bill.amount), bill.sender_name)
+                            })
+                        end
+
+                        TriggerClientEvent('illama_billing:refreshMenu', source)
+                    end
+                end
+            )
+        end
+    )
+end)
+
+RegisterNetEvent('illama_billing:acceptBill')
+AddEventHandler('illama_billing:acceptBill', function(billData)
+    local source = source
+    local pendingBill = PendingBills[source]
+    
+    if not pendingBill then return end
+
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return end
+
+    print('Debug - Signature reçue:', billData.signature)
+
+    MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status, allow_installments, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        {
+            pendingBill.data.sender,
+            pendingBill.data.sender_name,
+            xPlayer.identifier,
+            xPlayer.getName(),
+            pendingBill.data.amount,
+            pendingBill.data.reason,
+            pendingBill.data.bill_type,
+            pendingBill.data.society,
+            'pending',
+            pendingBill.data.allow_installments,
+            billData.signature
+        },
+        function(id)
+            if id then
+                print('Debug - Facture créée avec ID:', id)
+                TriggerClientEvent('ox_lib:notify', source, {
+                    type = 'success',
+                    description = _L('bill_accepted')
+                })
+
+                TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
+                    type = 'success',
+                    description = _L('bill_accepted_by_receiver')
+                })
+            end
+        end
+    )
+
+    PendingBills[source] = nil
+end)
+
+RegisterNetEvent('illama_billing:refuseBill')
+AddEventHandler('illama_billing:refuseBill', function(billData)
+    local source = source
+    local pendingBill = PendingBills[source]
+    
+    if not pendingBill then return end
+
+    TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
+        type = 'error',
+        description = _L('bill_refused_by_receiver')
+    })
+
+    PendingBills[source] = nil
+end)
+
+AddEventHandler('playerDropped', function()
+    local source = source
+    local pendingBill = PendingBills[source]
+    if pendingBill then
+        if pendingBill.type == 'recurring' then
+            TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
+                type = 'error',
+                description = _L('player_disconnected_recurring')
+            })
+        else
+            TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
+                type = 'error',
+                description = _L('player_disconnected_bill')
+            })
+        end
+        PendingBills[source] = nil
+    end
+end)
+
+RegisterNetEvent('illama_billing:deleteBill')
+AddEventHandler('illama_billing:deleteBill', function(billId)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    
+    if not xPlayer then return end
+
+    MySQL.query('DELETE FROM illama_bills WHERE id = ? AND receiver = ?', 
+        {billId, xPlayer.identifier},
+        function(affectedRows)
+            if affectedRows > 0 then
+                TriggerClientEvent('ox_lib:notify', source, {
+                    type = 'success',
+                    description = _L('bill_deleted')
+                })
+
+                MySQL.single('SELECT * FROM illama_bills WHERE id = ?', {billId}, function(bill)
+                    if bill then
+                        if bill.type == 'society' then
+                            local xPlayers = ESX.GetPlayers()
+                            for _, playerId in ipairs(xPlayers) do
+                                local xTarget = ESX.GetPlayerFromId(playerId)
+                                if xTarget and xTarget.job.name == bill.society and xTarget.job.grade_name == 'boss' then
+                                    TriggerClientEvent('ox_lib:notify', xTarget.source, {
+                                        type = 'error',
+                                        description = _L('bill_deleted_amount', ESX.Math.GroupDigits(bill.amount))
+                                    })
+                                end
+                            end
+                        else
+                            local xTarget = ESX.GetPlayerFromIdentifier(bill.sender)
+                            if xTarget then
+                                TriggerClientEvent('ox_lib:notify', xTarget.source, {
+                                    type = 'error',
+                                    description = _L('bill_deleted_amount', ESX.Math.GroupDigits(bill.amount))
+                                })
+                            end
+                        end
+                    end
+                end)
+            end
+        end
+    )
+end)
+
+-------------------------------
+--     RECURRING BILLS
+-------------------------------
 RegisterNetEvent('illama_billing:createRecurringBill')
 AddEventHandler('illama_billing:createRecurringBill', function(data)
     local source = source
@@ -270,132 +505,7 @@ AddEventHandler('illama_billing:createRecurringBill', function(data)
         description = _L('recurring_bill_request_sent')
     })
 end)
-ESX.RegisterServerCallback('illama_billing:getInstallmentPayments', function(source, cb)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    
-    if not xPlayer then 
-        cb({})
-        return
-    end
 
-    MySQL.query([[
-        SELECT 
-            ip.*,
-            b.reason as bill_reason
-        FROM illama_installment_payments ip
-        JOIN illama_bills b ON b.id = ip.bill_id
-        WHERE ip.player_identifier = ?
-        AND ip.remaining_payments > 0
-    ]], {xPlayer.identifier}, function(results)
-        cb(results or {})
-    end)
-end)
-
--- Événement pour configurer un plan de paiement
-RegisterNetEvent('illama_billing:setupInstallmentPlan')
-AddEventHandler('illama_billing:setupInstallmentPlan', function(billData, numberOfPayments)
-    local source = source
-    local xPlayer = ESX.GetPlayerFromId(source)
-    local pendingBill = PendingBills[source]
-    
-    if not xPlayer or not pendingBill then return end
-
-    -- D'abord, créer la facture
-    MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        {
-            pendingBill.data.sender,
-            pendingBill.data.sender_name,
-            xPlayer.identifier,
-            xPlayer.getName(),
-            pendingBill.data.amount,
-            pendingBill.data.reason,
-            pendingBill.data.bill_type,
-            pendingBill.data.society,
-            'pending'
-        },
-        function(billId)
-            if billId then
-                -- Ensuite, créer le plan de paiement
-                local amountPerPayment = math.ceil(pendingBill.data.amount / numberOfPayments)
-                local nextPaymentDate = os.time() + (7 * 86400) -- 7 jours
-
-                MySQL.insert('INSERT INTO illama_installment_payments (bill_id, player_identifier, amount_per_payment, remaining_payments, next_payment_date, total_payments) VALUES (?, ?, ?, ?, FROM_UNIXTIME(?), ?)',
-                    {
-                        billId,
-                        xPlayer.identifier,
-                        amountPerPayment,
-                        numberOfPayments,
-                        nextPaymentDate,
-                        numberOfPayments
-                    },
-                    function(id)
-                        if id then
-                            TriggerClientEvent('ox_lib:notify', source, {
-                                type = 'success',
-                                description = _L('payment_plan_created')
-                            })
-
-                            -- Notifier l'émetteur de la facture
-                            TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
-                                type = 'success',
-                                description = _L('bill_accepted_with_installments')
-                            })
-                        end
-                    end
-                )
-            end
-        end
-    )
-
-    -- Supprimer la facture en attente
-    PendingBills[source] = nil
-end)
-
--- Thread pour gérer les paiements automatiques
-CreateThread(function()
-    while true do
-        MySQL.query([[
-            SELECT * FROM illama_installment_payments 
-            WHERE remaining_payments > 0 
-            AND next_payment_date <= NOW()
-        ]], {}, function(payments)
-            for _, payment in ipairs(payments) do
-                local xPlayer = ESX.GetPlayerFromIdentifier(payment.player_identifier)
-                
-                if xPlayer then
-                    local bankMoney = xPlayer.getAccount('bank').money
-                    
-                    if bankMoney >= payment.amount_per_payment then
-                        xPlayer.removeAccountMoney('bank', payment.amount_per_payment)
-                        
-                        -- Mettre à jour le paiement
-                        MySQL.query([[
-                            UPDATE illama_installment_payments 
-                            SET remaining_payments = remaining_payments - 1,
-                                next_payment_date = DATE_ADD(next_payment_date, INTERVAL 7 DAY)
-                            WHERE id = ?
-                        ]], {payment.id})
-                        
-                        -- Notifier le joueur
-                        TriggerClientEvent('ox_lib:notify', xPlayer.source, {
-                            title = _L('installment_payment'),
-                            description = _L('payment_processed', ESX.Math.GroupDigits(payment.amount_per_payment)),
-                            type = 'success'
-                        })
-                    else
-                        TriggerClientEvent('ox_lib:notify', xPlayer.source, {
-                            title = _L('payment_failed'),
-                            description = _L('insufficient_funds_installment'),
-                            type = 'error'
-                        })
-                    end
-                end
-            end
-        end)
-        
-        Wait(60000) -- Vérifier toutes les minutes
-    end
-end)
 RegisterNetEvent('illama_billing:acceptRecurringBill')
 AddEventHandler('illama_billing:acceptRecurringBill', function()
     local source = source
@@ -514,50 +624,6 @@ AddEventHandler('illama_billing:payRecurringBill', function(billId, payments, pa
         end
     )
 end)
-RegisterNetEvent('illama_billing:deleteBill')
-AddEventHandler('illama_billing:deleteBill', function(billId)
-    local source = source
-    local xPlayer = ESX.GetPlayerFromId(source)
-    
-    if not xPlayer then return end
-
-    MySQL.query('DELETE FROM illama_bills WHERE id = ? AND receiver = ?', 
-        {billId, xPlayer.identifier},
-        function(affectedRows)
-            if affectedRows > 0 then
-                TriggerClientEvent('ox_lib:notify', source, {
-                    type = 'success',
-                    description = _L('bill_deleted')
-                })
-
-                MySQL.single('SELECT * FROM illama_bills WHERE id = ?', {billId}, function(bill)
-                    if bill then
-                        if bill.type == 'society' then
-                            local xPlayers = ESX.GetPlayers()
-                            for _, playerId in ipairs(xPlayers) do
-                                local xTarget = ESX.GetPlayerFromId(playerId)
-                                if xTarget and xTarget.job.name == bill.society and xTarget.job.grade_name == 'boss' then
-                                    TriggerClientEvent('ox_lib:notify', xTarget.source, {
-                                        type = 'error',
-                                        description = _L('bill_deleted_amount', ESX.Math.GroupDigits(bill.amount))
-                                    })
-                                end
-                            end
-                        else
-                            local xTarget = ESX.GetPlayerFromIdentifier(bill.sender)
-                            if xTarget then
-                                TriggerClientEvent('ox_lib:notify', xTarget.source, {
-                                    type = 'error',
-                                    description = _L('bill_deleted_amount', ESX.Math.GroupDigits(bill.amount))
-                                })
-                            end
-                        end
-                    end
-                end)
-            end
-        end
-    )
-end)
 
 RegisterNetEvent('illama_billing:cancelRecurringBill')
 AddEventHandler('illama_billing:cancelRecurringBill', function(billId)
@@ -581,6 +647,121 @@ AddEventHandler('illama_billing:cancelRecurringBill', function(billId)
     )
 end)
 
+-------------------------------
+--     INSTALLMENT BILLS
+-------------------------------
+RegisterNetEvent('illama_billing:setupInstallmentPlan')
+AddEventHandler('illama_billing:setupInstallmentPlan', function(billData, numberOfPayments)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local pendingBill = PendingBills[source]
+    
+    if not xPlayer or not pendingBill then return end
+
+    MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        {
+            pendingBill.data.sender,
+            pendingBill.data.sender_name,
+            xPlayer.identifier,
+            xPlayer.getName(),
+            pendingBill.data.amount,
+            pendingBill.data.reason,
+            pendingBill.data.bill_type,
+            pendingBill.data.society,
+            'pending'
+        },
+        function(billId)
+            if billId then
+                local amountPerPayment = math.ceil(pendingBill.data.amount / numberOfPayments)
+                local nextPaymentDate = os.time() + (7 * 86400)
+
+                MySQL.insert('INSERT INTO illama_installment_payments (bill_id, player_identifier, amount_per_payment, remaining_payments, next_payment_date, total_payments) VALUES (?, ?, ?, ?, FROM_UNIXTIME(?), ?)',
+                    {
+                        billId,
+                        xPlayer.identifier,
+                        amountPerPayment,
+                        numberOfPayments,
+                        nextPaymentDate,
+                        numberOfPayments
+                    },
+                    function(id)
+                        if id then
+                            TriggerClientEvent('ox_lib:notify', source, {
+                                type = 'success',
+                                description = _L('payment_plan_created')
+                            })
+                            TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
+                                type = 'success',
+                                description = _L('bill_accepted_with_installments')
+                            })
+                        end
+                    end
+                )
+            end
+        end
+    )
+    PendingBills[source] = nil
+end)
+
+-------------------------------
+--     TAGS MANAGEMENT
+-------------------------------
+RegisterNetEvent('illama_billing:addTagToBill')
+AddEventHandler('illama_billing:addTagToBill', function(billId, tag)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    
+    if not xPlayer then return end
+
+    MySQL.query('SELECT tags FROM illama_bills WHERE id = ?', {billId}, function(result)
+        if result and result[1] then
+            local success, currentTags = pcall(json.decode, result[1].tags or '[]')
+            if not success then currentTags = {} end
+            for _, existingTag in ipairs(currentTags) do
+                if existingTag == tag then
+                    return
+                end
+            end
+            
+            table.insert(currentTags, tag)
+            
+            MySQL.update('UPDATE illama_bills SET tags = ? WHERE id = ?', {
+                json.encode(currentTags),
+                billId
+            })
+        end
+    end)
+end)
+
+RegisterNetEvent('illama_billing:removeTagFromBill')
+AddEventHandler('illama_billing:removeTagFromBill', function(billId, tagToRemove)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    
+    if not xPlayer then return end
+
+    MySQL.query('SELECT tags FROM illama_bills WHERE id = ?', {billId}, function(result)
+        if result and result[1] then
+            local success, currentTags = pcall(json.decode, result[1].tags or '[]')
+            if not success then currentTags = {} end
+            local newTags = {}
+            for _, tag in ipairs(currentTags) do
+                if tag ~= tagToRemove then
+                    table.insert(newTags, tag)
+                end
+            end
+            
+            MySQL.update('UPDATE illama_bills SET tags = ? WHERE id = ?', {
+                json.encode(newTags),
+                billId
+            })
+        end
+    end)
+end)
+
+-------------------------------
+--     PAYMENT PROCESSING
+-------------------------------
 function StartRecurringBillsThread()
     if RecurringBillsThread then return end
 
@@ -633,206 +814,50 @@ function StartRecurringBillsThread()
     end)
 end
 
-RegisterNetEvent('illama_billing:acceptBill')
-AddEventHandler('illama_billing:acceptBill', function(billData)
-    local source = source
-    local pendingBill = PendingBills[source]
-    
-    if not pendingBill then return end
-
-    local xPlayer = ESX.GetPlayerFromId(source)
-    if not xPlayer then return end
-
-    MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        {
-            pendingBill.data.sender,
-            pendingBill.data.sender_name,
-            xPlayer.identifier,
-            xPlayer.getName(),
-            pendingBill.data.amount,
-            pendingBill.data.reason,
-            pendingBill.data.bill_type,
-            pendingBill.data.society,
-            'pending'
-        },
-        function(id)
-            if id then
-                TriggerClientEvent('ox_lib:notify', source, {
-                    type = 'success',
-                    description = _L('bill_accepted')
-                })
-
-                TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
-                    type = 'success',
-                    description = _L('bill_accepted_by_receiver')
-                })
+CreateThread(function()
+    while true do
+        MySQL.query([[
+            SELECT * FROM illama_installment_payments 
+            WHERE remaining_payments > 0 
+            AND next_payment_date <= NOW()
+        ]], {}, function(payments)
+            for _, payment in ipairs(payments) do
+                local xPlayer = ESX.GetPlayerFromIdentifier(payment.player_identifier)
+                
+                if xPlayer then
+                    local bankMoney = xPlayer.getAccount('bank').money
+                    
+                    if bankMoney >= payment.amount_per_payment then
+                        xPlayer.removeAccountMoney('bank', payment.amount_per_payment)
+                        MySQL.query([[
+                            UPDATE illama_installment_payments 
+                            SET remaining_payments = remaining_payments - 1,
+                                next_payment_date = DATE_ADD(next_payment_date, INTERVAL 7 DAY)
+                            WHERE id = ?
+                        ]], {payment.id})
+                        TriggerClientEvent('ox_lib:notify', xPlayer.source, {
+                            title = _L('installment_payment'),
+                            description = _L('payment_processed', ESX.Math.GroupDigits(payment.amount_per_payment)),
+                            type = 'success'
+                        })
+                    else
+                        TriggerClientEvent('ox_lib:notify', xPlayer.source, {
+                            title = _L('payment_failed'),
+                            description = _L('insufficient_funds_installment'),
+                            type = 'error'
+                        })
+                    end
+                end
             end
-        end
-    )
-
-    PendingBills[source] = nil
-end)
-RegisterNetEvent('illama_billing:refuseBill')
-AddEventHandler('illama_billing:refuseBill', function(billData)
-    local source = source
-    local pendingBill = PendingBills[source]
-    
-    if not pendingBill then return end
-
-    TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
-        type = 'error',
-        description = _L('bill_refused_by_receiver')
-    })
-
-    PendingBills[source] = nil
-end)
-
-AddEventHandler('playerDropped', function()
-    local source = source
-    local pendingBill = PendingBills[source]
-    if pendingBill then
-        if pendingBill.type == 'recurring' then
-            TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
-                type = 'error',
-                description = _L('player_disconnected_recurring')
-            })
-        else
-            TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
-                type = 'error',
-                description = _L('player_disconnected_bill')
-            })
-        end
-        PendingBills[source] = nil
+        end)
+        
+        Wait(60000)
     end
 end)
 
-RegisterNetEvent('illama_billing:payBill')
-AddEventHandler('illama_billing:payBill', function(billId, paymentType)
-    local source = source
-    local xPlayer = ESX.GetPlayerFromId(source)
-    
-    if not xPlayer then return end
-
-    MySQL.single('SELECT * FROM illama_bills WHERE id = ? AND status = ?', 
-        {billId, 'pending'},
-        function(bill)
-            if not bill then
-                TriggerClientEvent('ox_lib:notify', source, {
-                    type = 'error',
-                    description = _L('bill_already_paid')
-                })
-                return
-            end
-
-            local money = paymentType == 'bank' and xPlayer.getAccount('bank').money or xPlayer.getMoney()
-
-            if money < bill.amount then
-                TriggerClientEvent('ox_lib:notify', source, {
-                    type = 'error',
-                    description = _L('insufficient_funds', ESX.Math.GroupDigits(bill.amount - money))
-                })
-                return
-            end
-
-            if paymentType == 'bank' then
-                xPlayer.removeAccountMoney('bank', bill.amount)
-            else
-                xPlayer.removeMoney(bill.amount)
-            end
-
-            MySQL.update('UPDATE illama_bills SET status = ? WHERE id = ?', 
-                {'paid', billId},
-                function(affectedRows)
-                    if affectedRows > 0 then
-                        if bill.type == 'society' then
-                            TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. bill.society, function(account)
-                                if account then
-                                    account.addMoney(bill.amount)
-                                    
-                                    TriggerClientEvent('ox_lib:notify', source, {
-                                        type = 'success',
-                                        description = _L('payment_made_society', ESX.Math.GroupDigits(bill.amount), bill.society)
-                                    })
-
-                                    local xPlayers = ESX.GetPlayers()
-                                    for _, playerId in ipairs(xPlayers) do
-                                        local xTarget = ESX.GetPlayerFromId(playerId)
-                                        if xTarget and xTarget.job.name == bill.society and xTarget.job.grade_name == 'boss' then
-                                            TriggerClientEvent('ox_lib:notify', xTarget.source, {
-                                                title = _L('society_payment'),
-                                                description = _L('bill_paid_amount', ESX.Math.GroupDigits(bill.amount)),
-                                                type = 'success'
-                                            })
-                                        end
-                                    end
-                                end
-                            end)
-                        else
-                            local xTarget = ESX.GetPlayerFromIdentifier(bill.sender)
-                            if xTarget then
-                                if paymentType == 'bank' then
-                                    xTarget.addAccountMoney('bank', bill.amount)
-                                else
-                                    xTarget.addMoney(bill.amount)
-                                end
-
-                                TriggerClientEvent('ox_lib:notify', xTarget.source, {
-                                    type = 'success',
-                                    description = _L('payment_received', ESX.Math.GroupDigits(bill.amount), xPlayer.getName())
-                                })
-                            else
-                                MySQL.query('UPDATE users SET accounts = JSON_SET(accounts, "$.bank", CAST(JSON_EXTRACT(accounts, "$.bank") AS UNSIGNED) + ?) WHERE identifier = ?',
-                                    {bill.amount, bill.sender}
-                                )
-                            end
-
-                            TriggerClientEvent('ox_lib:notify', source, {
-                                type = 'success',
-                                description = _L('payment_made_player', ESX.Math.GroupDigits(bill.amount), bill.sender_name)
-                            })
-                        end
-
-                        TriggerClientEvent('illama_billing:refreshMenu', source)
-                    end
-                end
-            )
-        end
-    )
-end)
-ESX.RegisterServerCallback('illama_billing:generateBillImage', function(source, cb, content)
-    local html = [[
-        <div style="width: 400px; height: 500px; background-color: white; border: 2px solid black; padding: 20px; font-family: Arial, sans-serif;">
-            <h2 style="text-align: center; color: #333;">%s</h2>
-            <table style="width: 100%%;">
-                <tr><td><strong>De:</strong></td><td>%s</td></tr>
-                <tr><td><strong>À:</strong></td><td>%s</td></tr>
-                <tr><td><strong>Montant:</strong></td><td>%s</td></tr>
-                <tr><td><strong>Raison:</strong></td><td>%s</td></tr>
-                <tr><td><strong>Statut:</strong></td><td>%s</td></tr>
-                <tr><td><strong>Type:</strong></td><td>%s</td></tr>
-            </table>
-        </div>
-    ]]
-
-    local formattedHtml = string.format(html,
-        content.title,
-        content.sender,
-        content.receiver,
-        content.amount,
-        content.reason,
-        content.status,
-        content.type
-    )
-
-    cb(formattedHtml)
-end)
-
-
-CreateThread(function()
-    Wait(5000)
-    StartRecurringBillsThread()
-end)
-
+-------------------------------
+--     VERSION CHECKING
+-------------------------------
 local githubUser = 'illama'
 local githubRepo = 'illama_billing'
 
@@ -894,7 +919,88 @@ local function CheckVersion()
     )
 end
 
+-------------------------------
+--     SECURITY CHECK
+-------------------------------
+local scriptEnabled = false
+
+local function GetManifestVersion()
+    local manifest = LoadResourceFile(GetCurrentResourceName(), 'fxmanifest.lua')
+    if not manifest then return nil end
+    
+    for line in manifest:gmatch("[^\r\n]+") do
+        local version = line:match("^version%s+['\"](.+)['\"]")
+        if version then
+            return version:gsub("%s+", "")
+        end
+    end
+    return nil
+end
+
+local function StartPeriodicWarning(expectedName, currentName)
+    CreateThread(function()
+        while true do
+            print('^1[ERREUR - SYSTÈME DE FACTURATION] ^7')
+            print('^1[ERREUR] ^7Le script est désactivé car le nom de la ressource est incorrect!')
+            print('^1[ERREUR] ^7Nom attendu: ^3' .. expectedName .. '^7')
+            print('^1[ERREUR] ^7Nom actuel: ^3' .. currentName .. '^7')
+            print('^1[ERREUR] ^7Veuillez renommer le dossier pour réactiver le script.')
+            print('^1[ERREUR] ^7Contactez le support si vous avez besoin d\'aide.')
+            Wait(10000)
+        end
+    end)
+end
+local function DisableScript(expectedName, currentName)
+    AddEventHandler = function() return end
+    RegisterNetEvent = function() return end
+    TriggerEvent = function() return end
+    ESX.RegisterServerCallback = function() return end
+    RegisterCommand = function() return end
+    StartPeriodicWarning(expectedName, currentName)
+    TriggerClientEvent('illama_billing:scriptDisabled', -1, expectedName, currentName)
+end
+
+local function ValidateResourceName()
+    local resourceName = GetCurrentResourceName()
+    local manifestVersion = GetManifestVersion()
+    local expectedName = 'illama_billing_v.' .. manifestVersion
+    
+    if resourceName ~= expectedName then
+        print('^1[ERREUR] ^7Nom de ressource invalide!')
+        print('^1[ERREUR] ^7Nom attendu: ' .. expectedName)
+        print('^1[ERREUR] ^7Nom actuel: ' .. resourceName)
+        print('^1[ERREUR] ^7Version du manifest: ' .. manifestVersion)
+        print('^1[ERREUR] ^7Le script est désactivé pour des raisons de sécurité.')
+        
+        DisableScript(expectedName, resourceName)
+        return false
+    end
+    
+    scriptEnabled = true
+    return true
+end
+
+-------------------------------
+--     INITIALIZATION
+-------------------------------
 CreateThread(function()
     Wait(5000)
+    StartRecurringBillsThread()
     CheckVersion()
 end)
+
+if not ValidateResourceName() then 
+    return
+end
+
+local ESX = exports["es_extended"]:getSharedObject()
+
+local function CheckScriptEnabled(fn)
+    return function(...)
+        if not scriptEnabled then
+            print('^1[ERREUR] ^7Tentative d\'utilisation du script désactivé')
+            return
+        end
+        return fn(...)
+    end
+end
