@@ -4,6 +4,7 @@
 local ESX = exports["es_extended"]:getSharedObject()
 local PendingBills = {}
 local RecurringBillsThread = false
+local scriptVersion = GetResourceMetadata(GetCurrentResourceName(), 'version', 0) or '1.0.0'
 
 -------------------------------
 --     UTILITY FUNCTIONS
@@ -17,6 +18,82 @@ end
 local function isJobAllowedForRecurring(jobName)
     local jobConfig = Config.AllowedJobs[jobName]
     return jobConfig and jobConfig.allowRecurring or false
+end
+
+local function IsValidDescription(text)
+    if not text or text == '' then
+        return false
+    end
+    return string.match(text, "^[%s%da-zA-ZÀ-ÿ#%-%_/]+$") ~= nil
+end
+
+function FormatDateTime()
+    local time = os.date("*t")
+    return string.format("%02d/%02d/%04d %02d:%02d:%02d", 
+        time.day, time.month, time.year, 
+        time.hour, time.min, time.sec)
+end
+
+function FormatDate(timestamp)
+    local time
+    if timestamp then
+        time = os.date("*t", timestamp)
+    else
+        time = os.date("*t")
+    end
+    return string.format("%02d/%02d/%04d", time.day, time.month, time.year)
+end
+
+local function SendWebhook(webhookType, data)
+    if not Config.Webhooks.enabled then return end
+    local webhook
+    if data.society then
+        local jobConfig = Config.AllowedJobs[data.society]
+        if jobConfig and jobConfig.webhooks then
+            webhook = jobConfig.webhooks[webhookType]
+            if not webhook or not webhook.enabled then
+                webhook = Config.Webhooks.standard[webhookType]
+            end
+        end
+    else
+        webhook = Config.Webhooks.standard[webhookType]
+    end
+    
+    if not webhook or not webhook.enabled or not webhook.url then 
+        return 
+    end
+
+    local embed = {
+        {
+            ["color"] = webhook.color or 16711680,
+            ["title"] = _L('webhook_'..webhookType..'_title'),
+            ["description"] = _L('webhook_'..webhookType..'_desc', table.unpack(data.params or {})),
+            ["fields"] = data.fields or {},
+            ["footer"] = {
+                ["text"] = _L('webhook_footer', FormatDateTime())
+            }
+        }
+    }
+    if data.society then
+        local jobConfig = Config.AllowedJobs[data.society]
+        if jobConfig and jobConfig.webhooks and jobConfig.webhooks.logo then
+            embed[1]["thumbnail"] = {
+                ["url"] = jobConfig.webhooks.logo
+            }
+        end
+    end
+
+    local payload = json.encode({
+        username = data.society and Config.AllowedJobs[data.society].label or _L('webhook_bot_name'),
+        embeds = embed
+    })
+
+    PerformHttpRequest(webhook.url, function(err, text, headers) 
+        if err == 204 then
+        elseif err ~= 200 then
+        else
+        end
+    end, 'POST', payload, { ['Content-Type'] = 'application/json' })
 end
 
 -------------------------------
@@ -193,8 +270,14 @@ AddEventHandler('illama_billing:createBill', function(data)
     local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
     local xTarget = ESX.GetPlayerFromId(data.target)
-    
     if not xPlayer or not xTarget then return end
+    if not data.reason or not IsValidDescription(data.reason) then
+        TriggerClientEvent('ox_lib:notify', source, {
+            type = 'error',
+            description = _L('invalid_description')
+        })
+        return
+    end
     if data.type == 'society' and not canCreateSocietyBill(xPlayer) then
         TriggerClientEvent('ox_lib:notify', source, {
             type = 'error',
@@ -233,11 +316,33 @@ AddEventHandler('illama_billing:createBill', function(data)
             requireSignature = data.requireSignature
         }
     }
-
     PendingBills[data.target] = billData
-
+    SendWebhook('bill_created', {
+        society = data.type == 'society' and xPlayer.job.name or nil,
+        params = {
+            ESX.Math.GroupDigits(amount),
+            xPlayer.getName(),
+            xTarget.getName()
+        },
+        fields = {
+            {
+                ["name"] = _L('webhook_amount'),
+                ["value"] = ESX.Math.GroupDigits(amount),
+                ["inline"] = true
+            },
+            {
+                ["name"] = _L('webhook_reason'),
+                ["value"] = data.reason,
+                ["inline"] = true
+            },
+            {
+                ["name"] = _L('webhook_type'),
+                ["value"] = data.type == 'society' and xPlayer.job.label or _L('webhook_type_personal'),
+                ["inline"] = true
+            }
+        }
+    })
     TriggerClientEvent('illama_billing:requestConfirmation', data.target, billData.data)
-    
     TriggerClientEvent('ox_lib:notify', source, {
         type = 'info',
         description = _L('bill_request_sent')
@@ -282,6 +387,30 @@ AddEventHandler('illama_billing:payBill', function(billId, paymentType)
                 {'paid', billId},
                 function(affectedRows)
                     if affectedRows > 0 then
+                        SendWebhook('bill_paid', {
+                            society = bill.type == 'society' and bill.society or nil,
+                            params = {
+                                ESX.Math.GroupDigits(bill.amount),
+                                xPlayer.getName()
+                            },
+                            fields = {
+                                {
+                                    ["name"] = _L('webhook_payment_method'),
+                                    ["value"] = paymentType == 'bank' and _L('webhook_payment_bank') or _L('webhook_payment_cash'),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = _L('webhook_bill_id'),
+                                    ["value"] = billId,
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = _L('webhook_reason'),
+                                    ["value"] = bill.reason,
+                                    ["inline"] = true
+                                }
+                            }
+                        })
                         if bill.type == 'society' then
                             TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. bill.society, function(account)
                                 if account then
@@ -348,8 +477,6 @@ AddEventHandler('illama_billing:acceptBill', function(billData)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then return end
 
-    print('Debug - Signature reçue:', billData.signature)
-
     MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status, allow_installments, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         {
             pendingBill.data.sender,
@@ -366,7 +493,6 @@ AddEventHandler('illama_billing:acceptBill', function(billData)
         },
         function(id)
             if id then
-                print('Debug - Facture créée avec ID:', id)
                 TriggerClientEvent('ox_lib:notify', source, {
                     type = 'success',
                     description = _L('bill_accepted')
@@ -421,20 +547,51 @@ RegisterNetEvent('illama_billing:deleteBill')
 AddEventHandler('illama_billing:deleteBill', function(billId)
     local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
-    
     if not xPlayer then return end
+    
+    MySQL.single([[
+        SELECT b.*, j.label as job_label 
+        FROM illama_bills b 
+        LEFT JOIN jobs j ON j.name = b.society 
+        WHERE b.id = ? AND b.receiver = ?
+    ]], {billId, xPlayer.identifier},
+        function(bill)
+            if not bill then return end
+            
+            MySQL.update('DELETE FROM illama_bills WHERE id = ? AND receiver = ?', 
+                {billId, xPlayer.identifier},
+                function(affectedRows)
+                    if affectedRows then
+                        SendWebhook('bill_deleted', {
+                            society = bill.type == 'society' and bill.society or nil,
+                            params = {
+                                tostring(ESX.Math.GroupDigits(bill.amount)),
+                                xPlayer.getName()
+                            },
+                            fields = {
+                                {
+                                    ["name"] = _L('webhook_bill_id'),
+                                    ["value"] = tostring(billId),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = _L('webhook_reason'),
+                                    ["value"] = tostring(bill.reason),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = _L('webhook_type'),
+                                    ["value"] = bill.type == 'society' and (bill.job_label or bill.society) or _L('webhook_type_personal'),
+                                    ["inline"] = true
+                                }
+                            }
+                        })
 
-    MySQL.query('DELETE FROM illama_bills WHERE id = ? AND receiver = ?', 
-        {billId, xPlayer.identifier},
-        function(affectedRows)
-            if affectedRows > 0 then
-                TriggerClientEvent('ox_lib:notify', source, {
-                    type = 'success',
-                    description = _L('bill_deleted')
-                })
+                        TriggerClientEvent('ox_lib:notify', source, {
+                            type = 'success',
+                            description = _L('bill_deleted')
+                        })
 
-                MySQL.single('SELECT * FROM illama_bills WHERE id = ?', {billId}, function(bill)
-                    if bill then
                         if bill.type == 'society' then
                             local xPlayers = ESX.GetPlayers()
                             for _, playerId in ipairs(xPlayers) do
@@ -456,8 +613,8 @@ AddEventHandler('illama_billing:deleteBill', function(billId)
                             end
                         end
                     end
-                end)
-            end
+                end
+            )
         end
     )
 end)
@@ -465,45 +622,68 @@ end)
 -------------------------------
 --     RECURRING BILLS
 -------------------------------
-RegisterNetEvent('illama_billing:createRecurringBill')
-AddEventHandler('illama_billing:createRecurringBill', function(data)
+RegisterNetEvent('illama_billing:acceptRecurringBill')
+AddEventHandler('illama_billing:acceptRecurringBill', function(billData)
     local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
-    local xTarget = ESX.GetPlayerFromId(data.target)
-
-    if not canCreateSocietyBill(xPlayer) or not isJobAllowedForRecurring(xPlayer.job.name) then
-        TriggerClientEvent('ox_lib:notify', source, {
-            type = 'error',
-            description = _L('insufficient_rights')
-        })
-        return
-    end
-
-    local pendingBillData = {
-        type = 'recurring',
-        data = {
-            sender = xPlayer.identifier,
-            sender_name = xPlayer.getName(),
-            sender_source = source,
-            target = data.target,
-            amount = data.amount,
-            reason = data.reason,
-            interval_days = data.interval_days,
-            society = data.society,
-            society_label = data.society_label,
-            type = 'society',
-            bill_type = 'society'
-        }
-    }
-
-    PendingBills[data.target] = pendingBillData
-
-    TriggerClientEvent('illama_billing:requestConfirmation', data.target, pendingBillData.data)
-
-    TriggerClientEvent('ox_lib:notify', source, {
-        type = 'info',
-        description = _L('recurring_bill_request_sent')
-    })
+    local pendingBill = PendingBills[source]
+    if not xPlayer or not pendingBill then return end
+    MySQL.insert('INSERT INTO illama_recurring_bills (sender, sender_name, receiver, receiver_name, amount, reason, society, interval_days, next_billing_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))',
+        {
+            pendingBill.data.sender,
+            pendingBill.data.sender_name,
+            xPlayer.identifier,
+            xPlayer.getName(),
+            pendingBill.data.amount,
+            pendingBill.data.reason,
+            pendingBill.data.society,
+            pendingBill.data.interval_days,
+            os.time() + (pendingBill.data.interval_days * 86400)
+        },
+        function(id)
+            if id then
+                SendWebhook('recurring_created', {
+                    society = pendingBill.data.society,
+                    params = {
+                        ESX.Math.GroupDigits(pendingBill.data.amount),
+                        xPlayer.getName(),
+                        pendingBill.data.interval_days
+                    },
+                    fields = {
+                        {
+                            ["name"] = _L('webhook_amount'),
+                            ["value"] = ESX.Math.GroupDigits(pendingBill.data.amount),
+                            ["inline"] = true
+                        },
+                        {
+                            ["name"] = _L('webhook_interval'),
+                            ["value"] = _L('webhook_days_count', pendingBill.data.interval_days),
+                            ["inline"] = true
+                        },
+                        {
+                            ["name"] = _L('webhook_next_payment'),
+                            ["value"] = FormatDate(os.time() + (pendingBill.data.interval_days * 86400)),
+                            ["inline"] = true
+                        },
+                        {
+                            ["name"] = _L('webhook_reason'),
+                            ["value"] = pendingBill.data.reason,
+                            ["inline"] = true
+                        }
+                    }
+                })
+                TriggerClientEvent('ox_lib:notify', source, {
+                    type = 'success',
+                    description = _L('recurring_bill_created')
+                })
+                TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
+                    type = 'success',
+                    description = _L('recurring_bill_accepted')
+                })
+            end
+        end
+    )
+    PendingBills[source] = nil
 end)
 
 RegisterNetEvent('illama_billing:acceptRecurringBill')
@@ -674,7 +854,6 @@ AddEventHandler('illama_billing:setupInstallmentPlan', function(billData, number
             if billId then
                 local amountPerPayment = math.ceil(pendingBill.data.amount / numberOfPayments)
                 local nextPaymentDate = os.time() + (7 * 86400)
-
                 MySQL.insert('INSERT INTO illama_installment_payments (bill_id, player_identifier, amount_per_payment, remaining_payments, next_payment_date, total_payments) VALUES (?, ?, ?, ?, FROM_UNIXTIME(?), ?)',
                     {
                         billId,
@@ -686,6 +865,36 @@ AddEventHandler('illama_billing:setupInstallmentPlan', function(billData, number
                     },
                     function(id)
                         if id then
+                            SendWebhook('installment_created', {
+                                society = pendingBill.data.society,
+                                params = {
+                                    ESX.Math.GroupDigits(pendingBill.data.amount),
+                                    xPlayer.getName(),
+                                    numberOfPayments
+                                },
+                                fields = {
+                                    {
+                                        ["name"] = _L('webhook_amount_per_payment'),
+                                        ["value"] = ESX.Math.GroupDigits(amountPerPayment),
+                                        ["inline"] = true
+                                    },
+                                    {
+                                        ["name"] = _L('webhook_total_payments'),
+                                        ["value"] = numberOfPayments,
+                                        ["inline"] = true
+                                    },
+                                    {
+                                        ["name"] = _L('webhook_next_payment'),
+                                        ["value"] = FormatDate(nextPaymentDate),
+                                        ["inline"] = true
+                                    },
+                                    {
+                                        ["name"] = _L('webhook_reason'),
+                                        ["value"] = pendingBill.data.reason,
+                                        ["inline"] = true
+                                    }
+                                }
+                            })
                             TriggerClientEvent('ox_lib:notify', source, {
                                 type = 'success',
                                 description = _L('payment_plan_created')
@@ -764,7 +973,6 @@ end)
 -------------------------------
 function StartRecurringBillsThread()
     if RecurringBillsThread then return end
-
     RecurringBillsThread = true
     CreateThread(function()
         while true do
@@ -785,13 +993,44 @@ function StartRecurringBillsThread()
                                     'society',
                                     bill.society,
                                     'pending'
-                                }
+                                },
+                                function(billId)
+                                    if billId then
+                                        SendWebhook('recurring_payment', {
+                                            society = bill.society,
+                                            params = {
+                                                ESX.Math.GroupDigits(bill.amount),
+                                                xPlayer.getName()
+                                            },
+                                            fields = {
+                                                {
+                                                    ["name"] = _L('webhook_amount'),
+                                                    ["value"] = ESX.Math.GroupDigits(bill.amount),
+                                                    ["inline"] = true
+                                                },
+                                                {
+                                                    ["name"] = _L('webhook_next_payment'),
+                                                    ["value"] = FormatDate(os.time() + (bill.interval_days * 86400)),
+                                                    ["inline"] = true
+                                                },
+                                                {
+                                                    ["name"] = _L('webhook_reason'),
+                                                    ["value"] = bill.reason,
+                                                    ["inline"] = true
+                                                },
+                                                {
+                                                    ["name"] = _L('webhook_bill_id'),
+                                                    ["value"] = billId,
+                                                    ["inline"] = true
+                                                }
+                                            }
+                                        })
+                                    end
+                                end
                             )
-
                             MySQL.query('UPDATE illama_recurring_bills SET next_billing_date = DATE_ADD(next_billing_date, INTERVAL ? DAY) WHERE id = ?',
                                 {bill.interval_days, bill.id}
                             )
-
                             TriggerClientEvent('ox_lib:notify', xPlayer.source, {
                                 title = _L('recurring_bill'),
                                 description = _L('new_recurring_bill_amount',
@@ -983,6 +1222,29 @@ end
 -------------------------------
 --     INITIALIZATION
 -------------------------------
+AddEventHandler('onResourceStart', function(resourceName)
+    if (GetCurrentResourceName() ~= resourceName) then
+        return
+    end
+    if not Config.Webhooks.enabled then return end
+    SendWebhook('script_start', {
+        society = nil,
+        params = {},
+        fields = {
+            {
+                ["name"] = _L('webhook_version'),
+                ["value"] = scriptVersion,
+                ["inline"] = true
+            },
+            {
+                ["name"] = _L('webhook_framework'),
+                ["value"] = 'ESX',
+                ["inline"] = true
+            }
+        }
+    })
+end)
+
 CreateThread(function()
     Wait(5000)
     StartRecurringBillsThread()

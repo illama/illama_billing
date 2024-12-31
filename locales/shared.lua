@@ -26,6 +26,11 @@ function Locale.Translate(lang, str, ...)
         return 'Missing translation: ' .. str
     end
 
+    local args = {...}
+    if #args == 0 then
+        return Locales[lang][str]
+    end
+
     return string.format(Locales[lang][str], ...)
 end
 

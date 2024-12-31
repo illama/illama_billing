@@ -26,26 +26,24 @@ function GetNearbyPlayers()
     local players = ESX.Game.GetPlayers()
     local nearbyPlayers = {}
     local coordinates = GetEntityCoords(playerPed)
-
+    local myServerId = GetPlayerServerId(PlayerId())
     for _, player in ipairs(players) do
         local target = GetPlayerPed(player)
-        if target ~= playerPed then
-            local targetCoords = GetEntityCoords(target)
-            local distance = #(coordinates - targetCoords)
-           
-            if distance <= 5.0 then
-                table.insert(nearbyPlayers, {
-                    source = GetPlayerServerId(player),
-                    name = GetPlayerName(player),
-                    distance = distance
-                })
-            end
+        local targetServerId = GetPlayerServerId(player)
+        local targetCoords = GetEntityCoords(target)
+        local distance = #(coordinates - targetCoords)
+        if distance <= 5.0 or targetServerId == myServerId then
+            table.insert(nearbyPlayers, {
+                source = targetServerId,
+                name = GetPlayerName(player),
+                distance = distance
+            })
         end
     end
-
     table.sort(nearbyPlayers, function(a, b)
         return a.distance < b.distance
     end)
+    
     return nearbyPlayers
 end
 

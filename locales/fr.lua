@@ -257,6 +257,7 @@ Locales['fr'] = {
     ['signature_placeholder'] = 'Votre signature ici',
     ['signature'] = 'Signature',
     ['not_signed'] = 'Non signé',
+    ['signed_by'] = 'Signé par',
     ['accept'] = 'Accepter',
     ['separator_bills_management'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
     ['separator_history'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
@@ -299,6 +300,7 @@ Locales['fr'] = {
     ['recurring_cancelled_inactivity'] = 'L\'abonnement a été annulé pour inactivité',
     ['player_disconnected_recurring'] = 'Le joueur s\'est déconnecté, facture d\'abonnement annulé',
     ['player_disconnected_bill'] = 'Le joueur s\'est déconnecté, facture annulée',
+    ['invalid_description'] = 'La description ne peut contenir que des lettres et des espaces',
 
     -------------------
     -- SYSTEM MESSAGES
@@ -363,4 +365,48 @@ Locales['fr'] = {
     ['invalid_resource_name'] = 'Nom de ressource invalide!',
     ['manifest_version'] = 'Version du manifest: %s',
     ['script_disabled_security'] = 'Le script est désactivé pour des raisons de sécurité.',
+
+    ['webhook_bot_name'] = 'Système de Facturation',
+    ['webhook_footer'] = 'Envoyé le %s',
+    
+    -- Webhooks - Titres
+    ['webhook_bill_created_title'] = '📥 Nouvelle Facture',
+    ['webhook_bill_paid_title'] = '💰 Facture Payée',
+    ['webhook_bill_deleted_title'] = '🗑️ Facture Supprimée',
+    ['webhook_recurring_created_title'] = '🔄 Nouvelle Facture Récurrente',
+    ['webhook_recurring_payment_title'] = '💳 Paiement Récurrent',
+    ['webhook_recurring_cancelled_title'] = '⛔ Abonnement Annulé',
+    ['webhook_installment_created_title'] = '📋 Nouveau Plan de Paiement',
+    ['webhook_installment_payment_title'] = '💸 Paiement Échelonné',
+    
+    -- Webhooks - Descriptions
+    ['webhook_bill_created_desc'] = 'Une facture de $%s a été créée par %s pour %s',
+    ['webhook_bill_paid_desc'] = 'Une facture de $%s a été payée par %s',
+    ['webhook_bill_deleted_desc'] = 'Une facture de $%s a été supprimée par %s',
+    ['webhook_recurring_created_desc'] = 'Un abonnement de $%s a été créé pour %s (%s jours)',
+    ['webhook_recurring_payment_desc'] = 'Un paiement récurrent de $%s a été créé pour %s',
+    ['webhook_recurring_cancelled_desc'] = 'Un abonnement de $%s a été annulé par %s',
+    ['webhook_installment_created_desc'] = 'Un plan de paiement de $%s a été créé pour %s (%s paiements)',
+    ['webhook_installment_payment_desc'] = 'Un paiement échelonné de $%s a été effectué par %s',
+    
+    -- Webhooks - Champs
+    ['webhook_amount'] = 'Montant',
+    ['webhook_reason'] = 'Raison',
+    ['webhook_payment_method'] = 'Méthode de paiement',
+    ['webhook_payment_bank'] = 'Banque',
+    ['webhook_payment_cash'] = 'Espèces',
+    ['webhook_bill_id'] = 'ID Facture',
+    ['webhook_amount_per_payment'] = 'Montant par paiement',
+    ['webhook_total_payments'] = 'Nombre de paiements',
+    ['webhook_remaining_payments'] = 'Paiements restants',
+    ['webhook_total_amount'] = 'Montant total',
+    ['webhook_next_payment'] = 'Prochain paiement',
+    ['webhook_interval'] = 'Intervalle',
+    ['webhook_days_count'] = '%s jours',
+    ['webhook_type'] = 'Type',
+    ['webhook_type_personal'] = 'Personnelle',
+    ['webhook_script_start_title'] = '🚀 Script Démarré',
+    ['webhook_script_start_desc'] = 'Le système de facturation a démarré avec succès',
+    ['webhook_version'] = 'Version',
+    ['webhook_framework'] = 'Framework',
 }

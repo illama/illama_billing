@@ -1604,8 +1604,6 @@ RegisterNetEvent('illama_billing:requestConfirmation')
 AddEventHandler('illama_billing:requestConfirmation', function(billData)
     if not billData then return end
 
-    print('Debug - Signature requise:', billData.requireSignature)
-
     local metadata = {
         {label = _L('from'), value = billData.sender_name}
     }
@@ -1650,7 +1648,6 @@ AddEventHandler('illama_billing:requestConfirmation', function(billData)
         icon = 'check',
         onSelect = function()
             local processAccept = function(signature)
-                print('Debug - Process Accept avec signature:', signature)
                 billData.signature = signature
                 if billData.interval_days then
                     TriggerServerEvent('illama_billing:acceptRecurringBill', billData)
@@ -1666,7 +1663,6 @@ AddEventHandler('illama_billing:requestConfirmation', function(billData)
             end
 
             if billData.requireSignature then
-                print('Debug - Ouverture du menu signature')
                 Wait(100)
                 lib.hideContext()
                 Wait(100)
