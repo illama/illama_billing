@@ -7,9 +7,9 @@ Locales['zh'] = {
     
     -- 主要部分
     ['personal_bills'] = '个人账单',
-    ['personal_bills_desc'] = '管理您的个人账单',
+    ['personal_bills_desc'] = '创建个人账单',
     ['society_bills'] = '公司账单',
-    ['society_bills_desc'] = '管理公司账单',
+    ['society_bills_desc'] = '创建公司账单',
     ['my_bills'] = '我的账单',
     ['my_bills_desc'] = '查看接收到的账单',
     ['recurring_bills'] = '定期账单',
@@ -75,11 +75,13 @@ Locales['zh'] = {
     ['number_of_payments'] = '付款期数',
     ['max_5_payments'] = '最多5期（每周1期）',
     ['confirm_installment_plan'] = '确认分期计划',
-    ['payment_plan'] = '付款计划: %s',  -- 1 argument
-    ['installment_status'] = '剩余%d期，共%d期\n每期金额: $%s', -- 3 arguments
-    ['installment_details'] = '%d期分期付款计划\n每期金额: $%s\n总金额: $%s', -- 3 arguments
+    ['payment_plan'] = '付款计划: %s',
+    ['installment_status'] = '剩余%d期，共%d期\n每期金额: $%s',
+    ['installment_details'] = '%d期分期付款计划\n每期金额: $%s\n总金额: $%s',
     ['payment_plan_created'] = '分期付款计划创建成功',
     ['bill_accepted_with_installments'] = '账单已接受，将以分期方式支付',
+    ['allow_installments'] = '允许分期付款',
+    ['allow_installments_desc'] = '允许此账单分期付款',
 
     -- 分期付款菜单
     ['installment_payments'] = '分期付款',
@@ -237,6 +239,7 @@ Locales['zh'] = {
     ['select_billing_type'] = '账单类型',
     ['confirmation'] = '确认',
     ['delete_bill'] = '删除账单',
+    ['delete_bill_desc'] = '将要求确认删除。',
     ['cancel_subscription'] = '取消订阅',
     ['cancel_subscription_desc'] = '取消此订阅',
     ['confirm_delete_bill'] = '您确定要删除此账单吗？',
@@ -245,6 +248,8 @@ Locales['zh'] = {
     ['close'] = '关闭',
     ['info'] = '信息',
     ['click_to_export'] = '点击发票以查看',
+    ['separator_bills_management'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
+    ['separator_history'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
 
     -------------------
     -- 通知和错误
