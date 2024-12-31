@@ -7,9 +7,9 @@ Locales['ar'] = {
     
     -- الأقسام الرئيسية
     ['personal_bills'] = 'فواتير شخصية',
-    ['personal_bills_desc'] = 'إدارة فواتيرك الشخصية',
+    ['personal_bills_desc'] = 'إنشاء فواتير شخصية',
     ['society_bills'] = 'فواتير الشركات',
-    ['society_bills_desc'] = 'إدارة فواتير الشركة',
+    ['society_bills_desc'] = 'إنشاء فواتير الشركة',
     ['my_bills'] = 'فواتيري',
     ['my_bills_desc'] = 'عرض الفواتير المستلمة',
     ['recurring_bills'] = 'فواتير متكررة',
@@ -75,11 +75,13 @@ Locales['ar'] = {
     ['number_of_payments'] = 'عدد الأقساط',
     ['max_5_payments'] = 'الحد الأقصى 5 أقساط (قسط واحد أسبوعياً)',
     ['confirm_installment_plan'] = 'تأكيد خطة الدفع',
-    ['payment_plan'] = 'خطة الدفع: %s',  -- 1 argument
-    ['installment_status'] = 'متبقي %d قسط من %d\nقيمة القسط: $%s', -- 3 arguments
-    ['installment_details'] = 'خطة دفع على %d قسط\nقيمة القسط: $%s\nالمبلغ الإجمالي: $%s', -- 3 arguments
+    ['payment_plan'] = 'خطة الدفع: %s',
+    ['installment_status'] = 'متبقي %d قسط من %d\nقيمة القسط: $%s',
+    ['installment_details'] = 'خطة دفع على %d قسط\nقيمة القسط: $%s\nالمبلغ الإجمالي: $%s',
     ['payment_plan_created'] = 'تم إنشاء خطة الدفع بالتقسيط بنجاح',
     ['bill_accepted_with_installments'] = 'تم قبول الفاتورة مع الدفع بالتقسيط',
+    ['allow_installments'] = 'السماح بالدفع بالتقسيط',
+    ['allow_installments_desc'] = 'السماح بالدفع بالتقسيط لهذه الفاتورة',
 
     -- قائمة المدفوعات بالتقسيط
     ['installment_payments'] = 'المدفوعات بالتقسيط',
@@ -237,6 +239,7 @@ Locales['ar'] = {
     ['select_billing_type'] = 'نوع الفاتورة',
     ['confirmation'] = 'تأكيد',
     ['delete_bill'] = 'حذف الفاتورة',
+    ['delete_bill_desc'] = 'سيتم طلب تأكيد الحذف.',
     ['cancel_subscription'] = 'إلغاء الاشتراك',
     ['cancel_subscription_desc'] = 'إلغاء هذا الاشتراك',
     ['confirm_delete_bill'] = 'هل أنت متأكد أنك تريد حذف هذه الفاتورة؟',
@@ -245,6 +248,8 @@ Locales['ar'] = {
     ['close'] = 'أغلق',
     ['info'] = 'معلومات',
     ['click_to_export'] = 'انقر على فاتورة لعرضها',
+    ['separator_bills_management'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
+    ['separator_history'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
 
     -------------------
     -- الإشعارات والأخطاء
