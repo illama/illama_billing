@@ -334,5 +334,19 @@ Locales['es'] = {
     ['tag_name'] = 'Nombre de Etiqueta',
     ['tag_name_desc'] = 'Introduce el nombre de la nueva etiqueta',
     ['export_bill'] = 'Exportar Factura',
-    ['export_bill_desc'] = 'Exportar factura como imagen'
+    ['export_bill_desc'] = 'Exportar factura como imagen',
+
+    -------------------
+    -- SEGURIDAD
+    -------------------
+    ['billing_system_error'] = 'ERROR - SISTEMA DE FACTURACIÓN',
+    ['error'] = 'ERROR',
+    ['script_disabled_wrong_name'] = '¡El script está desactivado porque el nombre del recurso es incorrecto!',
+    ['expected_name'] = 'Nombre esperado: ^3%s^7',
+    ['current_name'] = 'Nombre actual: ^3%s^7',
+    ['rename_folder_instruction'] = 'Por favor, renombre la carpeta para reactivar el script.',
+    ['contact_support'] = 'Contacte con soporte si necesita ayuda.',
+    ['invalid_resource_name'] = '¡Nombre de recurso inválido!',
+    ['manifest_version'] = 'Versión del manifiesto: %s',
+    ['script_disabled_security'] = 'Script desactivado por razones de seguridad.',
 }
