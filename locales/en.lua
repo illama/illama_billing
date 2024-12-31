@@ -7,9 +7,9 @@ Locales['en'] = {
     
     -- Main sections
     ['personal_bills'] = 'Personal Bills',
-    ['personal_bills_desc'] = 'Manage your personal bills',
+    ['personal_bills_desc'] = 'Create personal bills',
     ['society_bills'] = 'Company Bills',
-    ['society_bills_desc'] = 'Manage company bills',
+    ['society_bills_desc'] = 'Create company bills',
     ['my_bills'] = 'My Bills',
     ['my_bills_desc'] = 'View received bills',
     ['recurring_bills'] = 'Recurring Bills',
@@ -75,11 +75,13 @@ Locales['en'] = {
     ['number_of_payments'] = 'Number of payments',
     ['max_5_payments'] = 'Maximum 5 payments (1 per week)',
     ['confirm_installment_plan'] = 'Confirm Payment Plan',
-    ['payment_plan'] = 'Payment Plan: %s',  -- 1 argument
-    ['installment_status'] = '%d payments remaining out of %d\nAmount per payment: $%s', -- 3 arguments
-    ['installment_details'] = 'Payment plan in %d installments\nAmount per payment: $%s\nTotal amount: $%s', -- 3 arguments
+    ['payment_plan'] = 'Payment Plan: %s',
+    ['installment_status'] = '%d payments remaining out of %d\nAmount per payment: $%s',
+    ['installment_details'] = 'Payment plan in %d installments\nAmount per payment: $%s\nTotal amount: $%s',
     ['payment_plan_created'] = 'Installment payment plan created successfully',
     ['bill_accepted_with_installments'] = 'Bill accepted with installment payment',
+    ['allow_installments'] = 'Allow installment payments',
+    ['allow_installments_desc'] = 'Allow installment payments for this bill',
 
     -- Installment Payments Menu
     ['installment_payments'] = 'Installment Payments',
@@ -237,6 +239,7 @@ Locales['en'] = {
     ['select_billing_type'] = 'Billing Type',
     ['confirmation'] = 'Confirmation',
     ['delete_bill'] = 'Delete the bill',
+    ['delete_bill_desc'] = 'A deletion confirmation will be requested.',
     ['cancel_subscription'] = 'Cancel subscription',
     ['cancel_subscription_desc'] = 'Cancel this subscription',
     ['confirm_delete_bill'] = 'Are you sure you want to delete this bill?',
