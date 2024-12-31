@@ -7,9 +7,9 @@ Locales['sr'] = {
     
     -- Glavne sekcije
     ['personal_bills'] = 'Lične Fakture',
-    ['personal_bills_desc'] = 'Upravljajte vašim ličnim fakturama',
+    ['personal_bills_desc'] = 'Kreiraj lične račune',
     ['society_bills'] = 'Fakture Preduzeća',
-    ['society_bills_desc'] = 'Upravljajte fakturama preduzeća',
+    ['society_bills_desc'] = 'Kreiraj račune preduzeća',
     ['my_bills'] = 'Moje Fakture',
     ['my_bills_desc'] = 'Pogledajte primljene fakture',
     ['recurring_bills'] = 'Ponavljajuće Fakture',
@@ -75,9 +75,9 @@ Locales['sr'] = {
     ['number_of_payments'] = 'Број рата',
     ['max_5_payments'] = 'Максимално 5 рата (1 недељно)',
     ['confirm_installment_plan'] = 'Потврди план отплате',
-    ['payment_plan'] = 'План отплате: %s',  -- 1 argument
-    ['installment_status'] = 'Преостало %d рата од %d\nИзнос рате: $%s', -- 3 arguments
-    ['installment_details'] = 'План отплате на %d рата\nИзнос рате: $%s\nУкупан износ: $%s', -- 3 arguments
+    ['payment_plan'] = 'План отплате: %s',
+    ['installment_status'] = 'Преостало %d рата од %d\nИзнос рате: $%s',
+    ['installment_details'] = 'План отплате на %d рата\nИзнос рате: $%s\nУкупан износ: $%s',
     ['payment_plan_created'] = 'План отплате на рате успешно креиран',
     ['bill_accepted_with_installments'] = 'Рачун прихваћен са плаћањем на рате',
 
@@ -237,6 +237,7 @@ Locales['sr'] = {
     ['select_billing_type'] = 'Tip fakture',
     ['confirmation'] = 'Potvrda',
     ['delete_bill'] = 'Obriši fakturu',
+    ['delete_bill_desc'] = 'Biće zatražena potvrda brisanja.',
     ['cancel_subscription'] = 'Otkaži pretplatu',
     ['cancel_subscription_desc'] = 'Otkažite ovu pretplatu',
     ['confirm_delete_bill'] = 'Da li ste sigurni da želite da obrišete ovu fakturu?',
@@ -245,6 +246,8 @@ Locales['sr'] = {
     ['close'] = 'Zatvori',
     ['info'] = 'Informacija',
     ['click_to_export'] = 'Kliknite na fakturu za pregled',
+    ['separator_bills_management'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
+    ['separator_history'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
 
     -------------------
     -- OBAVEŠTENJA I GREŠKE
