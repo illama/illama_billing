@@ -164,6 +164,35 @@
             text-align: center;
             margin-top: 30px;
         }
+        .signature-section {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 2px solid #f0f0f0;
+        }
+
+        .signature-box {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .signature-info {
+            text-align: right;
+            color: #444;
+        }
+
+        .signature-name {
+            font-size: 18px;
+            color: #2c3e50;
+            font-family: 'Brush Script MT', cursive;
+            margin-bottom: 5px;
+        }
+
+        .signature-date {
+            font-size: 12px;
+            color: #666;
+        }
 
         button {
             padding: 12px 24px;
@@ -257,6 +286,26 @@
                         </tbody>
                     </table>
                 </div>
+                ${data.signature ? `
+                    <div class="signature-section">
+                        <div class="signature-box">
+                            <div class="signature-info">
+                                <div class="signature-name">${data.signature}</div>
+                                <div class="signature-date">
+                                    <strong>${translations.signed_by}:</strong> ${data.signature}<br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ` : `
+                    <div class="signature-section">
+                        <div class="signature-box">
+                            <div class="signature-info">
+                                <div class="signature-name" style="color: #999;">${translations.not_signed}</div>
+                            </div>
+                        </div>
+                    </div>
+                `}
 
                 <div class="bill-buttons">
                     <button>${translations.close}</button>
