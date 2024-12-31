@@ -334,5 +334,19 @@ Locales['zh'] = {
     ['tag_name'] = '标签名称',
     ['tag_name_desc'] = '输入新标签名称',
     ['export_bill'] = '导出账单',
-    ['export_bill_desc'] = '将账单导出为图片'
+    ['export_bill_desc'] = '将账单导出为图片',
+
+    -------------------
+    -- 安全
+    -------------------
+    ['billing_system_error'] = '错误 - 计费系统',
+    ['error'] = '错误',
+    ['script_disabled_wrong_name'] = '由于资源名称不正确，脚本已被禁用！',
+    ['expected_name'] = '预期名称：^3%s^7',
+    ['current_name'] = '当前名称：^3%s^7',
+    ['rename_folder_instruction'] = '请重命名文件夹以重新激活脚本。',
+    ['contact_support'] = '如需帮助，请联系支持。',
+    ['invalid_resource_name'] = '无效的资源名称！',
+    ['manifest_version'] = '清单版本：%s',
+    ['script_disabled_security'] = '出于安全原因，脚本已被禁用。',
 }
