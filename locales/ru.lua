@@ -7,9 +7,9 @@ Locales['ru'] = {
     
     -- Основные разделы
     ['personal_bills'] = 'Личные счета',
-    ['personal_bills_desc'] = 'Управляйте своими личными счетами',
+    ['personal_bills_desc'] = 'Создать личные счета',
     ['society_bills'] = 'Счет компании',
-    ['society_bills_desc'] = 'Управляйте счетами компании',
+    ['society_bills_desc'] = 'Создать счета компании',
     ['my_bills'] = 'Мои счета',
     ['my_bills_desc'] = 'Посмотреть полученные счета',
     ['recurring_bills'] = 'Регулярные счета',
@@ -75,11 +75,13 @@ Locales['ru'] = {
     ['number_of_payments'] = 'Количество платежей',
     ['max_5_payments'] = 'Максимум 5 платежей (1 раз в неделю)',
     ['confirm_installment_plan'] = 'Подтвердить план рассрочки',
-    ['payment_plan'] = 'План платежей: %s',  -- 1 argument
-    ['installment_status'] = 'Осталось %d платежей из %d\nСумма платежа: $%s', -- 3 arguments
-    ['installment_details'] = 'План рассрочки на %d платежей\nСумма платежа: $%s\nОбщая сумма: $%s', -- 3 arguments
+    ['payment_plan'] = 'План платежей: %s',
+    ['installment_status'] = 'Осталось %d платежей из %d\nСумма платежа: $%s',
+    ['installment_details'] = 'План рассрочки на %d платежей\nСумма платежа: $%s\nОбщая сумма: $%s',
     ['payment_plan_created'] = 'План рассрочки успешно создан',
     ['bill_accepted_with_installments'] = 'Счёт принят с оплатой в рассрочку',
+    ['allow_installments'] = 'Разрешить оплату в рассрочку',
+    ['allow_installments_desc'] = 'Разрешить оплату в рассрочку для этого счета',
 
     -- Меню рассрочки
     ['installment_payments'] = 'Платежи в рассрочку',
@@ -237,6 +239,7 @@ Locales['ru'] = {
     ['select_billing_type'] = 'Тип биллинга',
     ['confirmation'] = 'Подтверждение',
     ['delete_bill'] = 'Удалить счет',
+    ['delete_bill_desc'] = 'Будет запрошено подтверждение удаления.',
     ['cancel_subscription'] = 'Отменить подписку',
     ['cancel_subscription_desc'] = 'Отменить эту подписку',
     ['confirm_delete_bill'] = 'Вы уверены, что хотите удалить этот счет?',
@@ -245,6 +248,8 @@ Locales['ru'] = {
     ['close'] = 'Закрыть',
     ['info'] = 'Информация',
     ['click_to_export'] = 'Нажмите на счет, чтобы просмотреть его',
+    ['separator_bills_management'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
+    ['separator_history'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
 
     -------------------
     -- УВЕДОМЛЕНИЯ И ОШИБКИ
