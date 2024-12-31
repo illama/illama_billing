@@ -7,9 +7,9 @@ Locales['it'] = {
     
     -- Sezioni principali
     ['personal_bills'] = 'Fatture Personali',
-    ['personal_bills_desc'] = 'Gestisci le tue fatture personali',
+    ['personal_bills_desc'] = 'Crea fatture personali',
     ['society_bills'] = 'Fatture Aziendali',
-    ['society_bills_desc'] = 'Gestisci le fatture aziendali',
+    ['society_bills_desc'] = 'Crea fatture aziendali',
     ['my_bills'] = 'Le Mie Fatture',
     ['my_bills_desc'] = 'Visualizza le fatture ricevute',
     ['recurring_bills'] = 'Fatture Ricorrenti',
@@ -75,11 +75,13 @@ Locales['it'] = {
     ['number_of_payments'] = 'Numero di rate',
     ['max_5_payments'] = 'Massimo 5 rate (1 a settimana)',
     ['confirm_installment_plan'] = 'Conferma piano di pagamento',
-    ['payment_plan'] = 'Piano di pagamento: %s',  -- 1 argument
-    ['installment_status'] = 'Restano %d rate su %d\nImporto per rata: $%s', -- 3 arguments
-    ['installment_details'] = 'Piano di pagamento in %d rate\nImporto per rata: $%s\nImporto totale: $%s', -- 3 arguments
+    ['payment_plan'] = 'Piano di pagamento: %s',
+    ['installment_status'] = 'Restano %d rate su %d\nImporto per rata: $%s',
+    ['installment_details'] = 'Piano di pagamento in %d rate\nImporto per rata: $%s\nImporto totale: $%s',
     ['payment_plan_created'] = 'Piano di pagamento rateale creato con successo',
     ['bill_accepted_with_installments'] = 'Fattura accettata con pagamento rateale',
+    ['allow_installments'] = 'Consentire pagamenti rateali',
+    ['allow_installments_desc'] = 'Consentire pagamenti rateali per questa fattura',
 
     -- Menu dei pagamenti rateali
     ['installment_payments'] = 'Pagamenti rateali',
@@ -234,6 +236,7 @@ Locales['it'] = {
     ['select_billing_type'] = 'Tipo di fatturazione',
     ['confirmation'] = 'Conferma',
     ['delete_bill'] = 'Elimina la fattura',
+    ['delete_bill_desc'] = 'Verrà richiesta una conferma di eliminazione.',
     ['cancel_subscription'] = 'Annulla abbonamento',
     ['cancel_subscription_desc'] = 'Annulla questo abbonamento',
     ['confirm_delete_bill'] = 'Sei sicuro di voler eliminare questa fattura?',
@@ -242,6 +245,8 @@ Locales['it'] = {
     ['close'] = 'Chiudi',
     ['info'] = 'Informazioni',
     ['click_to_export'] = 'Clicca su una fattura per visualizzarla',
+    ['separator_bills_management'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
+    ['separator_history'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
 
     -------------------
     -- NOTIFICHE ED ERRORI
