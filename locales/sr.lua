@@ -333,5 +333,19 @@ Locales['sr'] = {
     ['tag_name'] = 'Ime oznake',
     ['tag_name_desc'] = 'Unesite ime nove oznake',
     ['export_bill'] = 'Izvezi fakturu',
-    ['export_bill_desc'] = 'Napravi izvoz fakture kao sliku'
+    ['export_bill_desc'] = 'Napravi izvoz fakture kao sliku',
+
+    -------------------
+    -- БЕЗБЕДНОСТ
+    -------------------
+    ['billing_system_error'] = 'ГРЕШКА - СИСТЕМ ФАКТУРИСАЊА',
+    ['error'] = 'ГРЕШКА',
+    ['script_disabled_wrong_name'] = 'Скрипта је онемогућена јер је име ресурса нетачно!',
+    ['expected_name'] = 'Очекивано име: ^3%s^7',
+    ['current_name'] = 'Тренутно име: ^3%s^7',
+    ['rename_folder_instruction'] = 'Молимо преименујте фолдер да бисте поново активирали скрипту.',
+    ['contact_support'] = 'Контактирајте подршку ако вам треба помоћ.',
+    ['invalid_resource_name'] = 'Неважеће име ресурса!',
+    ['manifest_version'] = 'Верзија манифеста: %s',
+    ['script_disabled_security'] = 'Скрипта је онемогућена из безбедносних разлога.',
 }
