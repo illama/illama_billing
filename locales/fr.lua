@@ -12,11 +12,11 @@ Locales['fr'] = {
     ['society_bills_desc'] = 'Gérer les factures d\'entreprise',
     ['my_bills'] = 'Mes Factures',
     ['my_bills_desc'] = 'Voir les factures reçues',
-    ['recurring_bills'] = 'Factures Récurrentes',
-    ['recurring_bills_desc'] = 'Gérer vos abonnements et paiements récurrents',
+    ['recurring_bills'] = 'Abonnements',
+    ['recurring_bills_desc'] = 'Gérer vos abonnements',
     ['transaction_history'] = 'Historique des Transactions',
     ['transaction_history_desc'] = 'Voir l\'historique de toutes vos factures',
-    ['my_recurring_bills'] = 'Mes factures récurrentes',
+    ['my_recurring_bills'] = 'Mes abonnements',
 
     -------------------
     -- FACTURES INDIVIDUELLES
@@ -90,6 +90,8 @@ Locales['fr'] = {
     ['no_installment_payments'] = 'Aucun paiement échelonné',
     ['no_active_payment_plans'] = 'Vous n\'avez aucun plan de paiement actif',
     ['total_remaining'] = 'Montant restant à payer',
+    ['allow_installments'] = 'Autoriser les paiements échelonnés',
+    ['allow_installments_desc'] = 'Autoriser les paiements échelonnés pour cette facture',
 
     -- Notifications de paiement automatique
     ['installment_payment'] = 'Paiement échelonné',
@@ -113,14 +115,14 @@ Locales['fr'] = {
     -------------------
     -- FACTURES RÉCURRENTES
     -------------------
-    ['recurring_bill'] = 'Facture Récurrente',
-    ['recurring_bill_desc'] = 'Créer une facture mensuelle/récurrente',
-    ['recurring_bill_number'] = 'Facture récurrente #%s',
-    ['new_recurring_bill'] = 'Nouvelle Facture Récurrente',
-    ['recurring_payment'] = 'Paiement récurrent',
-    ['recurring_payment_suffix'] = '(Paiement récurrent)',
-    ['no_recurring_bills'] = 'Aucune facture récurrente',
-    ['no_recurring_bills_desc'] = 'Vous n\'avez aucune facture récurrente',
+    ['recurring_bill'] = 'Abonnements',
+    ['recurring_bill_desc'] = 'Créer un abonnement',
+    ['recurring_bill_number'] = 'Abonnement #%s',
+    ['new_recurring_bill'] = 'Nouvel abonnement',
+    ['recurring_payment'] = 'Paiement de l\'abonnement',
+    ['recurring_payment_suffix'] = '(Paiement de l\'abonnement)',
+    ['no_recurring_bills'] = 'Aucun abonnement',
+    ['no_recurring_bills_desc'] = 'Vous n\'avez aucun abonnement',
     ['bill_interval'] = 'Intervalle',
     
     -- Paramètres récurrents
@@ -130,9 +132,9 @@ Locales['fr'] = {
     ['interval_days'] = 'Intervalle (jours)',
     ['interval_days_desc'] = 'Nombre de jours entre chaque paiement',
     ['interval_days_format'] = '%d jours',
-    ['recurring_reason_desc'] = 'Entrez la raison de la facturation récurrente',
-    ['confirm_recurring_bill'] = 'Facture récurrente de $%s tous les %d jours pour: %s',
-    ['accept_recurring_payment'] = 'Accepter le paiement récurrent de $%s tous les %d jours',
+    ['recurring_reason_desc'] = 'Entrez la raison de la facturation de l\'abonnement',
+    ['confirm_recurring_bill'] = 'Abonnement de $%s tous les %d jours pour: %s',
+    ['accept_recurring_payment'] = 'Accepter l\'abonnement de $%s tous les %d jours',
 
     -------------------
     -- PAIEMENTS
@@ -230,14 +232,15 @@ Locales['fr'] = {
     ['refuse_bill'] = 'Refuser la facture',
     ['refuse_bill_desc'] = 'Refuser cette facture',
     ['refuse_subscription'] = 'Refuser l\'abonnement',
-    ['accept_recurring_desc'] = 'Accepter cette facture récurrente',
-    ['refuse_recurring_desc'] = 'Refuser cette facture récurrente',
+    ['accept_recurring_desc'] = 'Accepter cet abonnement',
+    ['refuse_recurring_desc'] = 'Refuser cet abonnement',
     ['select_player'] = 'Sélectionner un joueur',
     ['select_players'] = 'Sélectionner les joueurs',
     ['select_min_players'] = 'Sélectionnez au moins 2 joueurs',
     ['select_billing_type'] = 'Type de facture',
     ['confirmation'] = 'Confirmation',
     ['delete_bill'] = 'Supprimer la facture',
+    ['delete_bill_desc'] = 'Une confirmation de suppression sera demandée.',
     ['cancel_subscription'] = 'Annuler l\'abonnement',
     ['cancel_subscription_desc'] = 'Annuler cet abonnement',
     ['confirm_delete_bill'] = 'Êtes-vous sûr de vouloir supprimer cette facture ?',
@@ -246,6 +249,17 @@ Locales['fr'] = {
     ['close'] = 'Fermer',
     ['info'] = 'Information',
     ['click_to_export'] = 'Clic sur une facture pour la visualiser',
+    ['require_signature'] = 'Signature requise',
+    ['require_signature_desc'] = 'Demander une signature pour cette facture',
+    ['signature_required'] = 'Signature requise',
+    ['enter_signature'] = 'Votre signature',
+    ['signature_desc'] = 'Veuillez signer pour confirmer la facture',
+    ['signature_placeholder'] = 'Votre signature ici',
+    ['signature'] = 'Signature',
+    ['not_signed'] = 'Non signé',
+    ['accept'] = 'Accepter',
+    ['separator_bills_management'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
+    ['separator_history'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
 
     -------------------
     -- NOTIFICATIONS ET ERREURS
@@ -256,11 +270,11 @@ Locales['fr'] = {
     ['bill_accepted'] = 'Facture acceptée',
     ['bill_accepted_desc'] = 'Vous avez accepté la facture',
     ['bill_accepted_by_receiver'] = 'Facture acceptée',
-    ['recurring_bill_accepted'] = 'Facture récurrente acceptée',
-    ['recurring_bill_setup'] = 'La facturation récurrente a été configurée',
-    ['recurring_setup_success'] = 'La facturation récurrente a été mise en place',
+    ['recurring_bill_accepted'] = 'Abonnement acceptée',
+    ['recurring_bill_setup'] = 'La facturation de l\'abonnement a été configurée',
+    ['recurring_setup_success'] = 'L\'abonnement a été mit en place',
     ['bill_request_sent'] = 'Demande de facture envoyée',
-    ['recurring_bill_request_sent'] = 'Demande de facture récurrente envoyée',
+    ['recurring_bill_request_sent'] = 'Demande de facture d\'abonnement envoyée',
     ['bill_deleted'] = 'Facture supprimée avec succès',
     ['subscription_cancelled'] = 'Abonnement annulé',
 
@@ -281,9 +295,9 @@ Locales['fr'] = {
     ['bill_expired'] = 'Facture Expirée',
     ['bill_expired_desc'] = 'La facture a expiré',
     ['bill_deleted_amount'] = 'Une facture de $%s a été supprimée',
-    ['recurring_cancelled'] = 'Une facture récurrente a été annulée pour inactivité',
+    ['recurring_cancelled'] = 'Un abonnement a été annulé pour inactivité',
     ['recurring_cancelled_inactivity'] = 'L\'abonnement a été annulé pour inactivité',
-    ['player_disconnected_recurring'] = 'Le joueur s\'est déconnecté, facture récurrente annulée',
+    ['player_disconnected_recurring'] = 'Le joueur s\'est déconnecté, facture d\'abonnement annulé',
     ['player_disconnected_bill'] = 'Le joueur s\'est déconnecté, facture annulée',
 
     -------------------
@@ -331,5 +345,5 @@ Locales['fr'] = {
     ['tag_name'] = 'Nom de l\'étiquette',
     ['tag_name_desc'] = 'Entrez le nom de la nouvelle étiquette',
     ['export_bill'] = 'Exporter la facture',
-    ['export_bill_desc'] = 'Faire une exportation en image de la facture'
+    ['export_bill_desc'] = 'Faire une exportation en image de la facture',
 }
