@@ -7,9 +7,9 @@ Locales['es'] = {
     
     -- Secciones principales
     ['personal_bills'] = 'Facturas Personales',
-    ['personal_bills_desc'] = 'Gestiona tus facturas personales',
+    ['personal_bills_desc'] = 'Crear facturas personales',
     ['society_bills'] = 'Facturas de la Empresa',
-    ['society_bills_desc'] = 'Gestiona las facturas de la empresa',
+    ['society_bills_desc'] = 'Crear facturas de empresa',
     ['my_bills'] = 'Mis Facturas',
     ['my_bills_desc'] = 'Ver facturas recibidas',
     ['recurring_bills'] = 'Facturas Recurrentes',
@@ -75,11 +75,13 @@ Locales['es'] = {
     ['number_of_payments'] = 'Número de pagos',
     ['max_5_payments'] = 'Máximo 5 pagos (1 por semana)',
     ['confirm_installment_plan'] = 'Confirmar plan de pago',
-    ['payment_plan'] = 'Plan de pago: %s',  -- 1 argument
-    ['installment_status'] = 'Quedan %d pagos de %d\nCantidad por pago: $%s', -- 3 arguments
-    ['installment_details'] = 'Plan de pago en %d plazos\nCantidad por pago: $%s\nCantidad total: $%s', -- 3 arguments
+    ['payment_plan'] = 'Plan de pago: %s',
+    ['installment_status'] = 'Quedan %d pagos de %d\nCantidad por pago: $%s',
+    ['installment_details'] = 'Plan de pago en %d plazos\nCantidad por pago: $%s\nCantidad total: $%s',
     ['payment_plan_created'] = 'Plan de pago a plazos creado con éxito',
     ['bill_accepted_with_installments'] = 'Factura aceptada con pago a plazos',
+    ['allow_installments'] = 'Permitir pagos a plazos',
+    ['allow_installments_desc'] = 'Permitir pagos a plazos para esta factura',
 
     -- Menú de pagos a plazos
     ['installment_payments'] = 'Pagos a plazos',
@@ -237,6 +239,7 @@ Locales['es'] = {
     ['select_billing_type'] = 'Tipo de Facturación',
     ['confirmation'] = 'Confirmación',
     ['delete_bill'] = 'Eliminar la factura',
+    ['delete_bill_desc'] = 'Se solicitará una confirmación de eliminación.',
     ['cancel_subscription'] = 'Cancelar suscripción',
     ['cancel_subscription_desc'] = 'Cancelar esta suscripción',
     ['confirm_delete_bill'] = '¿Estás seguro de que deseas eliminar esta factura?',
@@ -245,6 +248,8 @@ Locales['es'] = {
     ['close'] = 'Cerrar',
     ['info'] = 'Información',
     ['click_to_export'] = 'Haz clic en una factura para verla',
+    ['separator_bills_management'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
+    ['separator_history'] = '━━━━━━━━━━━━━━━━━━━━━━━━',
 
     -------------------
     -- NOTIFICACIONES Y ERRORES
