@@ -260,7 +260,13 @@ local translations = {
     ['webhook_script_start_title'] = 'Skript Startat',
     ['webhook_script_start_desc'] = 'Faktureringssystemet har startats framgångsrikt',
     ['webhook_footer'] = 'Illama Faktureringssystem',
-    ['webhook_bot_name'] = 'Faktureringssystem'
+    ['webhook_bot_name'] = 'Faktureringssystem',
+    ['recurring_bill_request_sent'] = 'En återkommande faktura har skickats',
+    ['recurring_bill_setup'] = 'Prenumerationen har konfigurerats framgångsrikt',
+    ['recurring_bill_accepted'] = 'Kunden har accepterat prenumerationen',
+    ['bill_accepted_with_installments'] = 'Fakturan har accepterats framgångsrikt med avbetalningar',
+    ['payment_plan_created'] = 'Betalningsplanen har skapats framgångsrikt',
+    ['custom_bill'] = 'Anpassad faktura'
 }
 
 Locale.Add('sv', translations)

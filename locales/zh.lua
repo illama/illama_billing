@@ -260,7 +260,13 @@ local translations = {
     ['webhook_script_start_title'] = '脚本已启动',
     ['webhook_script_start_desc'] = '计费系统已成功启动',
     ['webhook_footer'] = 'Illama计费系统',
-    ['webhook_bot_name'] = '计费系统'
+    ['webhook_bot_name'] = '计费系统',
+    ['recurring_bill_request_sent'] = '已发送定期账单',
+    ['recurring_bill_setup'] = '订阅已成功设置',
+    ['recurring_bill_accepted'] = '客户已接受订阅',
+    ['bill_accepted_with_installments'] = '账单已成功接受分期付款',
+    ['payment_plan_created'] = '付款计划已成功创建',
+    ['custom_bill'] = '自定义账单'
 }
 
 Locale.Add('zh', translations)

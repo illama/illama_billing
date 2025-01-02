@@ -260,7 +260,13 @@ local translations = {
     ['webhook_script_start_title'] = 'Script Avviato',
     ['webhook_script_start_desc'] = 'Il sistema di fatturazione è stato avviato con successo',
     ['webhook_footer'] = 'Sistema di Fatturazione Illama',
-    ['webhook_bot_name'] = 'Sistema di Fatturazione'
+    ['webhook_bot_name'] = 'Sistema di Fatturazione',
+    ['recurring_bill_request_sent'] = 'È stata inviata una fattura ricorrente',
+    ['recurring_bill_setup'] = 'L\'abbonamento è stato configurato con successo',
+    ['recurring_bill_accepted'] = 'Il cliente ha accettato l\'abbonamento',
+    ['bill_accepted_with_installments'] = 'La fattura è stata accettata con successo con pagamenti rateali',
+    ['payment_plan_created'] = 'Il piano di pagamento è stato creato con successo',
+    ['custom_bill'] = 'Fattura personalizzata'
 }
 
 Locale.Add('it', translations)

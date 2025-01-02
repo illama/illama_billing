@@ -260,7 +260,13 @@ local translations = {
     ['webhook_script_start_title'] = '스크립트 시작됨',
     ['webhook_script_start_desc'] = '청구 시스템이 성공적으로 시작되었습니다',
     ['webhook_footer'] = 'Illama 청구 시스템',
-    ['webhook_bot_name'] = '청구 시스템'
+    ['webhook_bot_name'] = '청구 시스템',
+    ['recurring_bill_request_sent'] = '정기 청구서가 발송되었습니다',
+    ['recurring_bill_setup'] = '구독이 성공적으로 설정되었습니다',
+    ['recurring_bill_accepted'] = '고객이 구독을 수락했습니다',
+    ['bill_accepted_with_installments'] = '청구서가 할부 결제로 성공적으로 수락되었습니다',
+    ['payment_plan_created'] = '결제 계획이 성공적으로 생성되었습니다',
+    ['custom_bill'] = '맞춤 청구서'
 }
 
 Locale.Add('ko', translations)

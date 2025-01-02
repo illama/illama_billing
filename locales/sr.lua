@@ -260,7 +260,13 @@ local translations = {
     ['webhook_script_start_title'] = 'Скрипт Покренут',
     ['webhook_script_start_desc'] = 'Систем за фактурисање је успешно покренут',
     ['webhook_footer'] = 'Illama Систем за Фактурисање',
-    ['webhook_bot_name'] = 'Систем за Фактурисање'
+    ['webhook_bot_name'] = 'Систем за Фактурисање',
+    ['recurring_bill_request_sent'] = 'Poslat je ponavljajući račun',
+    ['recurring_bill_setup'] = 'Pretplata je uspešno podešena',
+    ['recurring_bill_accepted'] = 'Klijent je prihvatio pretplatu',
+    ['bill_accepted_with_installments'] = 'Račun je uspešno prihvaćen sa plaćanjem na rate',
+    ['payment_plan_created'] = 'Plan plaćanja je uspešno kreiran',
+    ['custom_bill'] = 'Prilagođeni račun'
 }
 
 Locale.Add('sr', translations)

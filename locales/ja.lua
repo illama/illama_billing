@@ -260,7 +260,13 @@ local translations = {
     ['webhook_script_start_title'] = 'スクリプト開始',
     ['webhook_script_start_desc'] = '請求システムが正常に開始されました',
     ['webhook_footer'] = 'Illama請求システム',
-    ['webhook_bot_name'] = '請求システム'
+    ['webhook_bot_name'] = '請求システム',
+    ['recurring_bill_request_sent'] = '定期請求書が送信されました',
+    ['recurring_bill_setup'] = 'サブスクリプションが正常に設定されました',
+    ['recurring_bill_accepted'] = 'クライアントがサブスクリプションを承認しました',
+    ['bill_accepted_with_installments'] = '請求書が分割払いで正常に承認されました',
+    ['payment_plan_created'] = '支払いプランが正常に作成されました',
+    ['custom_bill'] = 'カスタム請求書'
 }
 
 Locale.Add('ja', translations)

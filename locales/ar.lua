@@ -260,7 +260,13 @@ local translations = {
     ['webhook_script_start_title'] = 'تم بدء البرنامج النصي',
     ['webhook_script_start_desc'] = 'تم بدء نظام الفواتير بنجاح',
     ['webhook_footer'] = 'نظام Illama للفواتير',
-    ['webhook_bot_name'] = 'نظام الفواتير'
+    ['webhook_bot_name'] = 'نظام الفواتير',
+    ['recurring_bill_request_sent'] = 'تم إرسال فاتورة متكررة',
+    ['recurring_bill_setup'] = 'تم إعداد الاشتراك بنجاح',
+    ['recurring_bill_accepted'] = 'قبل العميل الاشتراك',
+    ['bill_accepted_with_installments'] = 'تم قبول الفاتورة بنجاح مع دفعات مقسطة',
+    ['payment_plan_created'] = 'تم إنشاء خطة الدفع بنجاح',
+    ['custom_bill'] = 'فاتورة مخصصة'
 }
 
 Locale.Add('ar', translations)

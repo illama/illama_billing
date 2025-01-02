@@ -260,7 +260,13 @@ local translations = {
     ['webhook_script_start_title'] = 'Script Started',
     ['webhook_script_start_desc'] = 'The billing system has been started successfully',
     ['webhook_footer'] = 'Illama Billing System',
-    ['webhook_bot_name'] = 'Billing System'
+    ['webhook_bot_name'] = 'Billing System',
+    ['recurring_bill_request_sent'] = 'A recurring bill has been sent',
+    ['recurring_bill_setup'] = 'The subscription has been successfully set up',
+    ['recurring_bill_accepted'] = 'The client has accepted the subscription',
+    ['bill_accepted_with_installments'] = 'The bill has been successfully accepted with installment payments',
+    ['payment_plan_created'] = 'The payment plan has been successfully created',
+    ['custom_bill'] = 'Custom Bill'
 }
 
 Locale.Add('en', translations)
