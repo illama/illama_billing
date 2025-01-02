@@ -82,46 +82,84 @@ Illama Billing is a secure and efficient billing script for FiveM, designed to s
 Example configuration:
 ```lua
 ['police'] = {
-    minGrade = 0,
-    label = 'LSPD',
-    maxAmount = 100000,
-    allowRecurring = true,
-    allowGroup = true,
-    allowCheck = true,
-    recurringMaxAmount = 50000,
-    templates = {
-        {
-            label = "Minor Speeding Violation",
-            reason = "Speeding less than 30km/h above the limit",
-            amount = 750
+        minGrade = 0,
+        label = 'LSPD',
+        maxAmount = 100000,
+        allowRecurring = true,
+        allowGroup = false,
+        allowCheck = true,
+        recurringMaxAmount = 50000,
+        templates = {
+            {
+                label = "Excès de vitesse léger",
+                reason = "Excès de vitesse inférieur à 30km/h",
+                amount = 750
+            },
+            {
+                label = "Autre (personnalisé)",
+                reason = "",
+                amount = 0
+            }
         },
-        {
-            label = "Other (customized)",
-            reason = "",
-            amount = 0
+        recurringTemplates = {
+            {
+                label = "Protection Mensuelle Standard",
+                reason = "Service de protection mensuel - Forfait standard",
+                amount = 5000,
+                interval = 30
+            },
+            {
+                label = "Protection Mensuelle Premium",
+                reason = "Service de protection mensuel - Forfait premium",
+                amount = 10000,
+                interval = 30
+            },
+            {
+                label = "Autre (personnalisé)",
+                reason = "",
+                amount = 0,
+                interval = 0
+            }
+        },
+        webhooks = {
+            bill_created = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 3447003
+            },
+            bill_paid = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 3066993
+            },
+            bill_deleted = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 15158332
+            },
+            recurring_created = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 10181046
+            },
+            recurring_payment = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 15105570
+            },
+            installment_created = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 3447003
+            },
+            installment_payment = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 10181046
+            },
+            logo = "YOUR_IMAGE_URL"
         }
     },
-    recurringTemplates = {
-        {
-            label = "Standard Monthly Protection",
-            reason = "Monthly protection service - Standard package",
-            amount = 5000,
-            interval = 30 -- Every 30 days
-        },
-        {
-            label = "Premium Monthly Protection",
-            reason = "Monthly protection service - Premium package",
-            amount = 10000,
-            interval = 30
-        },
-        {
-            label = "Other (customized)", -- Always keep this option
-            reason = "",
-            amount = 0,
-            interval = 0
-        }
-    }
-}
 ```
 
 ---
@@ -255,46 +293,84 @@ Illama Billing est un script de facturation sécurisé et performant pour FiveM,
 Exemple de configuration :
 ```lua
 ['police'] = {
-    minGrade = 0,
-    label = 'LSPD',
-    maxAmount = 100000,
-    allowRecurring = true,
-    allowGroup = true,
-    allowCheck = true,
-    recurringMaxAmount = 50000,
-    templates = {
-        {
-            label = "Excès de vitesse léger",
-            reason = "Excès de vitesse inférieur à 30km/h",
-            amount = 750
+        minGrade = 0,
+        label = 'LSPD',
+        maxAmount = 100000,
+        allowRecurring = true,
+        allowGroup = false,
+        allowCheck = true,
+        recurringMaxAmount = 50000,
+        templates = {
+            {
+                label = "Excès de vitesse léger",
+                reason = "Excès de vitesse inférieur à 30km/h",
+                amount = 750
+            },
+            {
+                label = "Autre (personnalisé)",
+                reason = "",
+                amount = 0
+            }
         },
-        {
-            label = "Autre (personnalisé)",
-            reason = "",
-            amount = 0
+        recurringTemplates = {
+            {
+                label = "Protection Mensuelle Standard",
+                reason = "Service de protection mensuel - Forfait standard",
+                amount = 5000,
+                interval = 30
+            },
+            {
+                label = "Protection Mensuelle Premium",
+                reason = "Service de protection mensuel - Forfait premium",
+                amount = 10000,
+                interval = 30
+            },
+            {
+                label = "Autre (personnalisé)",
+                reason = "",
+                amount = 0,
+                interval = 0
+            }
+        },
+        webhooks = {
+            bill_created = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 3447003
+            },
+            bill_paid = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 3066993
+            },
+            bill_deleted = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 15158332
+            },
+            recurring_created = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 10181046
+            },
+            recurring_payment = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 15105570
+            },
+            installment_created = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 3447003
+            },
+            installment_payment = {
+                enabled = true,
+                url = "YOUR_WEBHOOK_URL",
+                color = 10181046
+            },
+            logo = "YOUR_IMAGE_URL"
         }
     },
-    recurringTemplates = {
-        {
-            label = "Protection Mensuelle Standard",
-            reason = "Service de protection mensuel - Forfait standard",
-            amount = 5000,
-            interval = 30 -- Tous les 30 jours
-        },
-        {
-            label = "Protection Mensuelle Premium",
-            reason = "Service de protection mensuel - Forfait premium",
-            amount = 10000,
-            interval = 30
-        },
-        {
-            label = "Autre (personnalisé)", -- Toujours garder cette option
-            reason = "",
-            amount = 0,
-            interval = 0
-        }
-    }
-}
 ```
 
 ---
