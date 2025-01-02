@@ -73,3 +73,22 @@ ALTER TABLE `illama_installment_payments`
 ALTER TABLE `illama_installment_payments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
+
+CREATE TABLE `illama_society_history` (
+  `id` int(11) NOT NULL,
+  `society` varchar(60) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `type` enum('deposit','withdraw') NOT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `sender_name` varchar(50) DEFAULT NULL,
+  `receiver_name` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE `illama_society_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `society_date` (`society`,`date`);
+
+ALTER TABLE `illama_society_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+COMMIT;

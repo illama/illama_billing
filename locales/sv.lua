@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = 'En faktura på $%s raderades av %s',
     ['webhook_bill_paid_title'] = 'Faktura Betald',
     ['webhook_bill_paid_desc'] = 'En faktura på $%s betalades av %s',
-    ['webhook_interval'] = 'Intervall'
+    ['webhook_interval'] = 'Intervall',
+    ['society_stats'] = 'Företagsstatistik',
+    ['society_stats_desc'] = 'Visa detaljerad statistik',
+    ['society_statistics'] = 'Statistik',
+    ['top_payer'] = 'Toppbetalare',
+    ['top_biller'] = 'Toppfakturerare',
+    ['popular_templates'] = 'Populära mallar',
+    ['usage'] = 'användningar',
+    ['unknown'] = 'Okänd',
+    ['payment_from'] = 'Betalning från %s',
+    ['payment_processed'] = 'Betalning behandlad framgångsrikt'
 }
 
 Locale.Add('sv', translations)

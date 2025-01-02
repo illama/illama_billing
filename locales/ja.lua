@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = '$%sの請求書が%sによって削除されました',
     ['webhook_bill_paid_title'] = '請求書支払完了',
     ['webhook_bill_paid_desc'] = '$%sの請求書が%sによって支払われました',
-    ['webhook_interval'] = '間隔'
+    ['webhook_interval'] = '間隔',
+    ['society_stats'] = '会社統計',
+    ['society_stats_desc'] = '詳細な統計を表示',
+    ['society_statistics'] = '統計',
+    ['top_payer'] = 'トップ支払者',
+    ['top_biller'] = 'トップ請求者',
+    ['popular_templates'] = '人気のテンプレート',
+    ['usage'] = '使用回数',
+    ['unknown'] = '不明',
+    ['payment_from'] = '%sからの支払い',
+    ['payment_processed'] = '支払いが正常に処理されました'
 }
 
 Locale.Add('ja', translations)

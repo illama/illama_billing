@@ -302,6 +302,17 @@ function OpenSocietyBillingMenu()
         })
     end
 
+    if jobConfig and jobConfig.allowStats then
+        table.insert(options, {
+            title = _L('society_stats'),
+            description = _L('society_stats_desc'),
+            icon = 'chart-line',
+            onSelect = function()
+                OpenSocietyStats()
+            end
+        })
+    end
+
     lib.registerContext({
         id = 'society_billing_type_menu',
         title = _L('bill_type'),
@@ -1139,6 +1150,47 @@ function OpenRecurringBillActions(bill)
     })
 
     lib.showContext('recurring_bill_actions')
+end
+
+-------------------------------
+--       STATS MANAGEMENT
+-------------------------------
+function OpenSocietyStats()
+    local PlayerData = GetPlayerData()
+    
+    ESX.TriggerServerCallback('illama_billing:getSocietyStats', function(stats)
+        if not stats then
+            lib.notify({
+                title = _L('error'),
+                description = _L('cannot_load_stats'),
+                type = 'error'
+            })
+            return
+        end
+
+        SendNUIMessage({
+            type = 'showSocietyStats',
+            stats = stats,
+            society = {
+                name = PlayerData.job.name,
+                label = PlayerData.job.label or PlayerData.job.name
+            },
+            translations = {
+                title = _L('society_statistics'),
+                balance = _L('society_balance'),
+                topPayer = _L('top_payer'),
+                topBiller = _L('top_biller'),
+                popularTemplates = _L('popular_templates'),
+                close = _L('close'),
+                amount = _L('amount'),
+                count = _L('count'),
+                template = _L('template'),
+                usage = _L('usage')
+            }
+        })
+
+        SetNuiFocus(true, true)
+    end)
 end
 
 -------------------------------

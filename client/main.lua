@@ -141,6 +141,11 @@ RegisterNUICallback('closeBill', function(data, cb)
     cb({})
 end)
 
+RegisterNUICallback('closeStats', function(data, cb)
+    SetNuiFocus(false, false)
+    cb({})
+end)
+
 -------------------------------
 --       COMMANDS
 -------------------------------

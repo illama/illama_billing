@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = 'Uma fatura de $%s foi excluída por %s',
     ['webhook_bill_paid_title'] = 'Fatura Paga',
     ['webhook_bill_paid_desc'] = 'Uma fatura de $%s foi paga por %s',
-    ['webhook_interval'] = 'Intervalo'
+    ['webhook_interval'] = 'Intervalo',
+    ['society_stats'] = 'Estatísticas da empresa',
+    ['society_stats_desc'] = 'Ver estatísticas detalhadas',
+    ['society_statistics'] = 'Estatísticas',
+    ['top_payer'] = 'Melhores pagadores',
+    ['top_biller'] = 'Melhores cobradores',
+    ['popular_templates'] = 'Modelos populares',
+    ['usage'] = 'usos',
+    ['unknown'] = 'Desconhecido',
+    ['payment_from'] = 'Pagamento de %s',
+    ['payment_processed'] = 'Pagamento processado com sucesso'
 }
 
 Locale.Add('pt', translations)

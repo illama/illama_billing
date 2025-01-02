@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = 'Račun od $%s je obrisan od strane %s',
     ['webhook_bill_paid_title'] = 'Račun Plaćen',
     ['webhook_bill_paid_desc'] = 'Račun od $%s je plaćen od strane %s',
-    ['webhook_interval'] = 'Interval'
+    ['webhook_interval'] = 'Interval',
+    ['society_stats'] = 'Statistika kompanije',
+    ['society_stats_desc'] = 'Pogledaj detaljnu statistiku',
+    ['society_statistics'] = 'Statistika',
+    ['top_payer'] = 'Najbolji platiše',
+    ['top_biller'] = 'Najbolji izdavači računa',
+    ['popular_templates'] = 'Popularni šabloni',
+    ['usage'] = 'korišćenja',
+    ['unknown'] = 'Nepoznato',
+    ['payment_from'] = 'Uplata od %s',
+    ['payment_processed'] = 'Uplata uspešno obrađena'
 }
 
 Locale.Add('sr', translations)

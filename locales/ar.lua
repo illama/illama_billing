@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = 'تم حذف فاتورة بقيمة $%s بواسطة %s',
     ['webhook_bill_paid_title'] = 'تم دفع الفاتورة',
     ['webhook_bill_paid_desc'] = 'تم دفع فاتورة بقيمة $%s بواسطة %s',
-    ['webhook_interval'] = 'الفاصل الزمني'
+    ['webhook_interval'] = 'الفاصل الزمني',
+    ['society_stats'] = 'إحصائيات الشركة',
+    ['society_stats_desc'] = 'عرض الإحصائيات التفصيلية',
+    ['society_statistics'] = 'الإحصائيات',
+    ['top_payer'] = 'أفضل الدافعين',
+    ['top_biller'] = 'أفضل المصدرين',
+    ['popular_templates'] = 'القوالب الشائعة',
+    ['usage'] = 'استخدامات',
+    ['unknown'] = 'غير معروف',
+    ['payment_from'] = 'دفع من %s',
+    ['payment_processed'] = 'تمت معالجة الدفع بنجاح'
 }
 
 Locale.Add('ar', translations)

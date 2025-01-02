@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = '%s删除了一个$%s的账单',
     ['webhook_bill_paid_title'] = '账单已支付',
     ['webhook_bill_paid_desc'] = '%s支付了一个$%s的账单',
-    ['webhook_interval'] = '间隔'
+    ['webhook_interval'] = '间隔',
+    ['society_stats'] = '公司统计',
+    ['society_stats_desc'] = '查看详细统计',
+    ['society_statistics'] = '统计',
+    ['top_payer'] = '最佳付款人',
+    ['top_biller'] = '最佳开票人',
+    ['popular_templates'] = '热门模板',
+    ['usage'] = '使用次数',
+    ['unknown'] = '未知',
+    ['payment_from'] = '来自%s的付款',
+    ['payment_processed'] = '付款处理成功'
 }
 
 Locale.Add('zh', translations)

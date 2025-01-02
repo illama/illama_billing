@@ -44,6 +44,15 @@ function FormatDate(timestamp)
     return string.format("%02d/%02d/%04d", time.day, time.month, time.year)
 end
 
+function AddSocietyHistory(society, amount, type, reason, sender_name, receiver_name)
+    local societyLabel = Config.AllowedJobs[society] and Config.AllowedJobs[society].label or society
+    local finalSender = type == 'deposit' and (sender_name or _L('unknown')) or societyLabel
+    local finalReceiver = type == 'deposit' and societyLabel or (receiver_name or _L('unknown'))
+
+    MySQL.insert('INSERT INTO illama_society_history (society, amount, type, reason, sender_name, receiver_name) VALUES (?, ?, ?, ?, ?, ?)',
+        {society, amount, type, reason, finalSender, finalReceiver})
+end
+
 local function SendWebhook(webhookType, data)
     if not Config.Webhooks.enabled then return end
     local webhook
@@ -262,6 +271,121 @@ ESX.RegisterServerCallback('illama_billing:generateBillImage', function(source, 
     cb(formattedHtml)
 end)
 
+ESX.RegisterServerCallback('illama_billing:getSocietyStats', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer or not xPlayer.job then
+        cb(false)
+        return
+    end
+
+    local society = xPlayer.job.name
+    local stats = {
+        balance = {},
+        topPayers = {},
+        topBillers = {},
+        popularTemplates = {}
+    }
+
+    MySQL.single('SELECT money FROM addon_account_data WHERE account_name = ?', 
+    {'society_'..society}, function(currentBalance)
+        local currentMoney = currentBalance and currentBalance.money or 0
+
+        MySQL.query([[
+            SELECT 
+                DATE_FORMAT(date, '%Y-%m-%d') as transaction_date,
+                type,
+                amount,
+                reason,
+                sender_name,
+                receiver_name
+            FROM illama_society_history 
+            WHERE society = ? 
+            AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            ORDER BY date ASC
+        ]], {society}, function(historyResults)
+            local dailyBalances = {}
+            local dailyTransactions = {}
+            local runningBalance = 0
+
+            for i = 29, 0, -1 do
+                local date = os.date('%Y-%m-%d', os.time() - (i * 86400))
+                dailyBalances[date] = runningBalance
+                dailyTransactions[date] = {}
+            end
+
+            for _, transaction in ipairs(historyResults or {}) do
+                local change = transaction.type == 'deposit' and transaction.amount or -transaction.amount
+                runningBalance = runningBalance + change
+
+                for date, balance in pairs(dailyBalances) do
+                    if date >= transaction.transaction_date then
+                        dailyBalances[date] = dailyBalances[date] + change
+                    end
+                end
+
+                if dailyTransactions[transaction.transaction_date] then
+                    table.insert(dailyTransactions[transaction.transaction_date], {
+                        amount = transaction.amount,
+                        type = transaction.type,
+                        reason = transaction.reason,
+                        sender_name = transaction.sender_name,
+                        receiver_name = transaction.receiver_name
+                    })
+                end
+            end
+
+            stats.balance = {}
+            for i = 29, 0, -1 do
+                local date = os.date('%Y-%m-%d', os.time() - (i * 86400))
+                table.insert(stats.balance, {
+                    date = date,
+                    total = dailyBalances[date] + currentMoney - runningBalance,
+                    transactions = dailyTransactions[date]
+                })
+            end
+
+            table.sort(stats.balance, function(a, b)
+                return a.date < b.date
+            end)
+
+            MySQL.query([[
+                SELECT receiver_name, SUM(amount) as total, COUNT(*) as count 
+                FROM illama_bills 
+                WHERE society = ? AND status = 'paid' 
+                GROUP BY receiver_name 
+                ORDER BY total DESC 
+                LIMIT 5
+            ]], {society}, function(results)
+                stats.topPayers = results or {}
+
+                MySQL.query([[
+                    SELECT sender_name, SUM(amount) as total, COUNT(*) as count 
+                    FROM illama_bills 
+                    WHERE society = ? 
+                    GROUP BY sender_name 
+                    ORDER BY count DESC 
+                    LIMIT 5
+                ]], {society}, function(results)
+                    stats.topBillers = results or {}
+
+                    MySQL.query([[
+                        SELECT reason, COUNT(*) as count, SUM(amount) as total
+                        FROM illama_bills 
+                        WHERE society = ? 
+                        GROUP BY reason 
+                        ORDER BY count DESC 
+                        LIMIT 5
+                    ]], {society}, function(results)
+                        stats.popularTemplates = results or {}
+                        
+                        cb(stats)
+                    end)
+                end)
+            end)
+        end)
+    end)
+end)
+
 -------------------------------
 --     BILL MANAGEMENT
 -------------------------------
@@ -383,83 +507,85 @@ AddEventHandler('illama_billing:payBill', function(billId, paymentType)
                 xPlayer.removeMoney(bill.amount)
             end
 
+            if bill.type == 'society' then
+                TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. bill.society, function(account)
+                    if account then
+                        account.addMoney(bill.amount)
+                        AddSocietyHistory(
+                            bill.society, 
+                            bill.amount, 
+                            'deposit', 
+                            _L('payment_from', xPlayer.getName()),
+                            xPlayer.getName(),  -- Le joueur qui paie
+                            nil
+                        )
+                    end
+                end)
+            else
+                local targetPlayer = ESX.GetPlayerFromIdentifier(bill.sender)
+                if targetPlayer then
+                    targetPlayer.addAccountMoney('bank', bill.amount)
+                else
+                    MySQL.update('UPDATE users SET bank = bank + ? WHERE identifier = ?', {bill.amount, bill.sender})
+                end
+            end
+
             MySQL.update('UPDATE illama_bills SET status = ? WHERE id = ?', 
                 {'paid', billId},
                 function(affectedRows)
                     if affectedRows > 0 then
                         SendWebhook('bill_paid', {
-                            society = bill.type == 'society' and bill.society or nil,
+                            society = bill.society,
                             params = {
                                 ESX.Math.GroupDigits(bill.amount),
-                                xPlayer.getName()
+                                xPlayer.getName(),
+                                paymentType
                             },
                             fields = {
                                 {
-                                    ["name"] = _L('webhook_payment_method'),
-                                    ["value"] = paymentType == 'bank' and _L('webhook_payment_bank') or _L('webhook_payment_cash'),
+                                    ["name"] = _L('webhook_amount'),
+                                    ["value"] = ESX.Math.GroupDigits(bill.amount),
                                     ["inline"] = true
                                 },
                                 {
-                                    ["name"] = _L('webhook_bill_id'),
-                                    ["value"] = billId,
+                                    ["name"] = _L('webhook_payment_method'),
+                                    ["value"] = paymentType,
                                     ["inline"] = true
                                 },
                                 {
                                     ["name"] = _L('webhook_reason'),
                                     ["value"] = bill.reason,
                                     ["inline"] = true
+                                },
+                                {
+                                    ["name"] = _L('webhook_bill_id'),
+                                    ["value"] = billId,
+                                    ["inline"] = true
                                 }
                             }
                         })
-                        if bill.type == 'society' then
-                            TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. bill.society, function(account)
-                                if account then
-                                    account.addMoney(bill.amount)
-                                    
-                                    TriggerClientEvent('ox_lib:notify', source, {
-                                        type = 'success',
-                                        description = _L('payment_made_society', ESX.Math.GroupDigits(bill.amount), bill.society)
-                                    })
 
-                                    local xPlayers = ESX.GetPlayers()
-                                    for _, playerId in ipairs(xPlayers) do
-                                        local xTarget = ESX.GetPlayerFromId(playerId)
-                                        if xTarget and xTarget.job.name == bill.society and xTarget.job.grade_name == 'boss' then
-                                            TriggerClientEvent('ox_lib:notify', xTarget.source, {
-                                                title = _L('society_payment'),
-                                                description = _L('bill_paid_amount', ESX.Math.GroupDigits(bill.amount)),
-                                                type = 'success'
-                                            })
-                                        end
-                                    end
-                                end
-                            end)
-                        else
-                            local xTarget = ESX.GetPlayerFromIdentifier(bill.sender)
-                            if xTarget then
-                                if paymentType == 'bank' then
-                                    xTarget.addAccountMoney('bank', bill.amount)
-                                else
-                                    xTarget.addMoney(bill.amount)
-                                end
+                        TriggerClientEvent('ox_lib:notify', source, {
+                            title = _L('payment_processed'),
+                            description = _L('bill_paid_amount', ESX.Math.GroupDigits(bill.amount)),
+                            type = 'success'
+                        })
 
-                                TriggerClientEvent('ox_lib:notify', xTarget.source, {
-                                    type = 'success',
-                                    description = _L('payment_received', ESX.Math.GroupDigits(bill.amount), xPlayer.getName())
+                        if bill.type == 'personal' and bill.sender then
+                            local targetPlayer = ESX.GetPlayerFromIdentifier(bill.sender)
+                            if targetPlayer then
+                                TriggerClientEvent('ox_lib:notify', targetPlayer.source, {
+                                    title = _L('payment_received'),
+                                    description = _L('payment_received_amount', 
+                                        ESX.Math.GroupDigits(bill.amount),
+                                        xPlayer.getName()
+                                    ),
+                                    type = 'success'
                                 })
-                            else
-                                MySQL.query('UPDATE users SET accounts = JSON_SET(accounts, "$.bank", CAST(JSON_EXTRACT(accounts, "$.bank") AS UNSIGNED) + ?) WHERE identifier = ?',
-                                    {bill.amount, bill.sender}
-                                )
                             end
-
-                            TriggerClientEvent('ox_lib:notify', source, {
-                                type = 'success',
-                                description = _L('payment_made_player', ESX.Math.GroupDigits(bill.amount), bill.sender_name)
-                            })
                         end
 
-                        TriggerClientEvent('illama_billing:refreshMenu', source)
+                        TriggerClientEvent('illama_billing:billPaid', source, billId)
                     end
                 end
             )
@@ -811,6 +937,14 @@ AddEventHandler('illama_billing:payRecurringBill', function(billId, payments, pa
             end)
         end
     )
+    AddSocietyHistory(
+        bill.society, 
+        bill.amount, 
+        'deposit', 
+        _L('payment_from', xPlayer.getName()),
+        xPlayer.getName(),
+        nil
+    )
 end)
 
 RegisterNetEvent('illama_billing:cancelRecurringBill')
@@ -1004,6 +1138,14 @@ function StartRecurringBillsThread()
                                 },
                                 function(billId)
                                     if billId then
+                                        AddSocietyHistory(
+                                            bill.society, 
+                                            bill.amount, 
+                                            'deposit', 
+                                            _L('payment_from', xPlayer.getName()),
+                                            xPlayer.getName(),  -- Le joueur qui paie
+                                            nil  -- Le receiver_name sera automatiquement le label de la société
+                                        )
                                         SendWebhook('recurring_payment', {
                                             society = bill.society,
                                             params = {
@@ -1076,6 +1218,16 @@ CreateThread(function()
                     
                     if bankMoney >= payment.amount_per_payment then
                         xPlayer.removeAccountMoney('bank', payment.amount_per_payment)
+                        
+                        AddSocietyHistory(
+                            bill.society, 
+                            bill.amount, 
+                            'deposit', 
+                            _L('payment_from', xPlayer.getName()),
+                            xPlayer.getName(),
+                            nil
+                        )
+
                         MySQL.query([[
                             UPDATE illama_installment_payments 
                             SET remaining_payments = remaining_payments - 1,

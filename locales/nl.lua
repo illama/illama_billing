@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = 'Een factuur van $%s is verwijderd door %s',
     ['webhook_bill_paid_title'] = 'Factuur Betaald',
     ['webhook_bill_paid_desc'] = 'Een factuur van $%s is betaald door %s',
-    ['webhook_interval'] = 'Interval'
+    ['webhook_interval'] = 'Interval',
+    ['society_stats'] = 'Bedrijfsstatistieken',
+    ['society_stats_desc'] = 'Bekijk gedetailleerde statistieken',
+    ['society_statistics'] = 'Statistieken',
+    ['top_payer'] = 'Beste betalers',
+    ['top_biller'] = 'Beste factureerders',
+    ['popular_templates'] = 'Populaire sjablonen',
+    ['usage'] = 'gebruik',
+    ['unknown'] = 'Onbekend',
+    ['payment_from'] = 'Betaling van %s',
+    ['payment_processed'] = 'Betaling succesvol verwerkt'
 }
 
 Locale.Add('nl', translations)

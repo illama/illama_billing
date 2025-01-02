@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = '$%s의 청구서가 %s에 의해 삭제되었습니다',
     ['webhook_bill_paid_title'] = '청구서 지불됨',
     ['webhook_bill_paid_desc'] = '$%s의 청구서가 %s에 의해 지불되었습니다',
-    ['webhook_interval'] = '간격'
+    ['webhook_interval'] = '간격',
+    ['society_stats'] = '회사 통계',
+    ['society_stats_desc'] = '상세 통계 보기',
+    ['society_statistics'] = '통계',
+    ['top_payer'] = '최다 지불자',
+    ['top_biller'] = '최다 청구자',
+    ['popular_templates'] = '인기 템플릿',
+    ['usage'] = '사용',
+    ['unknown'] = '알 수 없음',
+    ['payment_from'] = '%s의 지불',
+    ['payment_processed'] = '지불이 성공적으로 처리되었습니다'
 }
 
 Locale.Add('ko', translations)

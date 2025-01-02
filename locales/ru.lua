@@ -276,7 +276,17 @@ local translations = {
     ['webhook_bill_deleted_desc'] = 'Счет на $%s удален пользователем %s',
     ['webhook_bill_paid_title'] = 'Счет Оплачен',
     ['webhook_bill_paid_desc'] = 'Счет на $%s оплачен пользователем %s',
-    ['webhook_interval'] = 'Интервал'
+    ['webhook_interval'] = 'Интервал',
+    ['society_stats'] = 'Статистика компании',
+    ['society_stats_desc'] = 'Просмотр подробной статистики',
+    ['society_statistics'] = 'Статистика',
+    ['top_payer'] = 'Лучшие плательщики',
+    ['top_biller'] = 'Лучшие выставители счетов',
+    ['popular_templates'] = 'Популярные шаблоны',
+    ['usage'] = 'использований',
+    ['unknown'] = 'Неизвестно',
+    ['payment_from'] = 'Платёж от %s',
+    ['payment_processed'] = 'Платёж успешно обработан'
 }
 
 Locale.Add('ru', translations)

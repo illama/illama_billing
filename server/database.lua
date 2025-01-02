@@ -3,8 +3,6 @@ local DB = {}
 -------------------------------
 --     BILLS OPERATIONS
 -------------------------------
-
--- Get bills
 function DB.GetPlayerBills(identifier, cb)
     MySQL.query('SELECT * FROM illama_bills WHERE receiver = ? AND status = ? ORDER BY date DESC', 
         {identifier, 'pending'},
@@ -33,7 +31,6 @@ function DB.GetBillsHistory(identifier, limit, cb)
     )
 end
 
--- Create and update bills
 function DB.CreateBill(data, cb)
     MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, allow_installments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
         {

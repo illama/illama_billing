@@ -1,7 +1,7 @@
 Config = {}
 Config.OpenKey = 'F2'
 Config.MaxBillAmount = 100000
-Config.Locale = 'en'
+Config.Locale = 'fr'
 Config.Debug = false
 
 Config.Webhooks = {
@@ -38,6 +38,7 @@ Config.AllowedJobs = {
         allowRecurring = true,
         allowGroup = false,
         allowCheck = true,
+        allowStats = true,
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -107,7 +108,7 @@ Config.AllowedJobs = {
                 url = "YOUR_WEBHOOK_URL",
                 color = 10181046
             },
-            logo = "YOUR_IMAGE_URL"
+            logo = "IMAGE_URL"
         }
     },
     ['ambulance'] = {
@@ -117,6 +118,7 @@ Config.AllowedJobs = {
         allowRecurring = true,
         allowGroup = true,
         allowCheck = true,
+        allowStats = true,
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -192,7 +194,7 @@ Config.AllowedJobs = {
                 url = "YOUR_WEBHOOK_URL",
                 color = 10181046
             },
-            logo = "YOUR_IMAGE_URL"
+            logo = "IMAGE_URL"
         }
     }
 }

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-translate="bill_receipt">Facture</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -19,7 +21,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: transparent;
         }
 
         #bill-container {
@@ -29,6 +31,7 @@
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             position: relative;
+            display: none;
         }
 
         .watermark {
@@ -148,26 +151,14 @@
             transform: rotate(45deg);
         }
 
-        .status-pending {
-            background-color: #f1c40f;
-        }
+        .status-pending { background-color: #f1c40f; }
+        .status-paid { background-color: #27ae60; }
+        .status-deleted { background-color: #e74c3c; }
 
-        .status-paid {
-            background-color: #27ae60;
-        }
-
-        .status-deleted {
-            background-color: #e74c3c;
-        }
-
-        .bill-buttons {
-            text-align: center;
-            margin-top: 30px;
-        }
         .signature-section {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 2px solid #f0f0f0;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
         }
 
         .signature-box {
@@ -194,6 +185,292 @@
             color: #666;
         }
 
+        #stats-container {
+            background: linear-gradient(135deg, #334d50 0%, #cbcaa5 100%);
+            width: 1000px;
+            padding: 40px;
+            min-height: 600px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: none;
+        }
+
+        .stats-title {
+            text-align: center;
+            color: #2C3E50;
+            font-size: 32px;
+            margin-bottom: 50px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .stats-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: #3498DB;
+            border-radius: 2px;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 50px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid #f0f4f8;
+        }
+
+        .stats-chart {
+            margin-bottom: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+            padding: 0 20px;
+        }
+
+        .stats-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stats-box h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .stats-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .stats-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f4f8;
+            transition: all 0.2s ease;
+        }
+
+        .stats-list-item:hover {
+            background-color: #f8fafc;
+            padding: 15px 10px;
+            margin: 0 -10px;
+            border-radius: 8px;
+        }
+
+        .stats-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .stats-list-item .name {
+            color: #2C3E50;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .stats-list-item .value {
+            color: #3498DB;
+            font-weight: 600;
+            font-size: 15px;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .bill-buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .chart-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+
+        .toggle-button {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .toggle-button:hover {
+            background-color: #e9ecef;
+        }
+
+        .balance-list {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        .balance-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #f0f4f8;
+        }
+
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .balance-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 13px;
+            color: #666;
+            padding-top: 8px;
+            border-top: 1px solid #f0f4f8;
+        }
+
+        .balance-date {
+            color: #2C3E50;
+            font-weight: 500;
+        }
+
+        .balance-amount {
+            color: #3498DB;
+            font-weight: 600;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .balance-from, .balance-to, .balance-reason {
+            display: flex;
+            align-items: center;
+        }
+
+        .balance-from::before {
+            content: "👤";
+            margin-right: 5px;
+        }
+
+        .balance-to::before {
+            content: "🏢";
+            margin-right: 5px;
+        }
+
+        .balance-reason::before {
+            content: "📝";
+            margin-right: 5px;
+        }
+
+        .balance-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .balance-item:last-child {
+            border-bottom: none;
+        }
+
+        .balance-date {
+            color: #2C3E50;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .balance-amount {
+            font-weight: 600;
+            color: #3498DB;
+            font-size: 15px;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .balance-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .balance-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .balance-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .balance-list::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .transactions-list {
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .transaction {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+        }
+
+        .transaction.deposit {
+            border-left: 3px solid #2ecc71;
+        }
+
+        .transaction.withdraw {
+            border-left: 3px solid #e74c3c;
+        }
+
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .transaction-type {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+        }
+
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-size: 13px;
+            color: #666;
+        }
+
         button {
             padding: 12px 24px;
             cursor: pointer;
@@ -206,6 +483,12 @@
             transition: background-color 0.3s ease;
         }
 
+        #balanceChart {
+            height: 300px !important;
+            margin-bottom: 20px;
+            width: 100% !important;
+        }
+
         button:hover {
             background-color: #34495e;
         }
@@ -215,7 +498,7 @@
                 background: none;
                 display: block;
             }
-            #bill-container {
+            #bill-container, #stats-container {
                 width: 100%;
                 box-shadow: none;
             }
@@ -227,6 +510,8 @@
 </head>
 <body>
     <div id="bill-container"></div>
+    <div id="stats-container"></div>
+
     <script>
         function getStatusClass(status) {
             switch(status) {
@@ -286,6 +571,7 @@
                         </tbody>
                     </table>
                 </div>
+
                 ${data.signature ? `
                     <div class="signature-section">
                         <div class="signature-box">
@@ -313,11 +599,260 @@
             `;
         }
 
-        window.addEventListener('message', (event) => {
-            if (event.data.type === 'showBillHTML') {
-                document.body.style.display = 'flex';
-                const container = document.getElementById('bill-container');
+        function createStatsHTML(data, translations) {
+            const societyLabel = data.society?.label || 'Society';
+            const title = translations?.title || 'Statistics';
+            const topPayer = translations?.topPayer || 'Top Payers';
+            const topBiller = translations?.topBiller || 'Top Billers';
+            const popularTemplates = translations?.popularTemplates || 'Popular Templates';
+            const closeText = translations?.close || 'Close';
+
+            return `
+                <h2 class="stats-title">${title} - ${societyLabel}</h2>
                 
+                <div class="chart-container">
+                    <div class="chart-controls">
+                        <div id="toggleView" class="toggle-button">
+                            <i class="fas fa-list"></i>
+                        </div>
+                    </div>
+                    <div id="chartView">
+                        <canvas id="balanceChart"></canvas>
+                    </div>
+                    <div id="listView" style="display: none;">
+                        <div class="balance-list"></div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stats-box">
+                        <h3>${topPayer}</h3>
+                        <div class="stats-list" id="topPayers"></div>
+                    </div>
+
+                    <div class="stats-box">
+                        <h3>${topBiller}</h3>
+                        <div class="stats-list" id="topBillers"></div>
+                    </div>
+
+                    <div class="stats-box">
+                        <h3>${popularTemplates}</h3>
+                        <div class="stats-list" id="popularTemplates"></div>
+                    </div>
+                </div>
+
+                <div class="bill-buttons">
+                    <button id="closeStatsButton">${closeText}</button>
+                </div>
+            `;
+        }
+
+        let balanceChart = null;
+
+        function createBalanceChart(balanceData) {
+            const ctx = document.getElementById('balanceChart').getContext('2d');
+            
+            // Changement du bouton en div
+            const toggleButton = document.getElementById('toggleView');
+            const chartView = document.getElementById('chartView');
+            const listView = document.getElementById('listView');
+            const balanceList = document.querySelector('.balance-list');
+            let isChartView = true;
+
+            function createBalanceList() {
+                balanceList.innerHTML = '';
+                balanceData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'balance-item';
+
+                    // Créer l'en-tête avec la date et le solde total
+                    let html = `
+                        <div class="balance-header">
+                            <span class="balance-date">${item.date}</span>
+                            <span class="balance-total">Solde: $${formatNumber(item.total)}</span>
+                        </div>
+                    `;
+
+                    // Ajouter les transactions du jour s'il y en a
+                    if (item.transactions && item.transactions.length > 0) {
+                        html += '<div class="transactions-list">';
+                        item.transactions.forEach(transaction => {
+                            html += `
+                                <div class="transaction ${transaction.type}">
+                                    <div class="transaction-header">
+                                        <span class="transaction-type">${transaction.type === 'deposit' ? 'Entrée' : 'Sortie'}</span>
+                                        <span class="transaction-amount">$${formatNumber(transaction.amount)}</span>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <span class="transaction-from">De: ${transaction.sender_name || 'N/A'}</span>
+                                        <span class="transaction-to">À: ${transaction.receiver_name || 'N/A'}</span>
+                                        <span class="transaction-reason">${transaction.reason || 'N/A'}</span>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                    }
+
+                    div.innerHTML = html;
+                    balanceList.appendChild(div);
+                });
+            }
+
+            toggleButton.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                isChartView = !isChartView;
+                if (isChartView) {
+                    chartView.style.display = 'block';
+                    listView.style.display = 'none';
+                    toggleButton.innerHTML = '<i class="fas fa-list"></i>';
+                } else {
+                    chartView.style.display = 'none';
+                    listView.style.display = 'block';
+                    toggleButton.innerHTML = '<i class="fas fa-chart-line"></i>';
+                    createBalanceList();
+                }
+                return false;
+            };
+
+            // Configuration du graphique
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(52, 152, 219, 0.2)');
+            gradient.addColorStop(1, 'rgba(52, 152, 219, 0)');
+            
+            const data = {
+                labels: balanceData.map(item => item.date),
+                datasets: [{
+                    label: 'Balance',
+                    data: balanceData.map(item => item.total),
+                    borderColor: '#3498DB',
+                    backgroundColor: gradient,
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#3498DB',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderWidth: 3,
+                    pointHoverBorderColor: '#3498DB'
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.03)'
+                            },
+                            ticks: {
+                                maxTicksLimit: 8,
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                },
+                                color: '#7f8c8d'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.03)'
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                },
+                                color: '#7f8c8d',
+                                callback: function(value) {
+                                    return '$' + formatNumber(value);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#fff',
+                            titleColor: '#2C3E50',
+                            bodyColor: '#2C3E50',
+                            titleFont: {
+                                family: 'Inter',
+                                size: 14,
+                                weight: '600'
+                            },
+                            bodyFont: {
+                                family: 'Inter',
+                                size: 13
+                            },
+                            padding: 15,
+                            borderColor: '#f0f4f8',
+                            borderWidth: 1,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Balance: $' + formatNumber(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        function populateList(elementId, data, translations) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = '';
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'stats-list-item';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'name';
+                nameSpan.textContent = item.receiver_name || item.sender_name || item.reason;
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'value';
+                
+                if (elementId === 'popularTemplates') {
+                    valueSpan.textContent = `${item.count} ${translations.usage || 'uses'}`;
+                } else {
+                    valueSpan.textContent = `$${formatNumber(item.total)}`;
+                }
+
+                div.appendChild(nameSpan);
+                div.appendChild(valueSpan);
+                container.appendChild(div);
+            });
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        window.addEventListener('message', (event) => {
+            document.body.style.display = 'flex';
+
+            if (event.data.type === 'showBillHTML') {
+                document.getElementById('bill-container').style.display = 'block';
+                document.getElementById('stats-container').style.display = 'none';
+                
+                const container = document.getElementById('bill-container');
                 const billHTML = createBillHTML(event.data.billData, event.data.translations);
                 container.innerHTML = billHTML;
 
@@ -329,6 +864,45 @@
                         method: 'POST'
                     });
                 };
+            }
+            else if (event.data.type === 'showSocietyStats') {
+                document.body.style.display = 'flex';
+                document.getElementById('bill-container').style.display = 'none';
+                document.getElementById('stats-container').style.display = 'block';
+                
+                const container = document.getElementById('stats-container');
+                const data = {
+                    stats: event.data.stats || {},
+                    society: event.data.society || {},
+                    translations: event.data.translations || {}
+                };
+
+                container.innerHTML = createStatsHTML(data, data.translations);
+
+                if (data.stats.balance && Array.isArray(data.stats.balance)) {
+                    createBalanceChart(data.stats.balance);
+                }
+
+                if (data.stats.topPayers) {
+                    populateList('topPayers', data.stats.topPayers, data.translations);
+                }
+                if (data.stats.topBillers) {
+                    populateList('topBillers', data.stats.topBillers, data.translations);
+                }
+                if (data.stats.popularTemplates) {
+                    populateList('popularTemplates', data.stats.popularTemplates, data.translations);
+                }
+
+                const closeButton = container.querySelector('button');
+                if (closeButton) {
+                    closeButton.onclick = () => {
+                        document.body.style.display = 'none';
+                        container.innerHTML = '';
+                        fetch(`https://${GetParentResourceName()}/closeStats`, {
+                            method: 'POST'
+                        });
+                    };
+                }
             }
         });
     </script>
