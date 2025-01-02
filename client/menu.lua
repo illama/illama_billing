@@ -135,6 +135,10 @@ function OpenBillingMenu()
         title = _L('billing_menu'),
         options = {
             {
+                title = _L('separator_bills_management'),
+                disabled = true
+            },
+            {
                 title = _L('my_bills'),
                 description = _L('my_bills_desc'),
                 icon = 'receipt',
@@ -159,7 +163,7 @@ function OpenBillingMenu()
                 end
             },
             {
-                title = _L('separator_bills_management'),
+                title = _L('separator_bills_creator'),
                 disabled = true
             },
             {
@@ -648,7 +652,7 @@ function CreateRecurringBill(target)
         local customInput = lib.inputDialog(_L('custom_subscription'), {
             {
                 type = 'number',
-                label = _L('payment_amount'),
+                label = _L('payment_amount_custom_subscription'),
                 description = _L('payment_amount_desc'),
                 required = true,
                 min = 1,
@@ -963,7 +967,7 @@ function OpenBillDetailsMenu(bill)
                 if confirm == 'confirm' then
                     TriggerServerEvent('illama_billing:deleteBill', bill.id)
                     Wait(100)
-                    OpenMyBillsMenu()
+                    OpenBillingMenu()
                 end
             end
         })
@@ -1111,7 +1115,8 @@ function OpenRecurringBillActions(bill)
                 })
                 if confirm == 'confirm' then
                     TriggerServerEvent('illama_billing:cancelRecurringBill', bill.id)
-                    lib.showContext('recurring_bills_menu')
+                    Wait(100)
+                    OpenBillingMenu()
                 end
             end
         })
@@ -1446,7 +1451,6 @@ function OpenAdvancePaymentMenu(bill)
         {
             type = 'number',
             label = _L('payments_count'),
-            description = _L('payments_count_desc'),
             required = true,
             min = 1,
             max = 12,
@@ -1461,7 +1465,7 @@ function OpenAdvancePaymentMenu(bill)
             content = string.format(_L('confirm_advance_payment'), 
                 ESX.Math.GroupDigits(total), 
                 input[2], 
-                input[1] == 'cash' and _L('cash') or _L('bank')
+                _L(input[1])
             ),
             centered = true,
             cancel = true

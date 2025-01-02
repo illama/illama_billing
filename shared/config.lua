@@ -1,29 +1,30 @@
 Config = {}
 Config.OpenKey = 'F2'
 Config.MaxBillAmount = 100000
-Config.Locale = 'fr'
+Config.Locale = 'en'
+Config.Debug = false
 
 Config.Webhooks = {
     enabled = true,
     standard = {
         script_start = {
             enabled = true,
-            url = "WEBNOOKS_HERE",
+            url = "YOUR_WEBNOOK_HERE",
             color = 3066993
         },
         bill_created = {
             enabled = true,
-            url = "WEBNOOKS_HERE",
+            url = "YOUR_WEBNOOK_HERE",
             color = 3066993
         },
         bill_paid = {
             enabled = true,
-            url = "WEBNOOKS_HERE",
+            url = "YOUR_WEBNOOK_HERE",
             color = 15105570
         },
         bill_deleted = {
             enabled = true,
-            url = "WEBNOOKS_HERE",
+            url = "YOUR_WEBNOOK_HERE",
             color = 15158332
         }
     }
@@ -73,40 +74,40 @@ Config.AllowedJobs = {
         webhooks = {
             bill_created = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 3447003
             },
             bill_paid = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 3066993
             },
             bill_deleted = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 15158332
             },
             recurring_created = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 10181046
             },
             recurring_payment = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 15105570
             },
             installment_created = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 3447003
             },
             installment_payment = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 10181046
             },
-            logo = "IMAGE_URL"
+            logo = "URL_IMAGE"
         }
     },
     ['ambulance'] = {
@@ -158,40 +159,40 @@ Config.AllowedJobs = {
         webhooks = {
             bill_created = {
                 enabled = true,
-                url = "",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 15158332
             },
             bill_paid = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 3066993
             },
             bill_deleted = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 15158332
             },
             recurring_created = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 10181046
             },
             recurring_payment = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 15105570
             },
             installment_created = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 3447003
             },
             installment_payment = {
                 enabled = true,
-                url = "WEBNOOKS_HERE",
+                url = "YOUR_WEBNOOK_HERE",
                 color = 10181046
             },
-            logo = "IMAGE_URL"
+            logo = "URL_IMAGE"
         }
     }
 }

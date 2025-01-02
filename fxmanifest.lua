@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 author 'Illama'
-version '1.1.8'
+version '2.0.0'
 
 dependencies {
     'es_extended',
@@ -15,13 +15,19 @@ shared_scripts {
     'shared/config.lua',
     'locales/shared.lua',
     'locales/ar.lua',
-    'locales/ru.lua',
-    'locales/zh.lua',
-    'locales/es.lua',
+    'locales/de.lua',
     'locales/en.lua',
+    'locales/es.lua',
     'locales/fr.lua',
     'locales/it.lua',
-    'locales/sr.lua'
+    'locales/ja.lua',
+    'locales/ko.lua',
+    'locales/nl.lua',
+    'locales/pt.lua',
+    'locales/ru.lua',
+    'locales/sr.lua',
+    'locales/sv.lua',
+    'locales/zh.lua'
 }
 
 client_scripts {

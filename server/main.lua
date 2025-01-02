@@ -622,23 +622,72 @@ end)
 -------------------------------
 --     RECURRING BILLS
 -------------------------------
-RegisterNetEvent('illama_billing:acceptRecurringBill')
-AddEventHandler('illama_billing:acceptRecurringBill', function(billData)
+RegisterNetEvent('illama_billing:createRecurringBill')
+AddEventHandler('illama_billing:createRecurringBill', function(data)
     local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
+    local xTarget = ESX.GetPlayerFromId(data.target)
+
+    if not canCreateSocietyBill(xPlayer) or not isJobAllowedForRecurring(xPlayer.job.name) then
+        TriggerClientEvent('ox_lib:notify', source, {
+            type = 'error',
+            description = _L('insufficient_rights')
+        })
+        return
+    end
+
+    local pendingBillData = {
+        type = 'recurring',
+        data = {
+            sender = xPlayer.identifier,
+            sender_name = xPlayer.getName(),
+            sender_source = source,
+            target = data.target,
+            amount = data.amount,
+            reason = data.reason,
+            interval_days = data.interval_days,
+            society = data.society,
+            society_label = data.society_label,
+            type = 'society',
+            bill_type = 'society'
+        }
+    }
+
+    PendingBills[data.target] = pendingBillData
+
+    TriggerClientEvent('illama_billing:requestConfirmation', data.target, pendingBillData.data)
+
+    TriggerClientEvent('ox_lib:notify', source, {
+        type = 'info',
+        description = _L('recurring_bill_request_sent')
+    })
+end)
+
+RegisterNetEvent('illama_billing:acceptRecurringBill')
+AddEventHandler('illama_billing:acceptRecurringBill', function()
+    local source = source
     local pendingBill = PendingBills[source]
-    if not xPlayer or not pendingBill then return end
-    MySQL.insert('INSERT INTO illama_recurring_bills (sender, sender_name, receiver, receiver_name, amount, reason, society, interval_days, next_billing_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))',
+
+    if not pendingBill or not pendingBill.data.interval_days then 
+        return 
+    end
+
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return end
+
+    local billData = pendingBill.data
+    local nextBillingDate = os.time() + (billData.interval_days * 86400)
+
+    MySQL.insert('INSERT INTO illama_recurring_bills (society, society_label, receiver, receiver_name, amount, reason, interval_days, next_billing_date) VALUES (?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))',
         {
-            pendingBill.data.sender,
-            pendingBill.data.sender_name,
+            billData.society,
+            billData.society_label,
             xPlayer.identifier,
             xPlayer.getName(),
-            pendingBill.data.amount,
-            pendingBill.data.reason,
-            pendingBill.data.society,
-            pendingBill.data.interval_days,
-            os.time() + (pendingBill.data.interval_days * 86400)
+            billData.amount,
+            billData.reason,
+            billData.interval_days,
+            nextBillingDate
         },
         function(id)
             if id then
@@ -672,48 +721,6 @@ AddEventHandler('illama_billing:acceptRecurringBill', function(billData)
                         }
                     }
                 })
-                TriggerClientEvent('ox_lib:notify', source, {
-                    type = 'success',
-                    description = _L('recurring_bill_created')
-                })
-                TriggerClientEvent('ox_lib:notify', pendingBill.data.sender_source, {
-                    type = 'success',
-                    description = _L('recurring_bill_accepted')
-                })
-            end
-        end
-    )
-    PendingBills[source] = nil
-end)
-
-RegisterNetEvent('illama_billing:acceptRecurringBill')
-AddEventHandler('illama_billing:acceptRecurringBill', function()
-    local source = source
-    local pendingBill = PendingBills[source]
-
-    if not pendingBill or not pendingBill.data.interval_days then 
-        return 
-    end
-
-    local xPlayer = ESX.GetPlayerFromId(source)
-    if not xPlayer then return end
-
-    local billData = pendingBill.data
-    local nextBillingDate = os.time() + (billData.interval_days * 86400)
-
-    MySQL.insert('INSERT INTO illama_recurring_bills (society, society_label, receiver, receiver_name, amount, reason, interval_days, next_billing_date) VALUES (?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))',
-        {
-            billData.society,
-            billData.society_label,
-            xPlayer.identifier,
-            xPlayer.getName(),
-            billData.amount,
-            billData.reason,
-            billData.interval_days,
-            nextBillingDate
-        },
-        function(id)
-            if id then
                 TriggerClientEvent('ox_lib:notify', source, {
                     type = 'success',
                     description = _L('recurring_bill_accepted')
@@ -763,41 +770,42 @@ AddEventHandler('illama_billing:payRecurringBill', function(billId, payments, pa
                 return
             end
 
-            if paymentType == 'bank' then
-                xPlayer.removeAccountMoney('bank', totalAmount)
-            else
-                xPlayer.removeMoney(totalAmount)
-            end
-
-            local newNextBillingDate = os.time() + ((bill.interval_days * payments) * 86400)
-            
-            MySQL.query('UPDATE illama_recurring_bills SET next_billing_date = FROM_UNIXTIME(?) WHERE id = ?',
-                {newNextBillingDate, billId}
-            )
-
-            MySQL.insert('INSERT INTO illama_recurring_payments (recurring_bill_id, amount, payments_count) VALUES (?, ?, ?)',
-                {billId, totalAmount, payments}
-            )
-
             TriggerEvent('esx_addonaccount:getSharedAccount', 'society_'..bill.society, function(account)
-                if account then
-                    account.addMoney(totalAmount)
-                    
-                    TriggerClientEvent('ox_lib:notify', source, {
-                        type = 'success',
-                        description = _L('payment_made', ESX.Math.GroupDigits(totalAmount))
-                    })
+                if not account then return end
 
-                    local xPlayers = ESX.GetPlayers()
-                    for _, playerId in ipairs(xPlayers) do
-                        local xTarget = ESX.GetPlayerFromId(playerId)
-                        if xTarget and xTarget.job.name == bill.society and xTarget.job.grade_name == 'boss' then
-                            TriggerClientEvent('ox_lib:notify', xTarget.source, {
-                                title = _L('recurring_payment'),
-                                description = _L('payment_received', ESX.Math.GroupDigits(totalAmount)),
-                                type = 'success'
-                            })
-                        end
+                if paymentType == 'bank' then
+                    xPlayer.removeAccountMoney('bank', totalAmount)
+                else
+                    xPlayer.removeMoney(totalAmount)
+                end
+
+                local newNextBillingDate = os.time() + ((bill.interval_days * payments) * 86400)
+                
+                MySQL.query('UPDATE illama_recurring_bills SET next_billing_date = FROM_UNIXTIME(?) WHERE id = ?',
+                    {newNextBillingDate, billId}
+                )
+
+                MySQL.insert('INSERT INTO illama_recurring_payments (recurring_bill_id, amount, payments_count) VALUES (?, ?, ?)',
+                    {billId, totalAmount, payments}
+                )
+
+                account.addMoney(totalAmount)
+
+                local formattedAmount = ESX.Math.GroupDigits(totalAmount)
+                TriggerClientEvent('ox_lib:notify', source, {
+                    type = 'success',
+                    description = _L('payment_made_society', formattedAmount, bill.society)
+                })
+
+                local xPlayers = ESX.GetPlayers()
+                for _, playerId in ipairs(xPlayers) do
+                    local xTarget = ESX.GetPlayerFromId(playerId)
+                    if xTarget and xTarget.job.name == bill.society and xTarget.job.grade_name == 'boss' then
+                        TriggerClientEvent('ox_lib:notify', xTarget.source, {
+                            title = _L('recurring_payment'),
+                            description = _L('payment_received', formattedAmount),
+                            type = 'success'
+                        })
                     end
                 end
             end)
@@ -1260,7 +1268,6 @@ local ESX = exports["es_extended"]:getSharedObject()
 local function CheckScriptEnabled(fn)
     return function(...)
         if not scriptEnabled then
-            print('^1[ERREUR] ^7Tentative d\'utilisation du script désactivé')
             return
         end
         return fn(...)
