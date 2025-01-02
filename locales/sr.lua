@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = 'Klijent je prihvatio pretplatu',
     ['bill_accepted_with_installments'] = 'Račun je uspešno prihvaćen sa plaćanjem na rate',
     ['payment_plan_created'] = 'Plan plaćanja je uspešno kreiran',
-    ['custom_bill'] = 'Prilagođeni račun'
+    ['custom_bill'] = 'Prilagođeni račun',
+    ['webhook_bill_created_title'] = 'Novi Račun',
+    ['webhook_bill_created_desc'] = 'Račun od $%s je kreiran od strane %s za %s',
+    ['webhook_recurring_created_title'] = 'Novi Ponavljajući Račun',
+    ['webhook_recurring_created_desc'] = 'Ponavljajući račun od $%s je kreiran za %s (svakih %s dana)',
+    ['webhook_days_count'] = '%s dana',
+    ['webhook_bill_deleted_title'] = 'Račun Obrisan',
+    ['webhook_bill_deleted_desc'] = 'Račun od $%s je obrisan od strane %s',
+    ['webhook_bill_paid_title'] = 'Račun Plaćen',
+    ['webhook_bill_paid_desc'] = 'Račun od $%s je plaćen od strane %s',
+    ['webhook_interval'] = 'Interval'
 }
 
 Locale.Add('sr', translations)

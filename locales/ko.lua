@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = '고객이 구독을 수락했습니다',
     ['bill_accepted_with_installments'] = '청구서가 할부 결제로 성공적으로 수락되었습니다',
     ['payment_plan_created'] = '결제 계획이 성공적으로 생성되었습니다',
-    ['custom_bill'] = '맞춤 청구서'
+    ['custom_bill'] = '맞춤 청구서',
+    ['webhook_bill_created_title'] = '새 청구서',
+    ['webhook_bill_created_desc'] = '$%s의 청구서가 %s에 의해 %s를 위해 생성되었습니다',
+    ['webhook_recurring_created_title'] = '새 정기 청구서',
+    ['webhook_recurring_created_desc'] = '$%s의 정기 청구서가 %s를 위해 생성되었습니다 (%s일마다)',
+    ['webhook_days_count'] = '%s일',
+    ['webhook_bill_deleted_title'] = '청구서 삭제됨',
+    ['webhook_bill_deleted_desc'] = '$%s의 청구서가 %s에 의해 삭제되었습니다',
+    ['webhook_bill_paid_title'] = '청구서 지불됨',
+    ['webhook_bill_paid_desc'] = '$%s의 청구서가 %s에 의해 지불되었습니다',
+    ['webhook_interval'] = '간격'
 }
 
 Locale.Add('ko', translations)

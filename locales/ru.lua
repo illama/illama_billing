@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = 'Клиент принял подписку',
     ['bill_accepted_with_installments'] = 'Счет успешно принят с рассрочкой платежа',
     ['payment_plan_created'] = 'План оплаты успешно создан',
-    ['custom_bill'] = 'Пользовательский счет'
+    ['custom_bill'] = 'Пользовательский счет',
+    ['webhook_bill_created_title'] = 'Новый Счет',
+    ['webhook_bill_created_desc'] = 'Счет на $%s создан %s для %s',
+    ['webhook_recurring_created_title'] = 'Новый Регулярный Счет',
+    ['webhook_recurring_created_desc'] = 'Регулярный счет на $%s создан для %s (каждые %s дней)',
+    ['webhook_days_count'] = '%s дней',
+    ['webhook_bill_deleted_title'] = 'Счет Удален',
+    ['webhook_bill_deleted_desc'] = 'Счет на $%s удален пользователем %s',
+    ['webhook_bill_paid_title'] = 'Счет Оплачен',
+    ['webhook_bill_paid_desc'] = 'Счет на $%s оплачен пользователем %s',
+    ['webhook_interval'] = 'Интервал'
 }
 
 Locale.Add('ru', translations)

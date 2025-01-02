@@ -9,22 +9,22 @@ Config.Webhooks = {
     standard = {
         script_start = {
             enabled = true,
-            url = "YOUR_WEBNOOK_HERE",
+            url = "YOUR_WEBHOOK_URL",
             color = 3066993
         },
         bill_created = {
             enabled = true,
-            url = "YOUR_WEBNOOK_HERE",
+            url = "YOUR_WEBHOOK_URL",
             color = 3066993
         },
         bill_paid = {
             enabled = true,
-            url = "YOUR_WEBNOOK_HERE",
+            url = "YOUR_WEBHOOK_URL",
             color = 15105570
         },
         bill_deleted = {
             enabled = true,
-            url = "YOUR_WEBNOOK_HERE",
+            url = "YOUR_WEBHOOK_URL",
             color = 15158332
         }
     }
@@ -74,40 +74,40 @@ Config.AllowedJobs = {
         webhooks = {
             bill_created = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 3447003
             },
             bill_paid = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 3066993
             },
             bill_deleted = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 15158332
             },
             recurring_created = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 10181046
             },
             recurring_payment = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 15105570
             },
             installment_created = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 3447003
             },
             installment_payment = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 10181046
             },
-            logo = "URL_IMAGE"
+            logo = "YOUR_IMAGE_URL"
         }
     },
     ['ambulance'] = {
@@ -159,40 +159,40 @@ Config.AllowedJobs = {
         webhooks = {
             bill_created = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 15158332
             },
             bill_paid = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 3066993
             },
             bill_deleted = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 15158332
             },
             recurring_created = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 10181046
             },
             recurring_payment = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 15105570
             },
             installment_created = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 3447003
             },
             installment_payment = {
                 enabled = true,
-                url = "YOUR_WEBNOOK_HERE",
+                url = "YOUR_WEBHOOK_URL",
                 color = 10181046
             },
-            logo = "URL_IMAGE"
+            logo = "YOUR_IMAGE_URL"
         }
     }
 }

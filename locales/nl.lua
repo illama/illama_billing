@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = 'De klant heeft het abonnement geaccepteerd',
     ['bill_accepted_with_installments'] = 'De factuur is succesvol geaccepteerd met termijnbetalingen',
     ['payment_plan_created'] = 'Het betalingsplan is succesvol aangemaakt',
-    ['custom_bill'] = 'Aangepaste factuur'
+    ['custom_bill'] = 'Aangepaste factuur',
+    ['webhook_bill_created_title'] = 'Nieuwe Factuur',
+    ['webhook_bill_created_desc'] = 'Een factuur van $%s is aangemaakt door %s voor %s',
+    ['webhook_recurring_created_title'] = 'Nieuwe Terugkerende Factuur',
+    ['webhook_recurring_created_desc'] = 'Een terugkerende factuur van $%s is aangemaakt voor %s (elke %s dagen)',
+    ['webhook_days_count'] = '%s dagen',
+    ['webhook_bill_deleted_title'] = 'Factuur Verwijderd',
+    ['webhook_bill_deleted_desc'] = 'Een factuur van $%s is verwijderd door %s',
+    ['webhook_bill_paid_title'] = 'Factuur Betaald',
+    ['webhook_bill_paid_desc'] = 'Een factuur van $%s is betaald door %s',
+    ['webhook_interval'] = 'Interval'
 }
 
 Locale.Add('nl', translations)

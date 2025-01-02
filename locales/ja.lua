@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = 'クライアントがサブスクリプションを承認しました',
     ['bill_accepted_with_installments'] = '請求書が分割払いで正常に承認されました',
     ['payment_plan_created'] = '支払いプランが正常に作成されました',
-    ['custom_bill'] = 'カスタム請求書'
+    ['custom_bill'] = 'カスタム請求書',
+    ['webhook_bill_created_title'] = '新規請求書',
+    ['webhook_bill_created_desc'] = '$%sの請求書が%sによって%sのために作成されました',
+    ['webhook_recurring_created_title'] = '新規定期請求書',
+    ['webhook_recurring_created_desc'] = '$%sの定期請求書が%sのために作成されました（%s日ごと）',
+    ['webhook_days_count'] = '%s日',
+    ['webhook_bill_deleted_title'] = '請求書削除',
+    ['webhook_bill_deleted_desc'] = '$%sの請求書が%sによって削除されました',
+    ['webhook_bill_paid_title'] = '請求書支払完了',
+    ['webhook_bill_paid_desc'] = '$%sの請求書が%sによって支払われました',
+    ['webhook_interval'] = '間隔'
 }
 
 Locale.Add('ja', translations)

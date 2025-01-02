@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = 'O cliente aceitou a assinatura',
     ['bill_accepted_with_installments'] = 'A fatura foi aceita com sucesso com pagamentos parcelados',
     ['payment_plan_created'] = 'O plano de pagamento foi criado com sucesso',
-    ['custom_bill'] = 'Fatura personalizada'
+    ['custom_bill'] = 'Fatura personalizada',
+    ['webhook_bill_created_title'] = 'Nova Fatura',
+    ['webhook_bill_created_desc'] = 'Uma fatura de $%s foi criada por %s para %s',
+    ['webhook_recurring_created_title'] = 'Nova Fatura Recorrente',
+    ['webhook_recurring_created_desc'] = 'Uma fatura recorrente de $%s foi criada para %s (a cada %s dias)',
+    ['webhook_days_count'] = '%s dias',
+    ['webhook_bill_deleted_title'] = 'Fatura Excluída',
+    ['webhook_bill_deleted_desc'] = 'Uma fatura de $%s foi excluída por %s',
+    ['webhook_bill_paid_title'] = 'Fatura Paga',
+    ['webhook_bill_paid_desc'] = 'Uma fatura de $%s foi paga por %s',
+    ['webhook_interval'] = 'Intervalo'
 }
 
 Locale.Add('pt', translations)

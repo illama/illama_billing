@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = 'قبل العميل الاشتراك',
     ['bill_accepted_with_installments'] = 'تم قبول الفاتورة بنجاح مع دفعات مقسطة',
     ['payment_plan_created'] = 'تم إنشاء خطة الدفع بنجاح',
-    ['custom_bill'] = 'فاتورة مخصصة'
+    ['custom_bill'] = 'فاتورة مخصصة',
+    ['webhook_bill_created_title'] = 'فاتورة جديدة',
+    ['webhook_bill_created_desc'] = 'تم إنشاء فاتورة بقيمة $%s بواسطة %s لـ %s',
+    ['webhook_recurring_created_title'] = 'فاتورة متكررة جديدة',
+    ['webhook_recurring_created_desc'] = 'تم إنشاء فاتورة متكررة بقيمة $%s لـ %s (كل %s يوم)',
+    ['webhook_days_count'] = '%s يوم',
+    ['webhook_bill_deleted_title'] = 'تم حذف الفاتورة',
+    ['webhook_bill_deleted_desc'] = 'تم حذف فاتورة بقيمة $%s بواسطة %s',
+    ['webhook_bill_paid_title'] = 'تم دفع الفاتورة',
+    ['webhook_bill_paid_desc'] = 'تم دفع فاتورة بقيمة $%s بواسطة %s',
+    ['webhook_interval'] = 'الفاصل الزمني'
 }
 
 Locale.Add('ar', translations)

@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = 'Der Kunde hat das Abonnement akzeptiert',
     ['bill_accepted_with_installments'] = 'Die Rechnung wurde erfolgreich mit Ratenzahlung akzeptiert',
     ['payment_plan_created'] = 'Der Zahlungsplan wurde erfolgreich erstellt',
-    ['custom_bill'] = 'Individuelle Rechnung'
+    ['custom_bill'] = 'Individuelle Rechnung',
+    ['webhook_bill_created_title'] = 'Neue Rechnung',
+    ['webhook_bill_created_desc'] = 'Eine Rechnung über $%s wurde von %s für %s erstellt',
+    ['webhook_recurring_created_title'] = 'Neue wiederkehrende Rechnung',
+    ['webhook_recurring_created_desc'] = 'Eine wiederkehrende Rechnung über $%s wurde für %s erstellt (alle %s Tage)',
+    ['webhook_days_count'] = '%s Tage',
+    ['webhook_bill_deleted_title'] = 'Rechnung gelöscht',
+    ['webhook_bill_deleted_desc'] = 'Eine Rechnung über $%s wurde von %s gelöscht',
+    ['webhook_bill_paid_title'] = 'Rechnung bezahlt',
+    ['webhook_bill_paid_desc'] = 'Eine Rechnung über $%s wurde von %s bezahlt',
+    ['webhook_interval'] = 'Intervall'
 }
 
 Locale.Add('de', translations)

@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = '客户已接受订阅',
     ['bill_accepted_with_installments'] = '账单已成功接受分期付款',
     ['payment_plan_created'] = '付款计划已成功创建',
-    ['custom_bill'] = '自定义账单'
+    ['custom_bill'] = '自定义账单',
+    ['webhook_bill_created_title'] = '新账单',
+    ['webhook_bill_created_desc'] = '%s为%s创建了一个$%s的账单',
+    ['webhook_recurring_created_title'] = '新定期账单',
+    ['webhook_recurring_created_desc'] = '为%s创建了一个$%s的定期账单（每%s天）',
+    ['webhook_days_count'] = '%s天',
+    ['webhook_bill_deleted_title'] = '账单已删除',
+    ['webhook_bill_deleted_desc'] = '%s删除了一个$%s的账单',
+    ['webhook_bill_paid_title'] = '账单已支付',
+    ['webhook_bill_paid_desc'] = '%s支付了一个$%s的账单',
+    ['webhook_interval'] = '间隔'
 }
 
 Locale.Add('zh', translations)

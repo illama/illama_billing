@@ -266,7 +266,17 @@ local translations = {
     ['recurring_bill_accepted'] = 'Kunden har accepterat prenumerationen',
     ['bill_accepted_with_installments'] = 'Fakturan har accepterats framgångsrikt med avbetalningar',
     ['payment_plan_created'] = 'Betalningsplanen har skapats framgångsrikt',
-    ['custom_bill'] = 'Anpassad faktura'
+    ['custom_bill'] = 'Anpassad faktura',
+    ['webhook_bill_created_title'] = 'Ny Faktura',
+    ['webhook_bill_created_desc'] = 'En faktura på $%s skapades av %s för %s',
+    ['webhook_recurring_created_title'] = 'Ny Återkommande Faktura',
+    ['webhook_recurring_created_desc'] = 'En återkommande faktura på $%s skapades för %s (var %s dag)',
+    ['webhook_days_count'] = '%s dagar',
+    ['webhook_bill_deleted_title'] = 'Faktura Raderad',
+    ['webhook_bill_deleted_desc'] = 'En faktura på $%s raderades av %s',
+    ['webhook_bill_paid_title'] = 'Faktura Betald',
+    ['webhook_bill_paid_desc'] = 'En faktura på $%s betalades av %s',
+    ['webhook_interval'] = 'Intervall'
 }
 
 Locale.Add('sv', translations)
