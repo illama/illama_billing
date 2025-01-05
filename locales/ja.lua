@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = '使用回数',
     ['unknown'] = '不明',
     ['payment_from'] = '%sからの支払い',
-    ['payment_processed'] = '支払いが正常に処理されました'
+    ['payment_processed'] = '支払いが正常に処理されました',
+    ['group_billing'] = "グループ請求",
+    ['select_players'] = "プレイヤーを選択",
+    ['split_type'] = "分割タイプ",
+    ['split_equal'] = "均等分割",
+    ['split_percentage'] = "パーセント分割",
+    ['split_amount'] = "金額分割",
+    ['total_amount'] = "合計金額",
+    ['success'] = "成功",
+    ['payment_received_recurring'] = "定期的な支払いが受信されました",
+    ['unknown_player'] = "不明なプレイヤー",
+    ['remaining_percentage'] = "%s (残り: %d%%)",
+    ['remaining_amount'] = "%s (残り: $%s)",
+    ['enter_percentage_per_player'] = "プレイヤーごとの割合を入力",
+    ['enter_amount_per_player'] = "プレイヤーごとの金額を入力",
+    ['percentage_not_100'] = "割合の合計は100%である必要があります",
+    ['amounts_not_total'] = "金額の合計は総額と一致する必要があります",
+    ['invalid_reason'] = "無効な理由"
 }
 
 Locale.Add('ja', translations)

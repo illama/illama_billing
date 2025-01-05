@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = '使用次数',
     ['unknown'] = '未知',
     ['payment_from'] = '来自%s的付款',
-    ['payment_processed'] = '付款处理成功'
+    ['payment_processed'] = '付款处理成功',
+    ['group_billing'] = "群组账单",
+    ['select_players'] = "选择玩家",
+    ['split_type'] = "分摊类型",
+    ['split_equal'] = "平均分摊",
+    ['split_percentage'] = "百分比分摊",
+    ['split_amount'] = "金额分摊",
+    ['total_amount'] = "总金额",
+    ['success'] = "成功",
+    ['payment_received_recurring'] = "收到定期付款",
+    ['unknown_player'] = "未知玩家",
+    ['remaining_percentage'] = "%s (剩余: %d%%)",
+    ['remaining_amount'] = "%s (剩余: $%s)",
+    ['enter_percentage_per_player'] = "输入每位玩家的百分比",
+    ['enter_amount_per_player'] = "输入每位玩家的金额",
+    ['percentage_not_100'] = "百分比总和必须等于100%",
+    ['amounts_not_total'] = "金额总和必须等于总金额",
+    ['invalid_reason'] = "无效原因"
 }
 
 Locale.Add('zh', translations)

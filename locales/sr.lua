@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = 'korišćenja',
     ['unknown'] = 'Nepoznato',
     ['payment_from'] = 'Uplata od %s',
-    ['payment_processed'] = 'Uplata uspešno obrađena'
+    ['payment_processed'] = 'Uplata uspešno obrađena',
+    ['group_billing'] = "Grupno fakturisanje",
+    ['select_players'] = "Izaberi igrače",
+    ['split_type'] = "Tip podele",
+    ['split_equal'] = "Jednaka podela",
+    ['split_percentage'] = "Procentualna podela",
+    ['split_amount'] = "Podela po iznosu",
+    ['total_amount'] = "Ukupan iznos",
+    ['success'] = "Uspeh",
+    ['payment_received_recurring'] = "Primljena ponavljajuća uplata",
+    ['unknown_player'] = "Nepoznat igrač",
+    ['remaining_percentage'] = "%s (Preostalo: %d%%)",
+    ['remaining_amount'] = "%s (Preostalo: $%s)",
+    ['enter_percentage_per_player'] = "Unesite procenat po igraču",
+    ['enter_amount_per_player'] = "Unesite iznos po igraču",
+    ['percentage_not_100'] = "Zbir procenata mora biti 100%",
+    ['amounts_not_total'] = "Zbir iznosa mora biti jednak ukupnom iznosu",
+    ['invalid_reason'] = "Nevažeći razlog"
 }
 
 Locale.Add('sr', translations)

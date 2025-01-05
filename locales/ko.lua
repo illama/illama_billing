@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = '사용',
     ['unknown'] = '알 수 없음',
     ['payment_from'] = '%s의 지불',
-    ['payment_processed'] = '지불이 성공적으로 처리되었습니다'
+    ['payment_processed'] = '지불이 성공적으로 처리되었습니다',
+    ['group_billing'] = "그룹 청구",
+    ['select_players'] = "플레이어 선택",
+    ['split_type'] = "분할 유형",
+    ['split_equal'] = "균등 분할",
+    ['split_percentage'] = "비율 분할",
+    ['split_amount'] = "금액 분할",
+    ['total_amount'] = "총 금액",
+    ['success'] = "성공",
+    ['payment_received_recurring'] = "정기 지불이 받아졌습니다",
+    ['unknown_player'] = "알 수 없는 플레이어",
+    ['remaining_percentage'] = "%s (남은: %d%%)",
+    ['remaining_amount'] = "%s (남은: $%s)",
+    ['enter_percentage_per_player'] = "플레이어당 비율 입력",
+    ['enter_amount_per_player'] = "플레이어당 금액 입력",
+    ['percentage_not_100'] = "비율의 합은 100%여야 합니다",
+    ['amounts_not_total'] = "금액의 합은 총액과 일치해야 합니다",
+    ['invalid_reason'] = "잘못된 이유"
 }
 
 Locale.Add('ko', translations)

@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = 'utilizzi',
     ['unknown'] = 'Sconosciuto',
     ['payment_from'] = 'Pagamento da %s',
-    ['payment_processed'] = 'Pagamento elaborato con successo'
+    ['payment_processed'] = 'Pagamento elaborato con successo',
+    ['group_billing'] = "Fatturazione di gruppo",
+    ['select_players'] = "Seleziona giocatori",
+    ['split_type'] = "Tipo di divisione",
+    ['split_equal'] = "Divisione equa",
+    ['split_percentage'] = "Divisione percentuale",
+    ['split_amount'] = "Divisione per importo",
+    ['total_amount'] = "Importo totale",
+    ['success'] = "Successo",
+    ['payment_received_recurring'] = "Pagamento ricorrente ricevuto",
+    ['unknown_player'] = "Giocatore sconosciuto",
+    ['remaining_percentage'] = "%s (Rimanente: %d%%)",
+    ['remaining_amount'] = "%s (Rimanente: $%s)",
+    ['enter_percentage_per_player'] = "Inserisci percentuale per giocatore",
+    ['enter_amount_per_player'] = "Inserisci importo per giocatore",
+    ['percentage_not_100'] = "La somma delle percentuali deve essere 100%",
+    ['amounts_not_total'] = "La somma degli importi deve essere uguale all'importo totale",
+    ['invalid_reason'] = "Motivo non valido"
 }
 
 Locale.Add('it', translations)

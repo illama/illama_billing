@@ -807,12 +807,6 @@ function OpenGroupBillingMenu(billType)
             name = 'require_signature',
             label = _L('require_signature'),
             description = _L('require_signature_desc')
-        },
-        {
-            type = 'checkbox',
-            name = 'allow_installments',
-            label = _L('allow_installments'),
-            description = _L('allow_installments_desc')
         }
     })
 
@@ -829,6 +823,24 @@ function OpenGroupBillingMenu(billType)
         lib.notify({
             title = _L('error'),
             description = _L('select_min_players'),
+            type = 'error'
+        })
+        return
+    end
+
+    if not validateAmount(totalAmount, Config.MaxBillAmount) then
+        lib.notify({
+            title = _L('error'),
+            description = _L('invalid_amount'),
+            type = 'error'
+        })
+        return
+    end
+
+    if not validateReason(reason) then
+        lib.notify({
+            title = _L('error'),
+            description = _L('invalid_reason'),
             type = 'error'
         })
         return
@@ -907,7 +919,7 @@ function OpenGroupBillingMenu(billType)
                     reason = reason .. ' (' .. (splitType == 'percentage' and _L('percentage_split') or _L('custom_split')) .. ')',
                     type = billType,
                     requireSignature = requireSignature,
-                    allow_installments = allowInstallments
+                    allow_installments = false
                 })
             end
         end
@@ -922,7 +934,7 @@ function OpenGroupBillingMenu(billType)
                     reason = reason .. ' (' .. _L('equal_split') .. ')',
                     type = billType,
                     requireSignature = requireSignature,
-                    allow_installments = allowInstallments
+                    allow_installments = false
                 })
             end
         end

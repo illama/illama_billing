@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = 'использований',
     ['unknown'] = 'Неизвестно',
     ['payment_from'] = 'Платёж от %s',
-    ['payment_processed'] = 'Платёж успешно обработан'
+    ['payment_processed'] = 'Платёж успешно обработан',
+    ['group_billing'] = "Групповой счет",
+    ['select_players'] = "Выбрать игроков",
+    ['split_type'] = "Тип разделения",
+    ['split_equal'] = "Равное разделение",
+    ['split_percentage'] = "Разделение по процентам",
+    ['split_amount'] = "Разделение по сумме",
+    ['total_amount'] = "Общая сумма",
+    ['success'] = "Успех",
+    ['payment_received_recurring'] = "Получен регулярный платеж",
+    ['unknown_player'] = "Неизвестный игрок",
+    ['remaining_percentage'] = "%s (Осталось: %d%%)",
+    ['remaining_amount'] = "%s (Осталось: $%s)",
+    ['enter_percentage_per_player'] = "Введите процент для каждого игрока",
+    ['enter_amount_per_player'] = "Введите сумму для каждого игрока",
+    ['percentage_not_100'] = "Сумма процентов должна равняться 100%",
+    ['amounts_not_total'] = "Сумма значений должна равняться общей сумме",
+    ['invalid_reason'] = "Недействительная причина"
 }
 
 Locale.Add('ru', translations)

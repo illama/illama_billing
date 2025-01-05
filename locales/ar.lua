@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = 'استخدامات',
     ['unknown'] = 'غير معروف',
     ['payment_from'] = 'دفع من %s',
-    ['payment_processed'] = 'تمت معالجة الدفع بنجاح'
+    ['payment_processed'] = 'تمت معالجة الدفع بنجاح',
+    ['group_billing'] = "فواتير جماعية",
+    ['select_players'] = "اختر اللاعبين",
+    ['split_type'] = "نوع التقسيم",
+    ['split_equal'] = "تقسيم متساوي",
+    ['split_percentage'] = "تقسيم بالنسبة المئوية",
+    ['split_amount'] = "تقسيم بالمبلغ",
+    ['total_amount'] = "المبلغ الإجمالي",
+    ['success'] = "نجاح",
+    ['payment_received_recurring'] = "تم استلام دفعة ربوية",9
+    ['unknown_player'] = "لاعب غير معروف",
+    ['remaining_percentage'] = "%s (المتبقي: %d%%)",
+    ['remaining_amount'] = "%s (المتبقي: $%s)",
+    ['enter_percentage_per_player'] = "أدخل النسبة المئوية لكل لاعب",
+    ['enter_amount_per_player'] = "أدخل المبلغ لكل لاعب",
+    ['percentage_not_100'] = "يجب أن يكون مجموع النسب المئوية 100%",
+    ['amounts_not_total'] = "يجب أن يكون مجموع المبالغ مساويًا للمبلغ الإجمالي",
+    ['invalid_reason'] = "السبب غير صالح"
 }
 
 Locale.Add('ar', translations)

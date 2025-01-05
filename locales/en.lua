@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = 'uses',
     ['unknown'] = 'Unknown',
     ['payment_from'] = 'Payment from %s',
-    ['payment_processed'] = 'Payment processed successfully'
+    ['payment_processed'] = 'Payment processed successfully',
+    ['group_billing'] = "Group Billing",
+    ['select_players'] = "Select Players",
+    ['split_type'] = "Split Type",
+    ['split_equal'] = "Equal Split",
+    ['split_percentage'] = "Percentage Split",
+    ['split_amount'] = "Amount Split",
+    ['total_amount'] = "Total Amount",
+    ['success'] = "Success",
+    ['payment_received_recurring'] = "Recurring Payment Received",
+    ['unknown_player'] = "Unknown player",
+    ['remaining_percentage'] = "%s (Remaining: %d%%)",
+    ['remaining_amount'] = "%s (Remaining: $%s)",
+    ['enter_percentage_per_player'] = "Enter percentage per player",
+    ['enter_amount_per_player'] = "Enter amount per player",
+    ['percentage_not_100'] = "The sum of percentages must equal 100%",
+    ['amounts_not_total'] = "The sum of amounts must equal the total amount",
+    ['invalid_reason'] = "Invalid reason"
 }
 
 Locale.Add('en', translations)

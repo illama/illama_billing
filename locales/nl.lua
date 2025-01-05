@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = 'gebruik',
     ['unknown'] = 'Onbekend',
     ['payment_from'] = 'Betaling van %s',
-    ['payment_processed'] = 'Betaling succesvol verwerkt'
+    ['payment_processed'] = 'Betaling succesvol verwerkt',
+    ['group_billing'] = "Groepsfacturering",
+    ['select_players'] = "Selecteer spelers",
+    ['split_type'] = "Verdeeltype",
+    ['split_equal'] = "Gelijke verdeling",
+    ['split_percentage'] = "Procentuele verdeling",
+    ['split_amount'] = "Bedragverdeling",
+    ['total_amount'] = "Totaalbedrag",
+    ['success'] = "Succes",
+    ['payment_received_recurring'] = "Terugkerende betaling ontvangen",
+    ['unknown_player'] = "Onbekende speler",
+    ['remaining_percentage'] = "%s (Resterend: %d%%)",
+    ['remaining_amount'] = "%s (Resterend: $%s)",
+    ['enter_percentage_per_player'] = "Voer percentage per speler in",
+    ['enter_amount_per_player'] = "Voer bedrag per speler in",
+    ['percentage_not_100'] = "De som van de percentages moet 100% zijn",
+    ['amounts_not_total'] = "De som van de bedragen moet gelijk zijn aan het totaalbedrag",
+    ['invalid_reason'] = "Ongeldige reden"
 }
 
 Locale.Add('nl', translations)

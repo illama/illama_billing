@@ -24,7 +24,7 @@ local function IsValidDescription(text)
     if not text or text == '' then
         return false
     end
-    return string.match(text, "^[%s%da-zA-ZÀ-ÿ#%-%_/]+$") ~= nil
+    return string.match(text, "^[%s%w%p]+$") ~= nil
 end
 
 function FormatDateTime()
@@ -395,6 +395,7 @@ AddEventHandler('illama_billing:createBill', function(data)
     local xPlayer = ESX.GetPlayerFromId(source)
     local xTarget = ESX.GetPlayerFromId(data.target)
     if not xPlayer or not xTarget then return end
+
     if not data.reason or not IsValidDescription(data.reason) then
         TriggerClientEvent('ox_lib:notify', source, {
             type = 'error',
@@ -603,7 +604,7 @@ AddEventHandler('illama_billing:acceptBill', function(billData)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then return end
 
-    MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status, allow_installments, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status, allow_installments, signature, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         {
             pendingBill.data.sender,
             pendingBill.data.sender_name,
@@ -612,10 +613,11 @@ AddEventHandler('illama_billing:acceptBill', function(billData)
             pendingBill.data.amount,
             pendingBill.data.reason,
             pendingBill.data.bill_type,
-            pendingBill.data.society,
+            pendingBill.data.society or NULL,
             'pending',
-            pendingBill.data.allow_installments,
-            billData.signature
+            pendingBill.data.allow_installments and 1 or 0,
+            billData.signature or NULL,
+            '[]'
         },
         function(id)
             if id then
@@ -929,7 +931,7 @@ AddEventHandler('illama_billing:payRecurringBill', function(billId, payments, pa
                     if xTarget and xTarget.job.name == bill.society and xTarget.job.grade_name == 'boss' then
                         TriggerClientEvent('ox_lib:notify', xTarget.source, {
                             title = _L('recurring_payment'),
-                            description = _L('payment_received', formattedAmount),
+                            description = _L('payment_received_recurring', formattedAmount),
                             type = 'success'
                         })
                     end
@@ -1124,9 +1126,9 @@ function StartRecurringBillsThread()
                     for _, bill in ipairs(bills) do
                         local xPlayer = ESX.GetPlayerFromIdentifier(bill.receiver)
                         if xPlayer then
-                            MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                            MySQL.insert('INSERT INTO illama_bills (sender, sender_name, receiver, receiver_name, amount, reason, type, society, status, allow_installments, signature, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                                 {
-                                    nil,
+                                    bill.sender,
                                     bill.society_label,
                                     bill.receiver,
                                     bill.receiver_name,
@@ -1134,7 +1136,10 @@ function StartRecurringBillsThread()
                                     bill.reason..' '.._L('recurring_payment_suffix'),
                                     'society',
                                     bill.society,
-                                    'pending'
+                                    'pending',
+                                    0,
+                                    NULL,
+                                    '[]'
                                 },
                                 function(billId)
                                     if billId then
@@ -1143,8 +1148,8 @@ function StartRecurringBillsThread()
                                             bill.amount, 
                                             'deposit', 
                                             _L('payment_from', xPlayer.getName()),
-                                            xPlayer.getName(),  -- Le joueur qui paie
-                                            nil  -- Le receiver_name sera automatiquement le label de la société
+                                            xPlayer.getName(),
+                                            nil
                                         )
                                         SendWebhook('recurring_payment', {
                                             society = bill.society,

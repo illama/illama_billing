@@ -286,7 +286,24 @@ local translations = {
     ['usage'] = 'användningar',
     ['unknown'] = 'Okänd',
     ['payment_from'] = 'Betalning från %s',
-    ['payment_processed'] = 'Betalning behandlad framgångsrikt'
+    ['payment_processed'] = 'Betalning behandlad framgångsrikt',
+    ['group_billing'] = "Gruppfakturering",
+    ['select_players'] = "Välj spelare",
+    ['split_type'] = "Delningstyp",
+    ['split_equal'] = "Jämn delning",
+    ['split_percentage'] = "Procentuell delning",
+    ['split_amount'] = "Beloppsdelning",
+    ['total_amount'] = "Totalbelopp",
+    ['success'] = "Lyckades",
+    ['payment_received_recurring'] = "Regelbunden betalning mottagen",
+    ['unknown_player'] = "Okänd spelare",
+    ['remaining_percentage'] = "%s (Återstående: %d%%)",
+    ['remaining_amount'] = "%s (Återstående: $%s)",
+    ['enter_percentage_per_player'] = "Ange procent per spelare",
+    ['enter_amount_per_player'] = "Ange belopp per spelare",
+    ['percentage_not_100'] = "Summan av procenten måste vara 100%",
+    ['amounts_not_total'] = "Summan av beloppen måste vara lika med totalbeloppet",
+    ['invalid_reason'] = "Ogiltig anledning"
 }
 
 Locale.Add('sv', translations)
