@@ -7,6 +7,42 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --background-color: white;
+            --text-color: #2c3e50;
+            --secondary-text: #444;
+            --border-color: #f0f0f0;
+            --table-header: #2c3e50;
+            --table-border: #eee;
+            --party-info-bg: #f8f9fa;
+            --box-shadow: rgba(0, 0, 0, 0.15);
+            --stats-box-bg: #ffffff;
+            --stats-text: #2c3e50;
+            --stats-border: #f0f4f8;
+            --chart-bg: #ffffff;
+            --list-hover: #f8fafc;
+            --value-bg: rgba(52, 152, 219, 0.1);
+            --chart-bg: #1a1a1a;
+        }
+
+        [data-theme="dark"] {
+            --background-color: #1a1a1a;
+            --text-color: #ffffff;
+            --secondary-text: #cccccc;
+            --border-color: #333333;
+            --table-header: #2c3e50;
+            --table-border: #333333;
+            --party-info-bg: #2a2a2a;
+            --box-shadow: rgba(0, 0, 0, 0.3);
+            --stats-box-bg: #2a2a2a;
+            --stats-text: #ffffff;
+            --stats-border: #333333;
+            --chart-bg: #1a1a1a;
+            --list-hover: #2c2c2c;
+            --value-bg: rgba(52, 152, 219, 0.2);
+            --chart-bg: #ffffff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -25,11 +61,11 @@
         }
 
         #bill-container {
-            background-color: white;
+            background-color: var(--background-color);
             width: 800px;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 24px var(--box-shadow);
             position: relative;
             display: none;
         }
@@ -62,8 +98,8 @@
         .logo-container {
             width: 180px;
             height: 60px;
-            background-color: #2c3e50;
-            color: white;
+            background-color: var(--background-color);
+            color: var(--text-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -79,7 +115,7 @@
 
         .bill-number {
             font-size: 24px;
-            color: #2c3e50;
+            color: var(--text-color);
             margin-bottom: 10px;
         }
 
@@ -93,19 +129,19 @@
             flex: 1;
             max-width: 45%;
             padding: 20px;
-            background-color: #f8f9fa;
+            background-color: var(--party-info-bg);
             border-radius: 8px;
         }
 
         .party-info h3 {
-            color: #2c3e50;
+            color: var(--text-color);
             margin-bottom: 15px;
             font-size: 16px;
             text-transform: uppercase;
         }
 
         .party-info p {
-            color: #444;
+            color: var(--secondary-text);
             line-height: 1.6;
             font-size: 14px;
         }
@@ -121,8 +157,8 @@
         }
 
         .details-table th {
-            background-color: #2c3e50;
-            color: white;
+            background-color: var(--background-color);
+            color: var(--secondary-text);
             text-align: left;
             padding: 12px;
             font-weight: 500;
@@ -130,12 +166,12 @@
 
         .details-table td {
             padding: 12px;
-            border-bottom: 1px solid #eee;
-            color: #444;
+            border-bottom: 1px solid var(--table-border);
+            color: var(--text-color);
         }
 
         .amount-row {
-            background-color: #f8f9fa;
+            background-color: var(--background-color);
             font-weight: bold;
         }
 
@@ -144,7 +180,7 @@
             top: 20px;
             right: -10px;
             padding: 8px 30px;
-            color: white;
+            color: var(--text-color);
             font-weight: bold;
             text-transform: uppercase;
             font-size: 14px;
@@ -170,34 +206,34 @@
 
         .signature-info {
             text-align: right;
-            color: #444;
+            color: var(--text-color);
         }
 
         .signature-name {
             font-size: 18px;
-            color: #2c3e50;
+            color: var(--text-color);
             font-family: 'Brush Script MT', cursive;
             margin-bottom: 5px;
         }
 
         .signature-date {
             font-size: 12px;
-            color: #666;
+            color: var(--text-color);
         }
 
         #stats-container {
-            background: linear-gradient(135deg, #334d50 0%, #cbcaa5 100%);
+            background-color: var(--chart-bg);
             width: 1000px;
             padding: 40px;
             min-height: 600px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 24px var(--box-shadow);
             display: none;
         }
 
         .stats-title {
             text-align: center;
-            color: #2C3E50;
+            color: var(--background-color);
             font-size: 32px;
             margin-bottom: 50px;
             font-weight: 700;
@@ -213,7 +249,7 @@
             transform: translateX(-50%);
             width: 60px;
             height: 4px;
-            background: #3498DB;
+            background: var(--background-color);
             border-radius: 2px;
         }
 
@@ -221,11 +257,11 @@
             width: 100%;
             height: 400px;
             margin-bottom: 50px;
-            background-color: #ffffff;
+            background-color: var(--stats-box-bg);
             border-radius: 16px;
             padding: 25px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            border: 1px solid #f0f4f8;
+            border: 1px solid var(--stats-border);
         }
 
         .stats-chart {
@@ -241,14 +277,14 @@
         }
 
         .stats-box {
-            background: white;
+            background: var(--stats-box-bg);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .stats-box h3 {
-            color: #2c3e50;
+            color: var(--stats-text);
             margin-bottom: 15px;
             font-size: 18px;
         }
@@ -264,12 +300,12 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
-            border-bottom: 1px solid #f0f4f8;
+            border-bottom: 1px solid var(--stats-border);
             transition: all 0.2s ease;
         }
 
         .stats-list-item:hover {
-            background-color: #f8fafc;
+            background-color: var(--list-hover);
             padding: 15px 10px;
             margin: 0 -10px;
             border-radius: 8px;
@@ -280,7 +316,7 @@
         }
 
         .stats-list-item .name {
-            color: #2C3E50;
+            color: var(--stats-text);
             font-weight: 500;
             font-size: 15px;
         }
@@ -289,7 +325,7 @@
             color: #3498DB;
             font-weight: 600;
             font-size: 15px;
-            background: rgba(52, 152, 219, 0.1);
+            background: var(--value-bg);
             padding: 6px 12px;
             border-radius: 20px;
         }
@@ -307,7 +343,7 @@
         }
 
         .toggle-button {
-            background-color: #f8f9fa;
+            background-color: var(--background-color);
             border: 1px solid #e9ecef;
             padding: 8px;
             border-radius: 6px;
@@ -317,23 +353,23 @@
         }
 
         .toggle-button:hover {
-            background-color: #e9ecef;
+            background-color: var(--background-color);
         }
 
         .balance-list {
             height: 400px;
             overflow-y: auto;
             padding: 20px;
-            background-color: white;
+            background-color: var(--stats-box-bg);
             border-radius: 8px;
         }
 
         .balance-item {
-            background: white;
+            background: var(--stats-box-bg);
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 8px;
-            border: 1px solid #f0f4f8;
+            border: 1px solid var(--stats-border);
         }
 
         .balance-header {
@@ -348,13 +384,13 @@
             flex-direction: column;
             gap: 5px;
             font-size: 13px;
-            color: #666;
+            color: var(--stats-text);
             padding-top: 8px;
             border-top: 1px solid #f0f4f8;
         }
 
         .balance-date {
-            color: #2C3E50;
+            color: var(--stats-text);
             font-weight: 500;
         }
 
@@ -387,7 +423,7 @@
         }
 
         .balance-item:hover {
-            background-color: #f8f9fa;
+            background-color: var(--background-color);
         }
 
         .balance-item:last-child {
@@ -437,7 +473,7 @@
             margin-bottom: 10px;
             padding: 10px;
             border-radius: 6px;
-            background-color: #f8f9fa;
+            background-color: var(--list-hover);
         }
 
         .transaction.deposit {
@@ -471,13 +507,27 @@
             color: #666;
         }
 
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px;
+            border-radius: 50%;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 20px;
+            z-index: 1000;
+        }
+
         button {
             padding: 12px 24px;
             cursor: pointer;
             border: none;
             border-radius: 6px;
-            background-color: #2c3e50;
-            color: white;
+            background-color: var(--background-color);
+            color: var(--text-color);
             font-size: 14px;
             font-weight: bold;
             transition: background-color 0.3s ease;
@@ -490,7 +540,7 @@
         }
 
         button:hover {
-            background-color: #34495e;
+            background-color: var(--background-color);
         }
 
         @media print {
@@ -509,10 +559,39 @@
     </style>
 </head>
 <body>
-    <div id="bill-container"></div>
+    <div id="bill-container">
+        <button class="theme-toggle" id="themeToggle"></button>
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+    
     <div id="stats-container"></div>
 
     <script>
+        function initThemeToggle() {
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        let isDark = false;
+
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+
+            if (window.balanceChart) {
+                window.balanceChart.options.scales.x.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
+                window.balanceChart.options.scales.y.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
+                window.balanceChart.options.scales.x.grid.color = getComputedStyle(document.documentElement).getPropertyValue('--border-color');
+                window.balanceChart.options.scales.y.grid.color = getComputedStyle(document.documentElement).getPropertyValue('--border-color');
+                window.balanceChart.options.plugins.tooltip.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+                window.balanceChart.options.plugins.tooltip.titleColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
+                window.balanceChart.options.plugins.tooltip.bodyColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
+                window.balanceChart.options.plugins.tooltip.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color');
+                window.balanceChart.update();
+            }
+        });
+}
+        
         function getStatusClass(status) {
             switch(status) {
                 case 'pending': return 'status-pending';
@@ -524,6 +603,10 @@
 
         function createBillHTML(data, translations) {
             return `
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+
                 <div class="watermark">${translations[data.status] || data.status}</div>
                 
                 <div class="status-banner ${getStatusClass(data.status)}">
@@ -608,6 +691,10 @@
             const closeText = translations?.close || 'Close';
 
             return `
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+
                 <h2 class="stats-title">${title} - ${societyLabel}</h2>
                 
                 <div class="chart-container">
@@ -652,7 +739,6 @@
         function createBalanceChart(balanceData) {
             const ctx = document.getElementById('balanceChart').getContext('2d');
             
-            // Changement du bouton en div
             const toggleButton = document.getElementById('toggleView');
             const chartView = document.getElementById('chartView');
             const listView = document.getElementById('listView');
@@ -665,7 +751,6 @@
                     const div = document.createElement('div');
                     div.className = 'balance-item';
 
-                    // Créer l'en-tête avec la date et le solde total
                     let html = `
                         <div class="balance-header">
                             <span class="balance-date">${item.date}</span>
@@ -673,7 +758,6 @@
                         </div>
                     `;
 
-                    // Ajouter les transactions du jour s'il y en a
                     if (item.transactions && item.transactions.length > 0) {
                         html += '<div class="transactions-list">';
                         item.transactions.forEach(transaction => {
@@ -717,7 +801,6 @@
                 return false;
             };
 
-            // Configuration du graphique
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
             gradient.addColorStop(0, 'rgba(52, 152, 219, 0.2)');
             gradient.addColorStop(1, 'rgba(52, 152, 219, 0)');
@@ -740,7 +823,7 @@
                 }]
             };
 
-            new Chart(ctx, {
+            window.balanceChart = new Chart(ctx, {
                 type: 'line',
                 data: data,
                 options: {
@@ -750,7 +833,7 @@
                         x: {
                             grid: {
                                 display: true,
-                                color: 'rgba(0,0,0,0.03)'
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
                             },
                             ticks: {
                                 maxTicksLimit: 8,
@@ -758,20 +841,20 @@
                                     family: 'Inter',
                                     size: 12
                                 },
-                                color: '#7f8c8d'
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-color')
                             }
                         },
                         y: {
                             grid: {
                                 display: true,
-                                color: 'rgba(0,0,0,0.03)'
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
                             },
                             ticks: {
                                 font: {
                                     family: 'Inter',
                                     size: 12
                                 },
-                                color: '#7f8c8d',
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-color'),
                                 callback: function(value) {
                                     return '$' + formatNumber(value);
                                 }
@@ -783,9 +866,9 @@
                             display: false
                         },
                         tooltip: {
-                            backgroundColor: '#fff',
-                            titleColor: '#2C3E50',
-                            bodyColor: '#2C3E50',
+                            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--background-color'),
+                            titleColor: getComputedStyle(document.documentElement).getPropertyValue('--text-color'),
+                            bodyColor: getComputedStyle(document.documentElement).getPropertyValue('--text-color'),
                             titleFont: {
                                 family: 'Inter',
                                 size: 14,
@@ -796,7 +879,7 @@
                                 size: 13
                             },
                             padding: 15,
-                            borderColor: '#f0f4f8',
+                            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color'),
                             borderWidth: 1,
                             displayColors: false,
                             callbacks: {
@@ -812,6 +895,8 @@
                     }
                 }
             });
+
+            return window.balanceChart;
         }
 
         function populateList(elementId, data, translations) {
@@ -856,7 +941,9 @@
                 const billHTML = createBillHTML(event.data.billData, event.data.translations);
                 container.innerHTML = billHTML;
 
-                const closeButton = container.querySelector('button');
+                initThemeToggle();
+
+                const closeButton = container.querySelector('.bill-buttons button');
                 closeButton.onclick = () => {
                     document.body.style.display = 'none';
                     container.innerHTML = '';
@@ -879,6 +966,8 @@
 
                 container.innerHTML = createStatsHTML(data, data.translations);
 
+                initThemeToggle();
+
                 if (data.stats.balance && Array.isArray(data.stats.balance)) {
                     createBalanceChart(data.stats.balance);
                 }
@@ -893,7 +982,7 @@
                     populateList('popularTemplates', data.stats.popularTemplates, data.translations);
                 }
 
-                const closeButton = container.querySelector('button');
+                const closeButton = container.querySelector('.bill-buttons button');
                 if (closeButton) {
                     closeButton.onclick = () => {
                         document.body.style.display = 'none';
