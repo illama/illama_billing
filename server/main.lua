@@ -20,10 +20,21 @@ local function isJobAllowedForRecurring(jobName)
     return jobConfig and jobConfig.allowRecurring or false
 end
 
-local function IsValidDescription(text)
+local function IsValidDescription(text, jobName)
     if not text or text == '' then
+        if jobName and Config.AllowedJobs[jobName] then
+            local templates = Config.AllowedJobs[jobName].templates
+            if templates then
+                for _, template in ipairs(templates) do
+                    if template.reason == text then
+                        return true
+                    end
+                end
+            end
+        end
         return false
     end
+
     return string.match(text, "^[%s%w%p]+$") ~= nil
 end
 
@@ -1266,61 +1277,70 @@ local githubUser = 'illama'
 local githubRepo = 'illama_billing'
 
 local function GetCurrentVersion()
-    local resourceName = GetCurrentResourceName()
-    local manifest = LoadResourceFile(resourceName, 'fxmanifest.lua')
-    if not manifest then
+    local currentVersion = GetResourceMetadata(GetCurrentResourceName(), 'version', 0)
+    if not currentVersion then
+        print('^1' .. _L('version_read_error') .. '^7')
         return nil
     end
-   
-    for line in manifest:gmatch("[^\r\n]+") do
-        local version = line:match("^version%s+['\"](.+)['\"]")
-        if version then
-            return version:gsub("%s+", "")
-        end
+    return currentVersion:gsub("%s+", "")
+end
+
+local function CompareVersions(v1, v2)
+    local v1Parts = {v1:match("(%d+)%.(%d+)%.(%d+)")}
+    local v2Parts = {v2:match("(%d+)%.(%d+)%.(%d+)")}
+    
+    for i = 1, 3 do
+        local v1Part = tonumber(v1Parts[i]) or 0
+        local v2Part = tonumber(v2Parts[i]) or 0
+        if v1Part > v2Part then return 1 end
+        if v1Part < v2Part then return -1 end
     end
-   
-    return nil
+    return 0
 end
 
 local function CheckVersion()
     local currentVersion = GetCurrentVersion()
-    if not currentVersion then
-        print(_L('version_read_error'))
-        return
-    end
+    if not currentVersion then return end
 
-    PerformHttpRequest(
-        ('https://api.github.com/repos/%s/%s/releases/latest'):format(githubUser, githubRepo),
-        function(err, text, headers)
-            if err ~= 200 then
-                print(_L('github_check_error'))
-                return
-            end
-           
-            local data = json.decode(text)
-            if not data or not data.tag_name then
-                print(_L('github_version_read_error'))
-                return
-            end
-           
-            local latestVersion = data.tag_name:gsub("^v", "")
-           
-            if latestVersion ~= currentVersion then
-                print(_L('new_version_available'))
-                print(_L('current_version', currentVersion))
-                print(_L('latest_version', latestVersion))
-                print(_L('release_notes', data.html_url or 'N/A'))
-                if data.body then
-                    print(_L('changes_list', data.body))
+    CreateThread(function()
+        Wait(5000)
+
+        PerformHttpRequest(
+            ('https://api.github.com/repos/%s/%s/releases/latest'):format(githubUser, githubRepo),
+            function(err, text, headers)
+                if err ~= 200 then
+                    print('^1' .. _L('github_check_error') .. '^7')
+                    return
                 end
-            else
-                print(_L('script_up_to_date', currentVersion))
-            end
-        end,
-        'GET',
-        '',
-        {['User-Agent'] = 'FXServer-'..githubUser}
-    )
+               
+                local success, data = pcall(json.decode, text)
+                if not success or not data or not data.tag_name then
+                    print('^1' .. _L('github_version_read_error') .. '^7')
+                    return
+                end
+               
+                local latestVersion = data.tag_name:gsub("^v", "")
+                local comparison = CompareVersions(latestVersion, currentVersion)
+               
+                if comparison > 0 then
+                    print('^3=========================^7')
+                    print('^3' .. _L('new_version_available') .. '^7')
+                    print('^3' .. _L('current_version', currentVersion) .. '^7')
+                    print('^3' .. _L('latest_version', latestVersion) .. '^7')
+                    print('^3' .. _L('release_notes', data.html_url or 'N/A') .. '^7')
+                    if data.body then
+                        print('^3' .. _L('changes_list', data.body) .. '^7')
+                    end
+                    print('^3=========================^7')
+                else
+                    print('^2' .. _L('script_up_to_date', currentVersion) .. '^7')
+                end
+            end,
+            'GET',
+            '',
+            {['User-Agent'] = 'FXServer-'..githubUser}
+        )
+    end)
 end
 
 -------------------------------
