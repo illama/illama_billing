@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "Insira o valor por jogador",
     ['percentage_not_100'] = "A soma das porcentagens deve ser igual a 100%",
     ['amounts_not_total'] = "A soma dos valores deve ser igual ao valor total",
-    ['invalid_reason'] = "Motivo inválido"
+    ['invalid_reason'] = "Motivo inválido",
+    ['delete_request'] = 'Solicitação de exclusão',
+    ['delete_request_sent'] = 'Sua solicitação de exclusão foi enviada',
+    ['requester'] = 'Solicitante',
+    ['accept_delete'] = 'Aceitar exclusão',
+    ['accept_delete_desc'] = 'Aceitar a solicitação de exclusão da fatura',
+    ['refuse_delete'] = 'Recusar exclusão',
+    ['refuse_delete_desc'] = 'Recusar a solicitação de exclusão da fatura',
+    ['delete_accepted'] = 'Exclusão aceita',
+    ['bill_deleted'] = 'A fatura foi excluída com sucesso',
+    ['delete_refused'] = 'Exclusão recusada',
+    ['delete_refused_desc'] = 'A solicitação de exclusão foi recusada',
+    ['delete_request_refused_by_sender'] = 'O remetente recusou sua solicitação de exclusão',
+    ['bill_delete_approved'] = "A fatura foi excluída com sucesso",
+    ['bill_delete_approved_desc'] = "A fatura foi excluída com sucesso",
+    ['approve_delete'] = "A fatura foi recusada",
+    ['approve_delete_desc'] = "A fatura foi recusada"
 }
 
 Locale.Add('pt', translations)

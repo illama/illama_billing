@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "Enter amount per player",
     ['percentage_not_100'] = "The sum of percentages must equal 100%",
     ['amounts_not_total'] = "The sum of amounts must equal the total amount",
-    ['invalid_reason'] = "Invalid reason"
+    ['invalid_reason'] = "Invalid reason",
+    ['delete_request'] = 'Delete Request',
+    ['delete_request_sent'] = 'Your delete request has been sent',
+    ['requester'] = 'Requester',
+    ['accept_delete'] = 'Accept Deletion',
+    ['accept_delete_desc'] = 'Accept the bill deletion request',
+    ['refuse_delete'] = 'Refuse Deletion',
+    ['refuse_delete_desc'] = 'Refuse the bill deletion request',
+    ['delete_accepted'] = 'Deletion Accepted',
+    ['bill_deleted'] = 'The bill has been successfully deleted',
+    ['delete_refused'] = 'Deletion Refused',
+    ['delete_refused_desc'] = 'The deletion request has been refused',
+    ['delete_request_refused_by_sender'] = 'The sender has refused your deletion request',
+    ['bill_delete_approved'] = "The bill has been successfully deleted",
+    ['bill_delete_approved_desc'] = "The bill has been successfully deleted",
+    ['approve_delete'] = "The bill has been refused",
+    ['approve_delete_desc'] = "The bill has been refused"
 }
 
 Locale.Add('en', translations)

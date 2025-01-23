@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "플레이어당 금액 입력",
     ['percentage_not_100'] = "비율의 합은 100%여야 합니다",
     ['amounts_not_total'] = "금액의 합은 총액과 일치해야 합니다",
-    ['invalid_reason'] = "잘못된 이유"
+    ['invalid_reason'] = "잘못된 이유",
+    ['delete_request'] = '삭제 요청',
+    ['delete_request_sent'] = '삭제 요청이 전송되었습니다',
+    ['requester'] = '요청자',
+    ['accept_delete'] = '삭제 수락',
+    ['accept_delete_desc'] = '청구서 삭제 요청을 수락합니다',
+    ['refuse_delete'] = '삭제 거부',
+    ['refuse_delete_desc'] = '청구서 삭제 요청을 거부합니다',
+    ['delete_accepted'] = '삭제가 수락되었습니다',
+    ['bill_deleted'] = '청구서가 성공적으로 삭제되었습니다',
+    ['delete_refused'] = '삭제가 거부되었습니다',
+    ['delete_refused_desc'] = '삭제 요청이 거부되었습니다',
+    ['delete_request_refused_by_sender'] = '발신자가 귀하의 삭제 요청을 거부했습니다',
+    ['bill_delete_approved'] = "청구서가 성공적으로 삭제되었습니다",
+    ['bill_delete_approved_desc'] = "청구서가 성공적으로 삭제되었습니다",
+    ['approve_delete'] = "청구서가 거부되었습니다",
+    ['approve_delete_desc'] = "청구서가 거부되었습니다"
 }
 
 Locale.Add('ko', translations)

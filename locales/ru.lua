@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "Введите сумму для каждого игрока",
     ['percentage_not_100'] = "Сумма процентов должна равняться 100%",
     ['amounts_not_total'] = "Сумма значений должна равняться общей сумме",
-    ['invalid_reason'] = "Недействительная причина"
+    ['invalid_reason'] = "Недействительная причина",
+    ['delete_request'] = 'Запрос на удаление',
+    ['delete_request_sent'] = 'Ваш запрос на удаление отправлен',
+    ['requester'] = 'Запрашивающий',
+    ['accept_delete'] = 'Принять удаление',
+    ['accept_delete_desc'] = 'Принять запрос на удаление счета',
+    ['refuse_delete'] = 'Отклонить удаление',
+    ['refuse_delete_desc'] = 'Отклонить запрос на удаление счета',
+    ['delete_accepted'] = 'Удаление принято',
+    ['bill_deleted'] = 'Счет успешно удален',
+    ['delete_refused'] = 'Удаление отклонено',
+    ['delete_refused_desc'] = 'Запрос на удаление отклонен',
+    ['delete_request_refused_by_sender'] = 'Отправитель отклонил ваш запрос на удаление',
+    ['bill_delete_approved'] = "Счет успешно удален",
+    ['bill_delete_approved_desc'] = "Счет успешно удален",
+    ['approve_delete'] = "Счет отклонен",
+    ['approve_delete_desc'] = "Счет отклонен"
 }
 
 Locale.Add('ru', translations)

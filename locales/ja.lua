@@ -303,7 +303,19 @@ local translations = {
     ['enter_amount_per_player'] = "プレイヤーごとの金額を入力",
     ['percentage_not_100'] = "割合の合計は100%である必要があります",
     ['amounts_not_total'] = "金額の合計は総額と一致する必要があります",
-    ['invalid_reason'] = "無効な理由"
+    ['invalid_reason'] = "無効な理由",
+    ['delete_request'] = '削除リクエスト',
+    ['delete_request_sent'] = '削除リクエストが送信されました',
+    ['requester'] = '要求者',
+    ['accept_delete'] = '削除を承認',
+    ['accept_delete_desc'] = '請求書の削除リクエストを承認する',
+    ['refuse_delete'] = '削除を拒否',
+    ['refuse_delete_desc'] = '請求書の削除リクエストを拒否する',
+    ['delete_accepted'] = '削除が承認されました',
+    ['bill_deleted'] = '請求書が正常に削除されました',
+    ['delete_refused'] = '削除が拒否されました',
+    ['delete_refused_desc'] = '削除リクエストが拒否されました',
+    ['delete_request_refused_by_sender'] = '送信者があなたの削除リクエストを拒否しました'    
 }
 
 Locale.Add('ja', translations)

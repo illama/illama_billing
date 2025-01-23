@@ -303,7 +303,24 @@ local translations = {
     ['enter_amount_per_player'] = "Entrer le montant par joueur",
     ['percentage_not_100'] = "La somme des pourcentages doit être égale à 100%",
     ['amounts_not_total'] = "La somme des montants doit être égale au montant total",
-    ['invalid_reason'] = "La raison est invalide"
+    ['invalid_reason'] = "La raison est invalide",
+    ['open_billing_menu'] = 'Ouvrir le menu de facturation',
+    ['delete_request'] = 'Demande de suppression de facture',
+    ['delete_request_sent'] = 'Votre demande de suppression a été envoyée',
+    ['requester'] = 'Demandeur de la suppression',
+    ['accept_delete'] = 'Accepter la suppression',
+    ['accept_delete_desc'] = 'Accepter la demande de suppression de la facture',
+    ['refuse_delete'] = 'Refuser la suppression',
+    ['refuse_delete_desc'] = 'Refuser la demande de suppression de la facture',
+    ['delete_accepted'] = 'Suppression acceptée',
+    ['bill_deleted'] = 'La facture a été supprimée avec succès',
+    ['delete_refused'] = 'Suppression refusée',
+    ['delete_refused_desc'] = 'La demande de suppression a été refusée',
+    ['delete_request_refused_by_sender'] = "L'émetteur a refusé votre demande de suppression",
+    ['bill_delete_approved'] = "La facture a été supprimée avec succès",
+    ['bill_delete_approved_desc'] = "La facture a été supprimée avec succès",
+    ['approve_delete'] = "La facture a été refusée",
+    ['approve_delete_desc'] = "La facture a été refusée"
 }
 
 Locale.Add('fr', translations)

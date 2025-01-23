@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "Ange belopp per spelare",
     ['percentage_not_100'] = "Summan av procenten måste vara 100%",
     ['amounts_not_total'] = "Summan av beloppen måste vara lika med totalbeloppet",
-    ['invalid_reason'] = "Ogiltig anledning"
+    ['invalid_reason'] = "Ogiltig anledning",
+    ['delete_request'] = 'Raderingsbegäran',
+    ['delete_request_sent'] = 'Din raderingsbegäran har skickats',
+    ['requester'] = 'Begärande',
+    ['accept_delete'] = 'Acceptera radering',
+    ['accept_delete_desc'] = 'Acceptera begäran om att radera fakturan',
+    ['refuse_delete'] = 'Neka radering',
+    ['refuse_delete_desc'] = 'Neka begäran om att radera fakturan',
+    ['delete_accepted'] = 'Radering accepterad',
+    ['bill_deleted'] = 'Fakturan har raderats framgångsrikt',
+    ['delete_refused'] = 'Radering nekad',
+    ['delete_refused_desc'] = 'Raderingsbegäran har nekats',
+    ['delete_request_refused_by_sender'] = 'Avsändaren har nekat din raderingsbegäran',
+    ['bill_delete_approved'] = "Fakturan har raderats framgångsrikt",
+    ['bill_delete_approved_desc'] = "Fakturan har raderats framgångsrikt",
+    ['approve_delete'] = "Fakturan har raderats framgångsrikt",
+    ['approve_delete_desc'] = "Fakturan har raderats framgångsrikt"
 }
 
 Locale.Add('sv', translations)

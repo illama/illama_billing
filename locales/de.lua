@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "Betrag pro Spieler eingeben",
     ['percentage_not_100'] = "Die Summe der Prozentsätze muss 100% ergeben",
     ['amounts_not_total'] = "Die Summe der Beträge muss dem Gesamtbetrag entsprechen",
-    ['invalid_reason'] = "Ungültiger Grund"
+    ['invalid_reason'] = "Ungültiger Grund",
+    ['delete_request'] = 'Löschungsantrag',
+    ['delete_request_sent'] = 'Ihr Löschungsantrag wurde gesendet',
+    ['requester'] = 'Antragsteller',
+    ['accept_delete'] = 'Löschung akzeptieren',
+    ['accept_delete_desc'] = 'Löschungsantrag für die Rechnung akzeptieren',
+    ['refuse_delete'] = 'Löschung ablehnen',
+    ['refuse_delete_desc'] = 'Löschungsantrag für die Rechnung ablehnen',
+    ['delete_accepted'] = 'Löschung akzeptiert',
+    ['bill_deleted'] = 'Die Rechnung wurde erfolgreich gelöscht',
+    ['delete_refused'] = 'Löschung abgelehnt',
+    ['delete_refused_desc'] = 'Der Löschungsantrag wurde abgelehnt',
+    ['delete_request_refused_by_sender'] = 'Der Absender hat Ihren Löschungsantrag abgelehnt',
+    ['bill_delete_approved'] = "Die Rechnung wurde erfolgreich gelöscht",
+    ['bill_delete_approved_desc'] = "Die Rechnung wurde erfolgreich gelöscht",
+    ['approve_delete'] = "Die Rechnung wurde abgelehnt",
+    ['approve_delete_desc'] = "Die Rechnung wurde abgelehnt"
 }
 
 Locale.Add('de', translations)

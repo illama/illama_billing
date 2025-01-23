@@ -988,9 +988,11 @@ function OpenBillDetailsMenu(bill)
                     cancel = true
                 })
                 if confirm == 'confirm' then
-                    TriggerServerEvent('illama_billing:deleteBill', bill.id)
-                    Wait(100)
-                    OpenBillingMenu()
+                    TriggerServerEvent('illama_billing:requestDeleteBill', bill.id)
+                    lib.notify({
+                        description = _L('delete_request_sent'),
+                        type = 'info'
+                    })
                 end
             end
         })
@@ -1803,6 +1805,52 @@ AddEventHandler('illama_billing:billExpired', function(billId, billType)
         type = 'error'
     })
     PlaySoundFrontend(-1, "EXIT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
+end)
+
+RegisterNetEvent('illama_billing:requestDeleteConfirmation')
+AddEventHandler('illama_billing:requestDeleteConfirmation', function(billData)
+    if not billData then return end
+
+    if lib.getOpenMenu() then lib.hideContext() end
+
+    lib.registerContext({
+        id = 'confirm_delete_bill',
+        title = _L('delete_request'),
+        options = {
+            {
+                title = _L('bill_details'),
+                description = _L('amount_reason',
+                    ESX.Math.GroupDigits(billData.amount),
+                    billData.reason
+                ),
+                metadata = {
+                    {label = _L('requester'), value = billData.requester_name}
+                }
+            },
+            {
+                title = _L('approve_delete'),
+                description = _L('approve_delete_desc'),
+                icon = 'check',
+                onSelect = function()
+                    TriggerServerEvent('illama_billing:confirmDeleteBill', billData.id)
+                end
+            },
+            {
+                title = _L('refuse_delete'),
+                description = _L('refuse_delete_desc'),
+                icon = 'xmark',
+                onSelect = function()
+                    TriggerClientEvent('ox_lib:notify', source, {
+                        type = 'error',
+                        description = _L('delete_request_refused')
+                    })
+                end
+            }
+        }
+    })
+    
+    lib.showContext('confirm_delete_bill')
+    PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
 end)
 
 RegisterKeyMapping('openbilling', _L('open_billing_menu'), 'keyboard', Config.OpenKey)

@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "Inserisci importo per giocatore",
     ['percentage_not_100'] = "La somma delle percentuali deve essere 100%",
     ['amounts_not_total'] = "La somma degli importi deve essere uguale all'importo totale",
-    ['invalid_reason'] = "Motivo non valido"
+    ['invalid_reason'] = "Motivo non valido",
+    ['delete_request'] = 'Richiesta di eliminazione',
+    ['delete_request_sent'] = 'La tua richiesta di eliminazione è stata inviata',
+    ['requester'] = 'Richiedente',
+    ['accept_delete'] = 'Accetta eliminazione',
+    ['accept_delete_desc'] = 'Accetta la richiesta di eliminazione della fattura',
+    ['refuse_delete'] = 'Rifiuta eliminazione',
+    ['refuse_delete_desc'] = 'Rifiuta la richiesta di eliminazione della fattura',
+    ['delete_accepted'] = 'Eliminazione accettata',
+    ['bill_deleted'] = 'La fattura è stata eliminata con successo',
+    ['delete_refused'] = 'Eliminazione rifiutata',
+    ['delete_refused_desc'] = 'La richiesta di eliminazione è stata rifiutata',
+    ['delete_request_refused_by_sender'] = 'Il mittente ha rifiutato la tua richiesta di eliminazione',
+    ['bill_delete_approved'] = "La fattura è stata eliminata con successo",
+    ['bill_delete_approved_desc'] = "La fattura è stata eliminata con successo",
+    ['approve_delete'] = "La fattura è stata rifiutata",
+    ['approve_delete_desc'] = "La fattura è stata rifiutata"
 }
 
 Locale.Add('it', translations)

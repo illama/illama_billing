@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "Voer bedrag per speler in",
     ['percentage_not_100'] = "De som van de percentages moet 100% zijn",
     ['amounts_not_total'] = "De som van de bedragen moet gelijk zijn aan het totaalbedrag",
-    ['invalid_reason'] = "Ongeldige reden"
+    ['invalid_reason'] = "Ongeldige reden",
+    ['delete_request'] = 'Verwijderingsverzoek',
+    ['delete_request_sent'] = 'Uw verwijderingsverzoek is verzonden',
+    ['requester'] = 'Aanvrager',
+    ['accept_delete'] = 'Verwijdering accepteren',
+    ['accept_delete_desc'] = 'Accepteer het verzoek om de factuur te verwijderen',
+    ['refuse_delete'] = 'Verwijdering weigeren',
+    ['refuse_delete_desc'] = 'Weiger het verzoek om de factuur te verwijderen',
+    ['delete_accepted'] = 'Verwijdering geaccepteerd',
+    ['bill_deleted'] = 'De factuur is succesvol verwijderd',
+    ['delete_refused'] = 'Verwijdering geweigerd',
+    ['delete_refused_desc'] = 'Het verwijderingsverzoek is geweigerd',
+    ['delete_request_refused_by_sender'] = 'De afzender heeft uw verwijderingsverzoek geweigerd',
+    ['bill_delete_approved'] = "De factuur is succesvol verwijderd",
+    ['bill_delete_approved_desc'] = "De factuur is succesvol verwijderd",
+    ['approve_delete'] = "De factuur is geweigerd",
+    ['approve_delete_desc'] = "De factuur is geweigerd"
 }
 
 Locale.Add('nl', translations)

@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "输入每位玩家的金额",
     ['percentage_not_100'] = "百分比总和必须等于100%",
     ['amounts_not_total'] = "金额总和必须等于总金额",
-    ['invalid_reason'] = "无效原因"
+    ['invalid_reason'] = "无效原因",
+    ['delete_request'] = '删除请求',
+    ['delete_request_sent'] = '您的删除请求已发送',
+    ['requester'] = '请求者',
+    ['accept_delete'] = '接受删除',
+    ['accept_delete_desc'] = '接受账单删除请求',
+    ['refuse_delete'] = '拒绝删除',
+    ['refuse_delete_desc'] = '拒绝账单删除请求',
+    ['delete_accepted'] = '删除已接受',
+    ['bill_deleted'] = '账单已成功删除',
+    ['delete_refused'] = '删除已拒绝',
+    ['delete_refused_desc'] = '删除请求已被拒绝',
+    ['delete_request_refused_by_sender'] = '发送者已拒绝您的删除请求',
+    ['bill_delete_approved'] = "账单已成功删除",
+    ['bill_delete_approved_desc'] = "账单已成功删除",
+    ['approve_delete'] = "账单已拒绝",
+    ['approve_delete_desc'] = "账单已拒绝"
 }
 
 Locale.Add('zh', translations)

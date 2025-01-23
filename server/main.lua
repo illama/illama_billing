@@ -758,6 +758,90 @@ AddEventHandler('illama_billing:deleteBill', function(billId)
     )
 end)
 
+RegisterNetEvent('illama_billing:requestDeleteBill')
+AddEventHandler('illama_billing:requestDeleteBill', function(billId)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return end
+    
+    MySQL.single([[
+        SELECT b.*, j.label as job_label, 
+               COALESCE(u.firstname, '') as sender_firstname,
+               COALESCE(u.lastname, '') as sender_lastname
+        FROM illama_bills b 
+        LEFT JOIN users u ON u.identifier = b.sender
+        LEFT JOIN jobs j ON j.name = b.society 
+        WHERE b.id = ? AND b.receiver = ?
+    ]], {billId, xPlayer.identifier},
+        function(bill)
+            if not bill then return end
+            
+            local xSender = ESX.GetPlayerFromIdentifier(bill.sender)
+            if not xSender then
+                TriggerClientEvent('ox_lib:notify', source, {
+                    type = 'error',
+                    description = _L('sender_not_online')
+                })
+                return
+            end
+
+            TriggerClientEvent('illama_billing:requestDeleteConfirmation', xSender.source, {
+                id = billId,
+                amount = bill.amount,
+                reason = bill.reason,
+                requester_name = xPlayer.getName()
+            })
+            
+            TriggerClientEvent('ox_lib:notify', source, {
+                type = 'info',
+                description = _L('delete_request_sent')
+            })
+        end
+    )
+end)
+
+RegisterNetEvent('illama_billing:confirmDeleteBill')
+AddEventHandler('illama_billing:confirmDeleteBill', function(billId)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return end
+    
+    MySQL.single('SELECT * FROM illama_bills WHERE id = ? AND sender = ?', 
+        {billId, xPlayer.identifier},
+        function(bill)
+            if not bill then return end
+            
+            MySQL.update('UPDATE illama_bills SET status = ? WHERE id = ?', 
+                {'deleted', billId},
+                function(affectedRows)
+                    if affectedRows > 0 then
+                        TriggerClientEvent('ox_lib:notify', source, {
+                            type = 'success',
+                            description = _L('bill_deleted')
+                        })
+                        local xReceiver = ESX.GetPlayerFromIdentifier(bill.receiver)
+                        if xReceiver then
+                            TriggerClientEvent('ox_lib:notify', xReceiver.source, {
+                                type = 'success',
+                                description = _L('bill_delete_approved')
+                            })
+                        end
+                    end
+                end
+            )
+        end
+    )
+end)
+
+RegisterNetEvent('illama_billing:deleteRequestRefused')
+AddEventHandler('illama_billing:deleteRequestRefused', function()
+    lib.notify({
+        title = _L('delete_refused'),
+        description = _L('delete_request_refused_by_sender'),
+        type = 'error'
+    })
+end)
+
 -------------------------------
 --     RECURRING BILLS
 -------------------------------

@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "أدخل المبلغ لكل لاعب",
     ['percentage_not_100'] = "يجب أن يكون مجموع النسب المئوية 100%",
     ['amounts_not_total'] = "يجب أن يكون مجموع المبالغ مساويًا للمبلغ الإجمالي",
-    ['invalid_reason'] = "السبب غير صالح"
+    ['invalid_reason'] = "السبب غير صالح",
+    ['delete_request'] = 'طلب حذف الفاتورة',
+    ['delete_request_sent'] = 'تم إرسال طلب الحذف الخاص بك',
+    ['requester'] = 'طالب الحذف',
+    ['accept_delete'] = 'قبول الحذف',
+    ['accept_delete_desc'] = 'قبول طلب حذف الفاتورة',
+    ['refuse_delete'] = 'رفض الحذف',
+    ['refuse_delete_desc'] = 'رفض طلب حذف الفاتورة',
+    ['delete_accepted'] = 'تم قبول الحذف',
+    ['bill_deleted'] = 'تم حذف الفاتورة بنجاح',
+    ['delete_refused'] = 'تم رفض الحذف',
+    ['delete_refused_desc'] = 'تم رفض طلب الحذف',
+    ['delete_request_refused_by_sender'] = 'رفض المرسل طلب الحذف الخاص بك',
+    ['bill_delete_approved'] = "تم حذف الفاتورة بنجاح",
+    ['bill_delete_approved_desc'] = "تم حذف الفاتورة بنجاح",
+    ['approve_delete'] = "تم رفض الفاتورة",
+    ['approve_delete_desc'] = "تم رفض الفاتورة"
 }
 
 Locale.Add('ar', translations)

@@ -303,7 +303,23 @@ local translations = {
     ['enter_amount_per_player'] = "Unesite iznos po igraču",
     ['percentage_not_100'] = "Zbir procenata mora biti 100%",
     ['amounts_not_total'] = "Zbir iznosa mora biti jednak ukupnom iznosu",
-    ['invalid_reason'] = "Nevažeći razlog"
+    ['invalid_reason'] = "Nevažeći razlog",
+    ['delete_request'] = 'Zahtev za brisanje',
+    ['delete_request_sent'] = 'Vaš zahtev za brisanje je poslat',
+    ['requester'] = 'Podnosilac zahteva',
+    ['accept_delete'] = 'Prihvati brisanje',
+    ['accept_delete_desc'] = 'Prihvati zahtev za brisanje računa',
+    ['refuse_delete'] = 'Odbij brisanje',
+    ['refuse_delete_desc'] = 'Odbij zahtev za brisanje računa',
+    ['delete_accepted'] = 'Brisanje prihvaćeno',
+    ['bill_deleted'] = 'Račun je uspešno obrisan',
+    ['delete_refused'] = 'Brisanje odbijeno',
+    ['delete_refused_desc'] = 'Zahtev za brisanje je odbijen',
+    ['delete_request_refused_by_sender'] = 'Pošiljalac je odbio vaš zahtev za brisanje',
+    ['bill_delete_approved'] = "Račun je uspešno obrisan",
+    ['bill_delete_approved_desc'] = "Račun je uspešno obrisan",
+    ['approve_delete'] = "Račun je odbijen",
+    ['approve_delete_desc'] = "Račun je odbijen"
 }
 
 Locale.Add('sr', translations)
