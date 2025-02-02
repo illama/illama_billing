@@ -80,14 +80,16 @@ Illama Billing is a secure and efficient billing script for FiveM, designed to s
 
 #### 👮 **Police**
 Example configuration:
-```lua
-['police'] = {
+```
+ ['police'] = {
         minGrade = 0,
         label = 'LSPD',
         maxAmount = 100000,
         allowRecurring = true,
         allowGroup = false,
         allowCheck = true,
+        allowCheckAll = true,
+        allowStats = true,
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -157,7 +159,7 @@ Example configuration:
                 url = "YOUR_WEBHOOK_URL",
                 color = 10181046
             },
-            logo = "YOUR_IMAGE_URL"
+            logo = "IMAGE_URL"
         }
     },
 ```
@@ -291,14 +293,16 @@ Illama Billing est un script de facturation sécurisé et performant pour FiveM,
 
 #### 👮 **Police**
 Exemple de configuration :
-```lua
-['police'] = {
+```
+ ['police'] = {
         minGrade = 0,
         label = 'LSPD',
         maxAmount = 100000,
         allowRecurring = true,
         allowGroup = false,
         allowCheck = true,
+        allowCheckAll = true,
+        allowStats = true,
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -368,7 +372,7 @@ Exemple de configuration :
                 url = "YOUR_WEBHOOK_URL",
                 color = 10181046
             },
-            logo = "YOUR_IMAGE_URL"
+            logo = "IMAGE_URL"
         }
     },
 ```
