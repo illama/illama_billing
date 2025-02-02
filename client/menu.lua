@@ -1619,29 +1619,36 @@ end
 function CheckPlayerBills(target)
     local PlayerData = GetPlayerData()
     if not PlayerData.job then return end
+    
+    local jobConfig = Config.AllowedJobs[PlayerData.job.name]
+    if not jobConfig then return end
 
     ESX.TriggerServerCallback('illama_billing:getAllPlayerBills', function(bills)
         local options = {}
 
         for _, bill in ipairs(bills.standard or {}) do
-            if bill.society == PlayerData.job.name then
+            if jobConfig.allowCheckAll or bill.society == PlayerData.job.name then
+                local societyLabel = Config.AllowedJobs[bill.society] and Config.AllowedJobs[bill.society].label or bill.society
                 table.insert(options, {
                     title = '$' .. ESX.Math.GroupDigits(bill.amount),
                     description = bill.reason,
                     metadata = {
-                        {label = _L('bill_type'), value = _L('standard_bill')}
+                        {label = _L('bill_type'), value = _L('standard_bill')},
+                        {label = _L('society'), value = societyLabel}
                     }
                 })
             end
         end
 
         for _, bill in ipairs(bills.recurring or {}) do
-            if bill.society == PlayerData.job.name then
+            if jobConfig.allowCheckAll or bill.society == PlayerData.job.name then
+                local societyLabel = Config.AllowedJobs[bill.society] and Config.AllowedJobs[bill.society].label or bill.society
                 table.insert(options, {
                     title = '$' .. ESX.Math.GroupDigits(bill.amount),
                     description = bill.reason,
                     metadata = {
                         {label = _L('bill_type'), value = _L('recurring_bill')},
+                        {label = _L('society'), value = societyLabel},
                         {label = _L('bill_interval'), value = string.format('%d %s', bill.interval_days, _L('days'))}
                     }
                 })
