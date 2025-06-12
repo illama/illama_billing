@@ -252,3 +252,35 @@ local function CheckScriptEnabled(fn)
         return fn(...)
     end
 end
+
+-------------------------------
+--       OX TARGET
+-------------------------------
+local function InitializeOxTarget()
+    exports.ox_target:addGlobalPlayer({
+        {
+            name = 'create_bill',
+            icon = 'fas fa-file-invoice',
+            label = _L('create_bill'),
+            distance = 2.0,
+            onSelect = function(data)
+                local targetId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity))
+                if targetId then
+                    OpenBillingMenu(targetId)
+                end
+            end,
+            canInteract = function(entity, distance, coords, name, bone)
+                local PlayerData = GetPlayerData()
+                return PlayerData and PlayerData.job and Config.AllowedJobs[PlayerData.job.name]
+            end
+        }
+    })
+end
+
+CreateThread(function()
+    while not ESX.IsPlayerLoaded() do
+        Wait(100)
+    end
+    RefreshPlayerData()
+    InitializeOxTarget()
+end)
