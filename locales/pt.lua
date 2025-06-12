@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "A fatura foi excluída com sucesso",
     ['bill_delete_approved_desc'] = "A fatura foi excluída com sucesso",
     ['approve_delete'] = "A fatura foi recusada",
-    ['approve_delete_desc'] = "A fatura foi recusada"
+    ['approve_delete_desc'] = "A fatura foi recusada",
+    ['create_bill'] = 'Criar fatura'
 }
 
 Locale.Add('pt', translations)
