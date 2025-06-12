@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "账单已成功删除",
     ['bill_delete_approved_desc'] = "账单已成功删除",
     ['approve_delete'] = "账单已拒绝",
-    ['approve_delete_desc'] = "账单已拒绝"
+    ['approve_delete_desc'] = "账单已拒绝",
+    ['create_bill'] = '创建账单'
 }
 
 Locale.Add('zh', translations)
