@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "Račun je uspešno obrisan",
     ['bill_delete_approved_desc'] = "Račun je uspešno obrisan",
     ['approve_delete'] = "Račun je odbijen",
-    ['approve_delete_desc'] = "Račun je odbijen"
+    ['approve_delete_desc'] = "Račun je odbijen",
+    ['create_bill'] = 'Kreiraj račun'
 }
 
 Locale.Add('sr', translations)
