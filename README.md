@@ -147,8 +147,9 @@ Example configuration:
 ### 🤝 **Dependencies**
 
 Before starting the script, ensure the following dependencies are installed and loaded:  
-1. **[OX Lib](https://github.com/overextended/ox_lib)**: For notifications and context menus.  
-2. **[ES Extended](https://github.com/esx-framework/es_extended)**: Base framework for ESX.  
+1. **[OX Lib](https://github.com/overextended/ox_lib)**: For notifications and context menus.
+2. **[OX Lib](https://github.com/overextended/ox_target)** : For the ALT menu.
+3. **[ES Extended](https://github.com/esx-framework/es_extended)**: Base framework for ESX.  
 
 Both dependencies must be started **before** loading the Illama Billing script.
 
@@ -162,6 +163,7 @@ Both dependencies must be started **before** loading the Illama Billing script.
 4. Add the following to your `server.cfg`:  
    ```plaintext
    ensure ox_lib
+   ensure ox_target
    ensure es_extended
    ensure illama_billing
    ```
@@ -328,7 +330,8 @@ Exemple de configuration :
 
 Avant de démarrer le script, assurez-vous que les dépendances suivantes sont installées et chargées :  
 1. **[OX Lib](https://github.com/overextended/ox_lib)** : Pour les notifications et les menus contextuels.  
-2. **[ES Extended](https://github.com/esx-framework/es_extended)** : Framework de base pour ESX.  
+2. **[OX Lib](https://github.com/overextended/ox_target)** : Pour le menu ALT.
+3. **[ES Extended](https://github.com/esx-framework/es_extended)** : Framework de base pour ESX.  
 
 Ces dépendances doivent être démarrées **avant** de charger le script Illama Billing.
 
