@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "تم حذف الفاتورة بنجاح",
     ['bill_delete_approved_desc'] = "تم حذف الفاتورة بنجاح",
     ['approve_delete'] = "تم رفض الفاتورة",
-    ['approve_delete_desc'] = "تم رفض الفاتورة"
+    ['approve_delete_desc'] = "تم رفض الفاتورة",
+    ['create_bill'] = 'إنشاء فاتورة'
 }
 
 Locale.Add('ar', translations)
