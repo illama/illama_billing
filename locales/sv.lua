@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "Fakturan har raderats framgångsrikt",
     ['bill_delete_approved_desc'] = "Fakturan har raderats framgångsrikt",
     ['approve_delete'] = "Fakturan har raderats framgångsrikt",
-    ['approve_delete_desc'] = "Fakturan har raderats framgångsrikt"
+    ['approve_delete_desc'] = "Fakturan har raderats framgångsrikt",
+    ['create_bill'] = 'Skapa faktura'
 }
 
 Locale.Add('sv', translations)
