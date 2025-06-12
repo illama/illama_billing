@@ -40,6 +40,8 @@ Config.AllowedJobs = {
         allowCheck = true,
         allowCheckAll = true,
         allowStats = true,
+        allowPersonal = true,
+        allowSociety = true,
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -121,6 +123,8 @@ Config.AllowedJobs = {
         allowCheck = true,
         allowCheckAll = false,
         allowStats = true,
+        allowPersonal = true,
+        allowSociety = true,
         recurringMaxAmount = 50000,
         templates = {
             {
