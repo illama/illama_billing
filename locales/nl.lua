@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "De factuur is succesvol verwijderd",
     ['bill_delete_approved_desc'] = "De factuur is succesvol verwijderd",
     ['approve_delete'] = "De factuur is geweigerd",
-    ['approve_delete_desc'] = "De factuur is geweigerd"
+    ['approve_delete_desc'] = "De factuur is geweigerd",
+    ['create_bill'] = 'Factuur aanmaken'
 }
 
 Locale.Add('nl', translations)
