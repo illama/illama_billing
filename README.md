@@ -342,6 +342,7 @@ Ces dépendances doivent être démarrées **avant** de charger le script Illama
 4. Ajoutez les lignes suivantes dans votre `server.cfg` :  
    ```plaintext
    ensure ox_lib
+   ensure ox_target
    ensure es_extended
    ensure illama_billing
    ```
