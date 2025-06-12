@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "The bill has been successfully deleted",
     ['bill_delete_approved_desc'] = "The bill has been successfully deleted",
     ['approve_delete'] = "The bill has been refused",
-    ['approve_delete_desc'] = "The bill has been refused"
+    ['approve_delete_desc'] = "The bill has been refused",
+    ['create_bill'] = 'Create Bill'
 }
 
 Locale.Add('en', translations)
