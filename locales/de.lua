@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "Die Rechnung wurde erfolgreich gelöscht",
     ['bill_delete_approved_desc'] = "Die Rechnung wurde erfolgreich gelöscht",
     ['approve_delete'] = "Die Rechnung wurde abgelehnt",
-    ['approve_delete_desc'] = "Die Rechnung wurde abgelehnt"
+    ['approve_delete_desc'] = "Die Rechnung wurde abgelehnt",
+    ['create_bill'] = 'Rechnung erstellen'
 }
 
 Locale.Add('de', translations)
