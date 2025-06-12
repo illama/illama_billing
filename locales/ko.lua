@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "청구서가 성공적으로 삭제되었습니다",
     ['bill_delete_approved_desc'] = "청구서가 성공적으로 삭제되었습니다",
     ['approve_delete'] = "청구서가 거부되었습니다",
-    ['approve_delete_desc'] = "청구서가 거부되었습니다"
+    ['approve_delete_desc'] = "청구서가 거부되었습니다",
+    ['create_bill'] = '청구서 생성'
 }
 
 Locale.Add('ko', translations)
