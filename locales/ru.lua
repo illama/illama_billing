@@ -319,7 +319,8 @@ local translations = {
     ['bill_delete_approved'] = "Счет успешно удален",
     ['bill_delete_approved_desc'] = "Счет успешно удален",
     ['approve_delete'] = "Счет отклонен",
-    ['approve_delete_desc'] = "Счет отклонен"
+    ['approve_delete_desc'] = "Счет отклонен",
+    ['create_bill'] = 'Создать счет'
 }
 
 Locale.Add('ru', translations)
