@@ -315,7 +315,12 @@ local translations = {
     ['bill_deleted'] = '請求書が正常に削除されました',
     ['delete_refused'] = '削除が拒否されました',
     ['delete_refused_desc'] = '削除リクエストが拒否されました',
-    ['delete_request_refused_by_sender'] = '送信者があなたの削除リクエストを拒否しました'    
+    ['delete_request_refused_by_sender'] = '送信者があなたの削除リクエストを拒否しました',
+    ['bill_delete_approved'] = "請求書が正常に削除されました",
+    ['bill_delete_approved_desc'] = "請求書が正常に削除されました",
+    ['approve_delete'] = "請求書が拒否されました",
+    ['approve_delete_desc'] = "請求書が拒否されました",
+    ['create_bill'] = '請求書を作成'
 }
 
 Locale.Add('ja', translations)
