@@ -88,7 +88,7 @@ function CanCreateSocietyBills()
     return tonumber(playerJob.grade) >= tonumber(jobConfig.minGrade)
 end
 
-function OpenSocietyBillPlayerSelect(billType)
+function OpenSocietyBillPlayerSelect(billType, targetId)
     local players = GetNearbyPlayers()
     
     local options = {}
@@ -98,9 +98,9 @@ function OpenSocietyBillPlayerSelect(billType)
             description = _L('distance', math.floor(player.distance)),
             onSelect = function()
                 if billType == 'standard' then
-                    CreateSocietyBill(player.source)
+                    CreateSocietyBill(targetId or player.source)
                 elseif billType == 'recurring' then
-                    CreateRecurringBill(player.source)
+                    CreateRecurringBill(targetId or player.source)
                 end
             end
         })
@@ -119,17 +119,7 @@ end
 -------------------------------
 --       MAIN MENUS
 -------------------------------
-function OpenBillingMenu()
-    local PlayerData = GetPlayerData()
-    if not PlayerData or not PlayerData.job then
-        lib.notify({
-            title = _L('error'),
-            description = _L('cannot_load_data'),
-            type = 'error'
-        })
-        return
-    end
-
+function OpenBillingMenu(targetId)
     local mainMenu = {
         id = 'billing_main_menu',
         title = _L('billing_menu'),
@@ -161,50 +151,99 @@ function OpenBillingMenu()
                 onSelect = function()
                     OpenRecurringBillsMenu()
                 end
-            },
-            {
-                title = _L('separator_bills_creator'),
-                disabled = true
-            },
-            {
-                title = _L('personal_bills'),
-                description = _L('personal_bills_desc'),
-                icon = 'file-invoice',
-                onSelect = function()
-                    OpenPersonalBillingMenu()
-                end
-            },
-            {
-                title = _L('society_bills'),
-                description = _L('society_bills_desc'),
-                icon = 'building',
-                onSelect = function()
-                    local canCreate = CanCreateSocietyBills()
-                    if canCreate then
-                        OpenSocietyBillingMenu()
-                    else
-                        lib.notify({
-                            title = _L('error'),
-                            description = _L('insufficient_rights'),
-                            type = 'error'
-                        })
-                    end
-                end
-            },
-            {
-                title = _L('separator_history'),
-                disabled = true
-            },
-            {
-                title = _L('transaction_history'),
-                description = _L('transaction_history_desc'),
-                icon = 'clock-rotate-left',
-                onSelect = function()
-                    OpenBillHistory()
-                end
             }
         }
     }
+
+    -- Si un ID de joueur cible est fourni, on ajoute directement les options de facturation
+    if targetId then
+        local PlayerData = GetPlayerData()
+        local jobConfig = Config.AllowedJobs[PlayerData.job.name]
+        
+        if jobConfig then
+            table.insert(mainMenu.options, {
+                title = _L('separator_bills_creator'),
+                disabled = true
+            })
+
+            if jobConfig.allowPersonal then
+                table.insert(mainMenu.options, {
+                    title = _L('personal_bills'),
+                    description = _L('personal_bills_desc'),
+                    icon = 'file-invoice',
+                    onSelect = function()
+                        CreatePersonalBill(targetId)
+                    end
+                })
+            end
+
+            if jobConfig.allowSociety then
+                table.insert(mainMenu.options, {
+                    title = _L('society_bills'),
+                    description = _L('society_bills_desc'),
+                    icon = 'building',
+                    onSelect = function()
+                        OpenSocietyBillPlayerSelect('standard', targetId)
+                    end
+                })
+            end
+
+            if jobConfig.allowRecurring then
+                table.insert(mainMenu.options, {
+                    title = _L('recurring_bill'),
+                    description = _L('recurring_bill_desc'),
+                    onSelect = function()
+                        OpenSocietyBillPlayerSelect('recurring', targetId)
+                    end
+                })
+            end
+        end
+    else
+        -- Menu normal sans cible
+        table.insert(mainMenu.options, {
+            title = _L('separator_bills_creator'),
+            disabled = true
+        })
+        table.insert(mainMenu.options, {
+            title = _L('personal_bills'),
+            description = _L('personal_bills_desc'),
+            icon = 'file-invoice',
+            onSelect = function()
+                OpenPersonalBillingMenu()
+            end
+        })
+        table.insert(mainMenu.options, {
+            title = _L('society_bills'),
+            description = _L('society_bills_desc'),
+            icon = 'building',
+            onSelect = function()
+                local canCreate = CanCreateSocietyBills()
+                if canCreate then
+                    OpenSocietyBillingMenu()
+                else
+                    lib.notify({
+                        title = _L('error'),
+                        description = _L('insufficient_rights'),
+                        type = 'error'
+                    })
+                end
+            end
+        })
+    end
+
+    table.insert(mainMenu.options, {
+        title = _L('separator_history'),
+        disabled = true
+    })
+    table.insert(mainMenu.options, {
+        title = _L('transaction_history'),
+        description = _L('transaction_history_desc'),
+        icon = 'clock-rotate-left',
+        onSelect = function()
+            OpenBillHistory()
+        end
+    })
+
     lib.registerContext(mainMenu)
     lib.showContext('billing_main_menu')
 end
