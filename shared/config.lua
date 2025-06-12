@@ -40,8 +40,8 @@ Config.AllowedJobs = {
         allowCheck = true,
         allowCheckAll = true,
         allowStats = true,
-        allowPersonal = true, //NE PAS MODIFIER
-        allowSociety = true, //NE PAS MODIFIER
+        allowPersonal = true, --NE PAS MODIFIER/DO NOT EDIT
+        allowSociety = true, --NE PAS MODIFIER/DO NOT EDIT
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -50,7 +50,7 @@ Config.AllowedJobs = {
                 amount = 750
             },
             {
-                label = "Autre (personnalisé)",
+                label = "Autre (personnalisé)", -- Toujours garder cette option/Always keep this option
                 reason = "",
                 amount = 0
             }
@@ -69,7 +69,7 @@ Config.AllowedJobs = {
                 interval = 30
             },
             {
-                label = "Autre (personnalisé)",
+                label = "Autre (personnalisé)", -- Toujours garder cette option/Always keep this option
                 reason = "",
                 amount = 0,
                 interval = 0
@@ -123,8 +123,8 @@ Config.AllowedJobs = {
         allowCheck = true,
         allowCheckAll = false,
         allowStats = true,
-        allowPersonal = true, //NE PAS MODIFIER
-        allowSociety = true, //NE PAS MODIFIER
+        allowPersonal = true, --NE PAS MODIFIER/DO NOT EDIT
+        allowSociety = true, --NE PAS MODIFIER/DO NOT EDIT
         recurringMaxAmount = 50000,
         templates = {
             {
@@ -133,7 +133,7 @@ Config.AllowedJobs = {
                 amount = 2500
             },
             {
-                label = "Autre (personnalisé)",
+                label = "Autre (personnalisé)", -- Toujours garder cette option/Always keep this option
                 reason = "",
                 amount = 0
             }
@@ -158,7 +158,7 @@ Config.AllowedJobs = {
                 interval = 7
             },
             {
-                label = "Autre (personnalisé)",
+                label = "Autre (personnalisé)", -- Toujours garder cette option/Always keep this option
                 reason = "",
                 amount = 0,
                 interval = 0
