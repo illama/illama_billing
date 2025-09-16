@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 author 'Illama'
-version '2.1.0'
+version '2.1.4'
 
 dependencies {
     'es_extended',
