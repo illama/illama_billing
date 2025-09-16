@@ -35,7 +35,9 @@ local function IsValidDescription(text, jobName)
         return false
     end
 
-    return string.match(text, "^[%s%w%p]+$") ~= nil
+    -- Accept any content, only enforce a reasonable maximum length
+    if #text > 2000 then return false end
+    return true
 end
 
 function FormatDateTime()
