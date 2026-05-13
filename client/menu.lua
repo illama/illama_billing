@@ -1502,6 +1502,40 @@ function OpenInstallmentMenu(billData)
     end
 end
 
+function OpenInstallmentPaymentActionsMenu(payment)
+    local amount = payment.amount_per_payment
+    local formatted = ESX.Math.GroupDigits(amount)
+    lib.registerContext({
+        id = 'installment_pay_actions_menu',
+        title = _L('payment_plan', payment.bill_reason or ''),
+        menu = 'installment_payments_menu',
+        options = {
+            {
+                title = _L('pay_cash'),
+                description = _L('pay_amount_cash', formatted),
+                icon = 'money-bill',
+                onSelect = function()
+                    TriggerServerEvent('illama_billing:payInstallment', payment.id, 'cash')
+                    Wait(100)
+                    OpenInstallmentPaymentsMenu()
+                end
+            },
+            {
+                title = _L('pay_bank'),
+                description = _L('pay_amount_bank', formatted),
+                icon = 'credit-card',
+                onSelect = function()
+                    TriggerServerEvent('illama_billing:payInstallment', payment.id, 'bank')
+                    Wait(100)
+                    OpenInstallmentPaymentsMenu()
+                end
+            }
+        }
+    })
+
+    lib.showContext('installment_pay_actions_menu')
+end
+
 function OpenInstallmentPaymentsMenu()
     ESX.TriggerServerCallback('illama_billing:getInstallmentPayments', function(payments)
         local options = {}
@@ -1519,7 +1553,11 @@ function OpenInstallmentPaymentsMenu()
                         label = _L('total_remaining'), 
                         value = ESX.Math.GroupDigits(payment.amount_per_payment * payment.remaining_payments)
                     }
-                }
+                },
+                icon = 'list',
+                onSelect = function()
+                    OpenInstallmentPaymentActionsMenu(payment)
+                end
             })
         end
         

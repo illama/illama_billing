@@ -1071,6 +1071,170 @@ end)
 -------------------------------
 --     INSTALLMENT BILLS
 -------------------------------
+local INSTALLMENT_NEXT_INTERVAL_DAYS = 7
+
+local function creditInstallmentRecipients(bill, amount, payerDisplayName)
+    if bill.type == 'society' then
+        TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. bill.society, function(account)
+            if account then
+                account.addMoney(amount)
+                AddSocietyHistory(
+                    bill.society,
+                    amount,
+                    'deposit',
+                    _L('payment_from', payerDisplayName),
+                    payerDisplayName,
+                    nil
+                )
+            end
+        end)
+    else
+        local targetPlayer = ESX.GetPlayerFromIdentifier(bill.sender)
+        if targetPlayer then
+            targetPlayer.addAccountMoney('bank', amount)
+        else
+            MySQL.update('UPDATE users SET bank = bank + ? WHERE identifier = ?', { amount, bill.sender })
+        end
+
+        if targetPlayer then
+            TriggerClientEvent('ox_lib:notify', targetPlayer.source, {
+                title = _L('payment_received'),
+                description = _L('payment_received',
+                    ESX.Math.GroupDigits(amount),
+                    payerDisplayName
+                ),
+                type = 'success'
+            })
+        end
+    end
+end
+
+local function finalizeInstallmentAfterCharge(source, row, bill, payerDisplayName, paymentTypeStr)
+    local amount = row.amount_per_payment
+    local installmentId = row.id
+    local billId = row.bill_id
+    local remainingBefore = row.remaining_payments
+    local reasonText = row.bill_reason or ''
+
+    MySQL.update([[
+        UPDATE illama_installment_payments
+        SET remaining_payments = remaining_payments - 1,
+            next_payment_date = DATE_ADD(next_payment_date, INTERVAL ? DAY)
+        WHERE id = ? AND remaining_payments > 0
+    ]], { INSTALLMENT_NEXT_INTERVAL_DAYS, installmentId }, function(affectedRows)
+        if not affectedRows or affectedRows < 1 then
+            return
+        end
+
+        local newRemaining = remainingBefore - 1
+        if newRemaining <= 0 then
+            MySQL.update('UPDATE illama_bills SET status = ? WHERE id = ?', { 'paid', billId })
+        end
+
+        TriggerClientEvent('ox_lib:notify', source, {
+            title = _L('installment_payment'),
+            description = _L('installment_payment_desc', ESX.Math.GroupDigits(amount)),
+            type = 'success'
+        })
+
+        SendWebhook('installment_payment', {
+            society = bill.type == 'society' and bill.society or nil,
+            params = {
+                ESX.Math.GroupDigits(amount),
+                payerDisplayName,
+                paymentTypeStr
+            },
+            fields = {
+                {
+                    ["name"] = _L('webhook_amount'),
+                    ["value"] = ESX.Math.GroupDigits(amount),
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = _L('webhook_payment_method'),
+                    ["value"] = paymentTypeStr,
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = _L('webhook_reason'),
+                    ["value"] = reasonText,
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = _L('webhook_bill_id'),
+                    ["value"] = tostring(billId),
+                    ["inline"] = true
+                }
+            }
+        })
+    end)
+end
+
+RegisterNetEvent('illama_billing:payInstallment')
+AddEventHandler('illama_billing:payInstallment', function(installmentId, paymentType)
+    local source = source
+    local xPlayer = ESX.GetPlayerFromId(source)
+
+    if not xPlayer then return end
+
+    installmentId = tonumber(installmentId)
+    if not installmentId then return end
+
+    if paymentType ~= 'cash' and paymentType ~= 'bank' then return end
+
+    MySQL.single([[
+        SELECT
+            ip.id,
+            ip.bill_id,
+            ip.player_identifier,
+            ip.amount_per_payment,
+            ip.remaining_payments,
+            ip.next_payment_date,
+            ip.total_payments,
+            b.type AS bill_type,
+            b.society,
+            b.sender,
+            b.reason AS bill_reason
+        FROM illama_installment_payments ip
+        INNER JOIN illama_bills b ON b.id = ip.bill_id
+        WHERE ip.id = ? AND ip.player_identifier = ? AND ip.remaining_payments > 0
+    ]], { installmentId, xPlayer.identifier }, function(row)
+        if not row then
+            TriggerClientEvent('ox_lib:notify', source, {
+                type = 'error',
+                description = _L('installment_invalid')
+            })
+            return
+        end
+
+        local bill = {
+            type = row.bill_type,
+            society = row.society,
+            sender = row.sender
+        }
+
+        local amount = row.amount_per_payment
+        local money = paymentType == 'bank' and xPlayer.getAccount('bank').money or xPlayer.getMoney()
+
+        if money < amount then
+            TriggerClientEvent('ox_lib:notify', source, {
+                type = 'error',
+                description = _L('insufficient_funds', ESX.Math.GroupDigits(amount - money))
+            })
+            return
+        end
+
+        if paymentType == 'bank' then
+            xPlayer.removeAccountMoney('bank', amount)
+        else
+            xPlayer.removeMoney(amount)
+        end
+
+        creditInstallmentRecipients(bill, amount, xPlayer.getName())
+        finalizeInstallmentAfterCharge(source, row, bill, xPlayer.getName(), paymentType)
+    end)
+end)
+
 RegisterNetEvent('illama_billing:setupInstallmentPlan')
 AddEventHandler('illama_billing:setupInstallmentPlan', function(billData, numberOfPayments)
     local source = source
@@ -1308,39 +1472,43 @@ end
 CreateThread(function()
     while true do
         MySQL.query([[
-            SELECT * FROM illama_installment_payments 
-            WHERE remaining_payments > 0 
-            AND next_payment_date <= NOW()
+            SELECT
+                ip.id,
+                ip.bill_id,
+                ip.player_identifier,
+                ip.amount_per_payment,
+                ip.remaining_payments,
+                ip.next_payment_date,
+                ip.total_payments,
+                b.type AS bill_type,
+                b.society,
+                b.sender,
+                b.reason AS bill_reason
+            FROM illama_installment_payments ip
+            INNER JOIN illama_bills b ON b.id = ip.bill_id
+            WHERE ip.remaining_payments > 0
+            AND ip.next_payment_date <= NOW()
         ]], {}, function(payments)
-            for _, payment in ipairs(payments) do
-                local xPlayer = ESX.GetPlayerFromIdentifier(payment.player_identifier)
-                
-                if xPlayer then
-                    local bankMoney = xPlayer.getAccount('bank').money
-                    
-                    if bankMoney >= payment.amount_per_payment then
-                        xPlayer.removeAccountMoney('bank', payment.amount_per_payment)
-                        
-                        AddSocietyHistory(
-                            bill.society, 
-                            bill.amount, 
-                            'deposit', 
-                            _L('payment_from', xPlayer.getName()),
-                            xPlayer.getName(),
-                            nil
-                        )
+            if not payments then return end
 
-                        MySQL.query([[
-                            UPDATE illama_installment_payments 
-                            SET remaining_payments = remaining_payments - 1,
-                                next_payment_date = DATE_ADD(next_payment_date, INTERVAL 7 DAY)
-                            WHERE id = ?
-                        ]], {payment.id})
-                        TriggerClientEvent('ox_lib:notify', xPlayer.source, {
-                            title = _L('installment_payment'),
-                            description = _L('payment_processed', ESX.Math.GroupDigits(payment.amount_per_payment)),
-                            type = 'success'
-                        })
+            for _, row in ipairs(payments) do
+                local xPlayer = ESX.GetPlayerFromIdentifier(row.player_identifier)
+
+                if xPlayer then
+                    local amount = row.amount_per_payment
+                    local bankMoney = xPlayer.getAccount('bank').money
+
+                    if bankMoney >= amount then
+                        xPlayer.removeAccountMoney('bank', amount)
+
+                        local bill = {
+                            type = row.bill_type,
+                            society = row.society,
+                            sender = row.sender
+                        }
+
+                        creditInstallmentRecipients(bill, amount, xPlayer.getName())
+                        finalizeInstallmentAfterCharge(xPlayer.source, row, bill, xPlayer.getName(), 'bank')
                     else
                         TriggerClientEvent('ox_lib:notify', xPlayer.source, {
                             title = _L('payment_failed'),
@@ -1351,7 +1519,7 @@ CreateThread(function()
                 end
             end
         end)
-        
+
         Wait(60000)
     end
 end)
